@@ -24,16 +24,18 @@ public class VerticalMenuPanel extends JPanel {
 		
 		buildFileMenu();
 		buildDatabaseMenu();
+		buildViewMenu();
+		buildLanguageMenu();
+		buildAboutMenu();
 		
 		menu.add(fileMenu);
-		//menu.add(databaseMenu);
-		//menu.add(viewMenu);
-		//menu.add(languageMenu);
-		//menu.add(aboutMenu);
+		menu.add(databaseMenu);
+		menu.add(viewMenu);
+		menu.add(languageMenu);
+		menu.add(aboutMenu);
 		
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		add(menu);
-		
 	}
 	
 	private void buildFileMenu() {
@@ -45,7 +47,19 @@ public class VerticalMenuPanel extends JPanel {
 	}
 	
 	private void buildDatabaseMenu() {
-		
+		setDatabaseMenu(new JMenu("Database"));
+	}
+	
+	private void buildViewMenu() {
+		setViewMenu(new JMenu("Database"));
+	}
+	
+	private void buildLanguageMenu() {
+		setLanguageMenu(new JMenu("Language"));
+	}
+	
+	private void buildAboutMenu() {
+		setAboutMenu(new JMenu("About"));
 	}
 
 	public JMenu getFileMenu() {
