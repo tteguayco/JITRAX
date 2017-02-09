@@ -3,36 +3,44 @@ package es.ull.etsii.jitrax.gui;
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class MainWindow extends JFrame {
+	private static final long serialVersionUID = 1L;
 	private static final int FRAME_WIDTH = 1000;
 	private static final int FRAME_HEIGHT = 600;
 	
 	private static final String FRAME_TITLE = "JITRAX";
 	
-	private VerticalMenuPanel verticalMenuPanel;
+	private MenuBar horizontalMenuPanel;
 	private CodeEditorPanel codeEditorPanel;
+	private InfoConsolePanel infoConsolePanel;
 	
 	public MainWindow() {
-		verticalMenuPanel = new VerticalMenuPanel();
+		horizontalMenuPanel = new MenuBar();
 		codeEditorPanel = new CodeEditorPanel();
+		infoConsolePanel = new InfoConsolePanel();
+		
+		JPanel leftPanel = new JPanel();
+		JPanel rightPanel = new JPanel();
+		
+		rightPanel.setLayout(new BorderLayout());
+		rightPanel.add(codeEditorPanel, BorderLayout.CENTER);
+		rightPanel.add(infoConsolePanel, BorderLayout.SOUTH);
+		
+		setJMenuBar(horizontalMenuPanel);
 		
 		setLayout(new BorderLayout());
-		add(verticalMenuPanel, BorderLayout.NORTH);
-		add(codeEditorPanel, BorderLayout.CENTER);
+		add(rightPanel, BorderLayout.CENTER);
+		add(leftPanel, BorderLayout.SOUTH);
 	}
 	
 	public static void main(String[] args) {
 		try {
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		        if ("Nimbus".equals(info.getName())) {
-		            UIManager.setLookAndFeel(info.getClassName());
-		            break;
-		        }
-		    }
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {

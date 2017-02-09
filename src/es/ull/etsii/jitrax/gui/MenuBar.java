@@ -1,26 +1,26 @@
 package es.ull.etsii.jitrax.gui;
 
-import java.awt.ComponentOrientation;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 
+import javax.swing.Box;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
-public class VerticalMenuPanel extends JPanel {
+public class MenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
 	
-	private JMenuBar menu;
 	private JMenu fileMenu;
 	private JMenu databaseMenu;
 	private JMenu viewMenu;
 	private JMenu languageMenu;
 	private JMenu aboutMenu;
 	
-	public VerticalMenuPanel() {
-		menu = new JMenuBar();
+	public MenuBar() {
+		//menu.add(Box.createHorizontalGlue());
 		
 		buildFileMenu();
 		buildDatabaseMenu();
@@ -28,14 +28,13 @@ public class VerticalMenuPanel extends JPanel {
 		buildLanguageMenu();
 		buildAboutMenu();
 		
-		menu.add(fileMenu);
-		menu.add(databaseMenu);
-		menu.add(viewMenu);
-		menu.add(languageMenu);
-		menu.add(aboutMenu);
+		add(fileMenu);
+		add(databaseMenu);
+		add(viewMenu);
+		add(languageMenu);
+		add(aboutMenu);
 		
 		setLayout(new FlowLayout(FlowLayout.LEFT));
-		add(menu);
 	}
 	
 	private void buildFileMenu() {
@@ -51,7 +50,7 @@ public class VerticalMenuPanel extends JPanel {
 	}
 	
 	private void buildViewMenu() {
-		setViewMenu(new JMenu("Database"));
+		setViewMenu(new JMenu("View"));
 	}
 	
 	private void buildLanguageMenu() {
@@ -100,13 +99,5 @@ public class VerticalMenuPanel extends JPanel {
 
 	public void setAboutMenu(JMenu aboutMenu) {
 		this.aboutMenu = aboutMenu;
-	}
-
-	public JMenuBar getMenu() {
-		return menu;
-	}
-
-	public void setMenu(JMenuBar menu) {
-		this.menu = menu;
 	}
 }

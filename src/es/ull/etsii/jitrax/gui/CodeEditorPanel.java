@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.LineBorder;
@@ -17,35 +18,52 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 public class CodeEditorPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
+	private static final String PANEL_TITLE = "Editor";
 	private static final String RA_SYNTAX_STYLE_ID = "text/RelationalAlgebra";
 	private static final String TOKEN_MAKER_LOCATION =
 			"es.ull.etsii.jitrax.codeEditor.RelationalAlgebraTokenMaker";
+	
+	private static final Color RA_CARET_COLOR = Color.BLACK;
+	private static final Color SQL_CARET_COLOR = Color.BLACK;
+	private static final Color PANEL_BORDER_COLOR = Color.BLACK;
 	
 	private RSyntaxTextArea relationalAlgebraCodeEditor;
 	private RSyntaxTextArea sqlCodeEditor;
 	
 	private JTabbedPane tabbedPane = new JTabbedPane();
+	private JButton translateButton;
+	private JButton executeButton;
 	
 	public CodeEditorPanel() {
 		relationalAlgebraCodeEditor = new RSyntaxTextArea();
 		sqlCodeEditor = new RSyntaxTextArea();
+		translateButton = new JButton("Translate to SQL");
+		executeButton = new JButton("Execute on Postgre");
 		
-		tabbedPane = new JTabbedPane();
-		
-		setLayout(new BorderLayout());
-		RTextScrollPane relationalAlgebraSP = new RTextScrollPane(relationalAlgebraCodeEditor);
-	    RTextScrollPane sqlSP = new RTextScrollPane(sqlCodeEditor);
-		
-		add(tabbedPane);
-		tabbedPane.add("Relational Algebra", relationalAlgebraSP);
-		tabbedPane.addTab("SQL", sqlSP);
-	    sqlCodeEditor.setEditable(false);
+		relationalAlgebraCodeEditor.setCaretColor(RA_CARET_COLOR);
+		sqlCodeEditor.setCaretColor(SQL_CARET_COLOR);
+		sqlCodeEditor.setEditable(false);
 		
 		setSyntaxHighlightingForRelationalAlgebra();
 		setSyntaxHighlightingForSQL();
 		
-		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(Color.BLACK);
-		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, "Editor"));
+		RTextScrollPane relationalAlgebraSP = new RTextScrollPane(relationalAlgebraCodeEditor);
+	    RTextScrollPane sqlSP = new RTextScrollPane(sqlCodeEditor);
+		
+		setLayout(new BorderLayout());
+		tabbedPane = new JTabbedPane();
+		tabbedPane.add("Relational Algebra", relationalAlgebraSP);
+		tabbedPane.addTab("SQL", sqlSP);
+		add(tabbedPane, BorderLayout.CENTER);
+		
+		JPanel controlPanel = new JPanel();
+		controlPanel.add(translateButton);
+		controlPanel.add(executeButton);
+		
+		add(controlPanel, BorderLayout.SOUTH);
+		
+		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
+		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
 	}
 	
 	/**
@@ -72,7 +90,7 @@ public class CodeEditorPanel extends JPanel {
 	}
 
 	public void setRelationalAlgebraCodeEditor(RSyntaxTextArea relationalAlgebraCodeEditor) {
-		relationalAlgebraCodeEditor = relationalAlgebraCodeEditor;
+		this.relationalAlgebraCodeEditor = relationalAlgebraCodeEditor;
 	}
 
 	public RSyntaxTextArea getSQLCodeEditor() {
