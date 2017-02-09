@@ -2,6 +2,7 @@ package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -27,6 +28,9 @@ public class CodeEditorPanel extends JPanel {
 	private static final Color SQL_CARET_COLOR = Color.BLACK;
 	private static final Color PANEL_BORDER_COLOR = Color.BLACK;
 	
+	private static final int DEFAULT_FONT_SIZE = 16;
+	private static final int DEFAULT_FONT_STYLE = Font.PLAIN;
+	
 	private RSyntaxTextArea relationalAlgebraCodeEditor;
 	private RSyntaxTextArea sqlCodeEditor;
 	
@@ -41,6 +45,11 @@ public class CodeEditorPanel extends JPanel {
 		executeButton = new JButton("Execute on Postgre");
 		
 		relationalAlgebraCodeEditor.setCaretColor(RA_CARET_COLOR);
+		String currentFontName = relationalAlgebraCodeEditor.getFont().getName();
+		relationalAlgebraCodeEditor.setFont(new Font(currentFontName, 
+													DEFAULT_FONT_STYLE, 
+													DEFAULT_FONT_SIZE));
+		
 		sqlCodeEditor.setCaretColor(SQL_CARET_COLOR);
 		sqlCodeEditor.setEditable(false);
 		
@@ -54,6 +63,7 @@ public class CodeEditorPanel extends JPanel {
 		tabbedPane = new JTabbedPane();
 		tabbedPane.add("Relational Algebra", relationalAlgebraSP);
 		tabbedPane.addTab("SQL", sqlSP);
+		tabbedPane.addTab("Parse Tree", null);
 		tabbedPane.setFocusable(false);
 		add(tabbedPane, BorderLayout.CENTER);
 		

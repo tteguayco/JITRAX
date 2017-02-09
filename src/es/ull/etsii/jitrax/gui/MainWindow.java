@@ -32,7 +32,7 @@ public class MainWindow extends JFrame {
 		
 		leftPanel.add(databaseViewerPanel);
 		
-		rightPanel.setLayout(new BorderLayout(5, 5));
+		rightPanel.setLayout(new BorderLayout(20, 5));
 		
 		rightPanel.add(codeEditorPanel, BorderLayout.CENTER);
 		rightPanel.add(infoConsolePanel, BorderLayout.SOUTH);
