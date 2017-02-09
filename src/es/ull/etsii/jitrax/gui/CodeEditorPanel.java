@@ -54,6 +54,7 @@ public class CodeEditorPanel extends JPanel {
 		tabbedPane = new JTabbedPane();
 		tabbedPane.add("Relational Algebra", relationalAlgebraSP);
 		tabbedPane.addTab("SQL", sqlSP);
+		tabbedPane.setFocusable(false);
 		add(tabbedPane, BorderLayout.CENTER);
 		
 		JPanel controlPanel = new JPanel();
