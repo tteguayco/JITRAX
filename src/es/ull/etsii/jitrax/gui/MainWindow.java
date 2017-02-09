@@ -19,16 +19,21 @@ public class MainWindow extends JFrame {
 	private MenuBar horizontalMenuPanel;
 	private CodeEditorPanel codeEditorPanel;
 	private InfoConsolePanel infoConsolePanel;
+	private DatabaseViewerPanel databaseViewerPanel;
 	
 	public MainWindow() {
 		horizontalMenuPanel = new MenuBar();
 		codeEditorPanel = new CodeEditorPanel();
 		infoConsolePanel = new InfoConsolePanel();
+		databaseViewerPanel = new DatabaseViewerPanel();
 		
 		JPanel leftPanel = new JPanel();
 		JPanel rightPanel = new JPanel();
 		
-		rightPanel.setLayout(new BorderLayout());
+		leftPanel.add(databaseViewerPanel);
+		
+		rightPanel.setLayout(new BorderLayout(5, 5));
+		
 		rightPanel.add(codeEditorPanel, BorderLayout.CENTER);
 		rightPanel.add(infoConsolePanel, BorderLayout.SOUTH);
 		
@@ -36,7 +41,7 @@ public class MainWindow extends JFrame {
 		
 		setLayout(new BorderLayout());
 		add(rightPanel, BorderLayout.CENTER);
-		add(leftPanel, BorderLayout.SOUTH);
+		add(leftPanel, BorderLayout.WEST);
 	}
 	
 	public static void main(String[] args) {
