@@ -17,7 +17,7 @@ public class InfoConsolePanel extends JPanel {
 	private static final String DEFAULT_QUERY = "PROJECT [name, age] (Students)";
 	private static final String CONSOLE_STYLE = "Courier New";
 	
-	private static final Color PANEL_BORDER_COLOR = Color.BLACK;
+	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
 	private static final int NROWS = 6;
 	

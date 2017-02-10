@@ -2,6 +2,7 @@ package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,6 +14,8 @@ public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final int FRAME_WIDTH = 1000;
 	private static final int FRAME_HEIGHT = 600;
+	private static final int MINIMUM_WIDTH = 800;
+	private static final int MINIMUM_HEIGHT = 500;
 	
 	private static final String FRAME_TITLE = "JITRAX";
 	
@@ -62,6 +65,7 @@ public class MainWindow extends JFrame {
 		
 		window.setTitle(FRAME_TITLE);
 		window.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		window.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		window.setLocationRelativeTo(null);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);

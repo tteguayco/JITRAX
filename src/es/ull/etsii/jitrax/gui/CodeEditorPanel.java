@@ -26,7 +26,7 @@ public class CodeEditorPanel extends JPanel {
 	
 	private static final Color RA_CARET_COLOR = Color.BLACK;
 	private static final Color SQL_CARET_COLOR = Color.BLACK;
-	private static final Color PANEL_BORDER_COLOR = Color.BLACK;
+	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
 	private static final int DEFAULT_FONT_SIZE = 16;
 	private static final int DEFAULT_FONT_STYLE = Font.PLAIN;
