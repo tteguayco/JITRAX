@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.EmptyBorder;
 
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -16,6 +17,7 @@ public class MainWindow extends JFrame {
 	private static final int FRAME_HEIGHT = 600;
 	private static final int MINIMUM_WIDTH = 800;
 	private static final int MINIMUM_HEIGHT = 500;
+	private static final int BORDER_GAP = 10;
 	
 	private static final String FRAME_TITLE = "JITRAX";
 	
@@ -30,21 +32,24 @@ public class MainWindow extends JFrame {
 		infoConsolePanel = new InfoConsolePanel();
 		databaseViewerPanel = new DatabaseViewerPanel();
 		
+		JPanel mainContainer = new JPanel();
 		JPanel leftPanel = new JPanel();
 		JPanel rightPanel = new JPanel();
 		
+		mainContainer.setLayout(new BorderLayout());
 		leftPanel.add(databaseViewerPanel);
-		
 		rightPanel.setLayout(new BorderLayout(20, 5));
-		
 		rightPanel.add(codeEditorPanel, BorderLayout.CENTER);
 		rightPanel.add(infoConsolePanel, BorderLayout.SOUTH);
 		
 		setJMenuBar(horizontalMenuPanel);
 		
+		mainContainer.setBorder(new EmptyBorder(BORDER_GAP, BORDER_GAP, BORDER_GAP, BORDER_GAP));
+		
 		setLayout(new BorderLayout());
-		add(rightPanel, BorderLayout.CENTER);
-		add(leftPanel, BorderLayout.WEST);
+		mainContainer.add(rightPanel, BorderLayout.CENTER);
+		mainContainer.add(leftPanel, BorderLayout.WEST);
+		add(mainContainer, BorderLayout.CENTER);
 	}
 	
 	public static void main(String[] args) {

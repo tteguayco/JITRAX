@@ -12,6 +12,12 @@ public class Attribute {
 		dataType = aDataType;
 	}
 
+	public Attribute(String aName, DataType aDataType) {
+		name = aName;
+		isPrimaryKey = false;
+		dataType = aDataType;
+	}
+	
 	public String getName() {
 		return name;
 	}
