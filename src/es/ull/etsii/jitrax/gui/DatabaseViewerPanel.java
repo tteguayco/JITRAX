@@ -10,9 +10,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 
-import es.ull.etsii.jitrax.database.DataType;
-import es.ull.etsii.jitrax.database.Database;
-import es.ull.etsii.jitrax.database.Table;
+import es.ull.etsii.jitrax.adt.DataType;
+import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.adt.Table;
 
 public class DatabaseViewerPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -46,7 +46,7 @@ public class DatabaseViewerPanel extends JPanel {
 		
 		selectedDatabasePanel = new SelectedDatabasePanel(databases);
 		tablesPanel = new TablesPanel(tables);
-		selectedTablePanel = new SelectedTablePanel();
+		selectedTablePanel = new SelectedTablePanel(table1);
 		
 		JScrollPane tablesSP = new JScrollPane(tablesPanel);
 		tablesSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);

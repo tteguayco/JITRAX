@@ -1,7 +1,5 @@
 package es.ull.etsii.jitrax.gui;
 
-import es.ull.etsii.jitrax.database.*;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
@@ -15,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+
+import es.ull.etsii.jitrax.adt.*;
 
 public class TablesPanel extends JPanel {
 	private static final long serialVersionUID = 1L;

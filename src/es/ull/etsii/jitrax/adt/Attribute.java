@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.database;
+package es.ull.etsii.jitrax.adt;
 
 public class Attribute {
 

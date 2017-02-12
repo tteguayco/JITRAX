@@ -1,7 +1,5 @@
 package es.ull.etsii.jitrax.gui;
 
-import es.ull.etsii.jitrax.database.*;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -12,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
+import es.ull.etsii.jitrax.adt.*;
 
 public class SelectedDatabasePanel extends JPanel {
 	private static final int TOP_PADDING = 5;

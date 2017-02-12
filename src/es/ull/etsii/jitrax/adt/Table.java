@@ -1,17 +1,21 @@
-package es.ull.etsii.jitrax.database;
+package es.ull.etsii.jitrax.adt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import es.ull.etsii.jitrax.exceptions.DuplicatePrimaryKeyException;
 
 public class Table {
 	private String name;
 	private ArrayList<Attribute> attributes;
 	private HashMap<String, Integer> attributesNames;
+	private ArrayList<Row> rows;
 	
 	public Table(String aName) {
 		name = aName;
 		attributes = new ArrayList<Attribute>();
 		attributesNames = new HashMap<String, Integer>();
+		rows = new ArrayList<Row>();
 	}
 
 	/**
@@ -26,6 +30,39 @@ public class Table {
 			return false;
 		}
 	}
+	
+	/**
+	 * The size of a table will be its number of attributes.
+	 * @return
+	 */
+	public int getNumOfColumns() {
+		return getAttributes().size();
+	}
+	
+	/**
+	 * Adds a new row or tuple to this table.
+	 * @return
+	 */
+	public void addRow(ArrayList<Datum> newRowData) throws DuplicatePrimaryKeyException {
+		/**
+		 * PROVISIONAL
+		 */
+		
+		// Si no existe la clave primera, insertar...
+		Row newRow = new Row(getAttributes(), newRowData);
+		getRows().add(newRow);
+	}
+	
+	/**
+	 * Returns true if the specified set of values already
+	 * exists as a primary key.
+	 * @return
+	 */
+	/*private boolean primaryKeyExists(ArrayList<String> values) {
+		for (int i = 0; i < getRows().size(); i++) {
+			
+		}
+	}*/
 	
 	/**
 	 * Adds a new attribute to the table. Returns false if couldn't do it
@@ -67,5 +104,13 @@ public class Table {
 
 	public void setAttributesNames(HashMap<String, Integer> attributesNames) {
 		this.attributesNames = attributesNames;
+	}
+
+	public ArrayList<Row> getRows() {
+		return rows;
+	}
+
+	public void setRows(ArrayList<Row> rows) {
+		this.rows = rows;
 	}
 }
