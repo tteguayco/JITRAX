@@ -11,9 +11,9 @@ public class Table {
 	private HashMap<String, Integer> attributesNames;
 	private ArrayList<Row> rows;
 	
-	public Table(String aName) {
+	public Table(String aName, ArrayList<Attribute> attrList) {
 		name = aName;
-		attributes = new ArrayList<Attribute>();
+		attributes = attrList;
 		attributesNames = new HashMap<String, Integer>();
 		rows = new ArrayList<Row>();
 	}

@@ -13,7 +13,7 @@ public enum DataType {
 			case INT: return "Integer";
 			case FLOAT: return "Float";
 			case DATE: return "Date";
-			default: return ""; // Should never happen
+			default: return "";
 		}
 	}
 }

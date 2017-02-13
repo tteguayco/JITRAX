@@ -2,6 +2,7 @@ package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -20,6 +21,10 @@ public class SelectedDatabasePanel extends JPanel {
 	private static final int RIGHT_PADDING = 20;
 	private static final int COMBOBOX_WIDTH = 200;
 	private static final int COMBOBOX_HEIGHT = 40;
+	private static final int MINIMUM_WIDTH = 250;
+	private static final int MINIMUM_HEIGHT = 100;
+	private static final int MAXIMUM_WIDTH = 250;
+	private static final int MAXIMUM_HEIGHT = 100;
 	
 	private JComboBox<String> dbComboBox;
 	private JButton addButton;
@@ -31,10 +36,10 @@ public class SelectedDatabasePanel extends JPanel {
 		eraseButton = new JButton("ERASE");
 		
 		updateComboBox(databases);
-		setLayout(new BorderLayout());
+		setLayout(new GridLayout(2, 1, 5, 5));
 		setBorder(new EmptyBorder(TOP_PADDING,
-									LEFT_PADDING,
-									BOTTOM_PADDING,
+								LEFT_PADDING,
+								BOTTOM_PADDING,
 									RIGHT_PADDING));
 		
 		// ComboBox settings
@@ -42,12 +47,18 @@ public class SelectedDatabasePanel extends JPanel {
 		((JLabel)dbComboBox.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 		dbComboBox.setFocusable(false);
 		
+		JPanel comboBoxContainer = new JPanel();
+		comboBoxContainer.add(dbComboBox);
+		
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.add(addButton);
 		buttonsPanel.add(eraseButton);
 		
-		add(dbComboBox, BorderLayout.NORTH);
-		add(buttonsPanel, BorderLayout.SOUTH);
+		add(comboBoxContainer);
+		add(buttonsPanel);
+		
+		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
+		setMaximumSize(new Dimension(MAXIMUM_WIDTH, MAXIMUM_HEIGHT));
 	}
 	
 	/**

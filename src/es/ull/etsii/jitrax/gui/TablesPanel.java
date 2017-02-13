@@ -2,6 +2,7 @@ package es.ull.etsii.jitrax.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -28,6 +29,10 @@ public class TablesPanel extends JPanel {
 	private static final int NEW_TABLE_PANEL_BOTTOM_PADDING = 10;
 	private static final int NEW_TABLE_PANEL_RIGHT_PADDING = 10;
 	private static final int GAP_BETWEEN_ATTRIBUTES = 5;
+	private static final int MINIMUM_WIDTH = 100;
+	private static final int MINIMUM_HEIGHT = 100;
+	private static final int MAXIMUM_WIDTH = 100;
+	private static final int MAXIMUM_HEIGHT = 100;
 	
 	private static final float ATTRIBUTES_ALIGNMENT = Component.CENTER_ALIGNMENT;
 	
@@ -58,6 +63,9 @@ public class TablesPanel extends JPanel {
 		JScrollPane sp = new JScrollPane(this);
 		sp.setVisible(true);
 		printTablesOnPanel();
+		
+		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
+		setMaximumSize(new Dimension(MAXIMUM_WIDTH, MAXIMUM_HEIGHT));
 	}
 	
 	/**

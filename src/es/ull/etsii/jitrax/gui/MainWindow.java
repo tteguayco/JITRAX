@@ -3,7 +3,10 @@ package es.ull.etsii.jitrax.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -38,7 +41,7 @@ public class MainWindow extends JFrame {
 		
 		mainContainer.setLayout(new BorderLayout());
 		leftPanel.add(databaseViewerPanel);
-		rightPanel.setLayout(new BorderLayout(20, 5));
+		rightPanel.setLayout(new BorderLayout());
 		rightPanel.add(codeEditorPanel, BorderLayout.CENTER);
 		rightPanel.add(infoConsolePanel, BorderLayout.SOUTH);
 		
@@ -47,8 +50,10 @@ public class MainWindow extends JFrame {
 		mainContainer.setBorder(new EmptyBorder(BORDER_GAP, BORDER_GAP, BORDER_GAP, BORDER_GAP));
 		
 		setLayout(new BorderLayout());
+		
+		add(databaseViewerPanel, BorderLayout.WEST);
 		mainContainer.add(rightPanel, BorderLayout.CENTER);
-		mainContainer.add(leftPanel, BorderLayout.WEST);
+		//mainContainer.add(leftPanel, BorderLayout.WEST);
 		add(mainContainer, BorderLayout.CENTER);
 	}
 	
@@ -73,6 +78,7 @@ public class MainWindow extends JFrame {
 		window.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		window.setLocationRelativeTo(null);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//window.pack();
 		window.setVisible(true);
 	}
 }

@@ -2,6 +2,8 @@ package es.ull.etsii.jitrax.adt;
 
 import java.util.ArrayList;
 
+import es.ull.etsii.jitrax.exceptions.DuplicateTableException;
+
 public class Database {
 
 	private String name;
@@ -13,6 +15,15 @@ public class Database {
 	public Database(String aName) {
 		name = aName;
 		tables = new ArrayList<Table>();
+	}
+	
+	public Database(String aName, ArrayList<Table> tableList) {
+		name = aName;
+		tables = tableList;
+	}
+	
+	public void addTable(Table newTable) throws DuplicateTableException {
+		getTables().add(newTable);
 	}
 	
 	/**
