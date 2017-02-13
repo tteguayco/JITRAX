@@ -1,15 +1,21 @@
 package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Datum;
@@ -18,9 +24,12 @@ import es.ull.etsii.jitrax.adt.Table;
 
 public class SelectedTablePanel extends JPanel {
 	private static final int MINIMUM_WIDTH = 250;
-	private static final int MINIMUM_HEIGHT = 120;
+	private static final int MINIMUM_HEIGHT = 130;
 	private static final int MAXIMUM_WIDTH = 250;
-	private static final int MAXIMUM_HEIGHT = 120;
+	private static final int MAXIMUM_HEIGHT = 130;
+	private static final int ODD_ROW_R = 220;
+	private static final int ODD_ROW_G = 220;
+	private static final int ODD_ROW_B = 220;
 	
 	private Table table;
 	private JTable graphicTable;
@@ -40,8 +49,17 @@ public class SelectedTablePanel extends JPanel {
 		String[][] rowsData = getTableRowsData();
 		graphicTable = new JTable(rowsData, columnNames);
 		
+		
+		// Table's alignments
+		centerGraphicTableHeaders();
+		centerGraphicTableContent();
+		
+		// Mark odd rows with a different color
+		markOddRows();
+		
 		setLayout(new BorderLayout());
 		graphicTable.setEnabled(false);
+		
 		
 		JPanel buttonsContainer = new JPanel();
 		buttonsContainer.add(detailsButton);
@@ -61,6 +79,28 @@ public class SelectedTablePanel extends JPanel {
 		tableSP.setPreferredSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMaximumSize(new Dimension(MAXIMUM_WIDTH, MAXIMUM_HEIGHT));
+	}
+	
+	private void centerGraphicTableHeaders() {
+		((DefaultTableCellRenderer)getGraphicTable()
+				.getTableHeader()
+				.getDefaultRenderer())
+	    		.setHorizontalAlignment(JLabel.CENTER);
+	}
+	
+	private void centerGraphicTableContent() {
+		DefaultTableCellRenderer render = new DefaultTableCellRenderer();
+		render.setHorizontalAlignment(SwingConstants.CENTER);
+		for (int i = 0; i < getGraphicTable().getColumnCount(); i++) {
+			getGraphicTable().getColumnModel().getColumn(i).setCellRenderer(render);
+		}
+	}
+	
+	private void markOddRows() {
+		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+		if (defaults.get("Table.alternateRowColor") == null) {
+		    defaults.put("Table.alternateRowColor", new Color(ODD_ROW_R, ODD_ROW_G, ODD_ROW_B));
+		}
 	}
 	
 	/**
@@ -103,5 +143,21 @@ public class SelectedTablePanel extends JPanel {
 
 	public void setTable(Table table) {
 		this.table = table;
+	}
+
+	public JTable getGraphicTable() {
+		return graphicTable;
+	}
+
+	public void setGraphicTable(JTable graphicTable) {
+		this.graphicTable = graphicTable;
+	}
+
+	public JButton getDetailsButton() {
+		return detailsButton;
+	}
+
+	public void setDetailsButton(JButton detailsButton) {
+		this.detailsButton = detailsButton;
 	}
 }

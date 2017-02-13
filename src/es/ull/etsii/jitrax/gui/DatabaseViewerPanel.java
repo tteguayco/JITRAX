@@ -76,16 +76,38 @@ public class DatabaseViewerPanel extends JPanel {
 		
 		
 		ArrayList<Datum> firstRowData = new ArrayList<Datum>();
+		ArrayList<Datum> firstRowData1 = new ArrayList<Datum>();
+		ArrayList<Datum> firstRowData2 = new ArrayList<Datum>();
+		ArrayList<Datum> firstRowData3 = new ArrayList<Datum>();
+		ArrayList<Datum> firstRowData4 = new ArrayList<Datum>();
+		ArrayList<Datum> firstRowData5 = new ArrayList<Datum>();
+		ArrayList<Datum> firstRowData6 = new ArrayList<Datum>();
+		ArrayList<Datum> firstRowData7 = new ArrayList<Datum>();
 		
 		Datum dniDatum = new Datum(dniAttr, "12345678R");
-		
-		attrList.add(dniAttr);
+	
+		//attrList.add(dniAttr);
 		firstRowData.add(dniDatum);
+		firstRowData1.add(dniDatum);
+		firstRowData2.add(dniDatum);
+		firstRowData3.add(dniDatum);
+		firstRowData4.add(dniDatum);
+		firstRowData5.add(dniDatum);
+		firstRowData6.add(dniDatum);
+		firstRowData7.add(dniDatum);
 		
-		Row row1 = new Row(attrList, firstRowData);
+		
+		
 		Table table = new Table("Students", attrList);
 		try {
 			table.addRow(firstRowData);
+			table.addRow(firstRowData1);
+			table.addRow(firstRowData2);
+			table.addRow(firstRowData3);
+			table.addRow(firstRowData4);
+			table.addRow(firstRowData5);
+			table.addRow(firstRowData6);
+			table.addRow(firstRowData7);
 		} catch (DuplicatePrimaryKeyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

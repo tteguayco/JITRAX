@@ -25,6 +25,10 @@ public class SelectedDatabasePanel extends JPanel {
 	private static final int MINIMUM_HEIGHT = 100;
 	private static final int MAXIMUM_WIDTH = 250;
 	private static final int MAXIMUM_HEIGHT = 100;
+	private static final int VGAP = 5;
+	private static final int HGAP = 5;
+	private static final int NROWS = 2;
+	private static final int NCOLS = 1;
 	
 	private JComboBox<String> dbComboBox;
 	private JButton addButton;
@@ -36,11 +40,11 @@ public class SelectedDatabasePanel extends JPanel {
 		eraseButton = new JButton("ERASE");
 		
 		updateComboBox(databases);
-		setLayout(new GridLayout(2, 1, 5, 5));
+		setLayout(new GridLayout(NROWS, NCOLS, VGAP, HGAP));
 		setBorder(new EmptyBorder(TOP_PADDING,
 								LEFT_PADDING,
 								BOTTOM_PADDING,
-									RIGHT_PADDING));
+								RIGHT_PADDING));
 		
 		// ComboBox settings
 		dbComboBox.setPreferredSize(new Dimension(COMBOBOX_WIDTH, COMBOBOX_HEIGHT));
