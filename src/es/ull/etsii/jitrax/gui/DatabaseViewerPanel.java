@@ -56,6 +56,17 @@ public class DatabaseViewerPanel extends JPanel {
 		tables.add(table2);
 		tables.add(table3);
 		
+		ArrayList<Datum> table1Data = new ArrayList<Datum>();
+		table1Data.add(new Datum(dniAttr, "21323L"));
+		table1Data.add(new Datum(nameAttr, "sad"));
+		
+		try {
+			table1.addRow(table1Data);
+		} catch (DuplicatePrimaryKeyException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		Database myDB = new Database("MyDB");
 		databases.add(myDB);
 		
@@ -74,11 +85,6 @@ public class DatabaseViewerPanel extends JPanel {
 		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
-		
-		
-		
-		
-		
 		
 		ArrayList<Datum> firstRowData = new ArrayList<Datum>();
 		ArrayList<Datum> firstRowData1 = new ArrayList<Datum>();
@@ -102,7 +108,6 @@ public class DatabaseViewerPanel extends JPanel {
 		firstRowData7.add(dniDatum);
 		firstRowData.add(new Datum(nameAttr, "Juan"));
 		
-		
 		Table table = new Table("Students", attrList);
 		try {
 			table.addRow(firstRowData);
@@ -114,7 +119,6 @@ public class DatabaseViewerPanel extends JPanel {
 			table.addRow(firstRowData6);
 			table.addRow(firstRowData7);
 		} catch (DuplicatePrimaryKeyException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -19,7 +19,12 @@ import es.ull.etsii.jitrax.gui.TablesPanel;
 public class SelectedDBController {
 	private static final Color selectedTableColor = Color.ORANGE;
 	
-	public SelectedDBController(TablesPanel tablesPanel, SelectedTablePanelViewer selectedTablePanel) {
+	private TablesPanel tablesPanel;
+	private SelectedTablePanelViewer selectedTablePanelViewer;
+	
+	public SelectedDBController(TablesPanel aTablesPanel, SelectedTablePanelViewer aSelectedTablePanelViewer) {
+		tablesPanel = aTablesPanel;
+		selectedTablePanelViewer = aSelectedTablePanelViewer;
 		
 		// Setting listeners for all the table panels
 		for (int i = 0; i < tablesPanel.getComponentCount(); i++) {
@@ -29,6 +34,13 @@ public class SelectedDBController {
 				public void mouseClicked(MouseEvent e) {
 					TablePanel targetTablePanel = ((TablePanel) e.getSource());
 					tablesPanel.changeSelectedTablePanel(targetTablePanel);
+					
+					// Get new data
+					String[] newColsNames = targetTablePanel.getTable().getColumnsNames();
+					String[][] newRowsData = targetTablePanel.getTable().getRowsData();
+					
+					selectedTablePanelViewer.getTableModel().setDataVector(newRowsData, newColsNames);
+					selectedTablePanelViewer.getTableModel().fireTableDataChanged();
 				}
 			});
 		}

@@ -17,6 +17,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Datum;
@@ -35,21 +36,23 @@ public class SelectedTablePanelViewer extends JPanel {
 	private Table table;
 	private JTable graphicTable;
 	private JButton detailsButton;
+	private DefaultTableModel tableModel;
 	
 	public SelectedTablePanelViewer(Table aTable) {
 		table = aTable;
 		detailsButton = new JButton("DETAILS");
-		createGraphicTable();
+		graphicTable = new JTable();
+		initializeTableModel();
+		graphicTable.setModel(tableModel);
 	}
 	
 	/**
 	 * Creates a customized JTable with the table's information.
 	 */
-	private void createGraphicTable() {
+	private void initializeTableModel() {
 		String[] columnNames = getColumnNames();
 		String[][] rowsData = getTableRowsData();
-		graphicTable = new JTable(rowsData, columnNames);
-		
+		tableModel = new DefaultTableModel(rowsData, columnNames);
 		
 		// Table's alignments
 		centerGraphicTableHeaders();
@@ -160,5 +163,13 @@ public class SelectedTablePanelViewer extends JPanel {
 
 	public void setDetailsButton(JButton detailsButton) {
 		this.detailsButton = detailsButton;
+	}
+
+	public DefaultTableModel getTableModel() {
+		return tableModel;
+	}
+
+	public void setTableModel(DefaultTableModel tableModel) {
+		this.tableModel = tableModel;
 	}
 }

@@ -31,6 +31,28 @@ public class Table {
 		}
 	}
 	
+	public String[] getColumnsNames() {
+		String[] columnNames = new String[getAttributes().size()];
+		
+		for (int i = 0; i < getAttributes().size(); i++) {
+			columnNames[i] = getAttributes().get(i).getName();
+		}
+		
+		return columnNames;
+	}
+	
+	public String[][] getRowsData() {
+		String[][] rowsData = new String[getRows().size()][getAttributes().size()];
+		
+		for (int i = 0; i < getRows().size(); i++) {
+			for (int j = 0; j < getRows().get(i).size(); j++) {
+				rowsData[i][j] = getRows().get(i).getData().get(j).getStringValue();
+			}
+		}
+		
+		return rowsData;
+	}
+	
 	/**
 	 * The size of a table will be its number of attributes.
 	 * @return
