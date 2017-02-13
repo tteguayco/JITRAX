@@ -14,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -22,7 +23,7 @@ import es.ull.etsii.jitrax.adt.Datum;
 import es.ull.etsii.jitrax.adt.Row;
 import es.ull.etsii.jitrax.adt.Table;
 
-public class SelectedTablePanel extends JPanel {
+public class SelectedTablePanelViewer extends JPanel {
 	private static final int MINIMUM_WIDTH = 250;
 	private static final int MINIMUM_HEIGHT = 130;
 	private static final int MAXIMUM_WIDTH = 250;
@@ -35,7 +36,7 @@ public class SelectedTablePanel extends JPanel {
 	private JTable graphicTable;
 	private JButton detailsButton;
 	
-	public SelectedTablePanel(Table aTable) {
+	public SelectedTablePanelViewer(Table aTable) {
 		table = aTable;
 		detailsButton = new JButton("DETAILS");
 		createGraphicTable();
@@ -72,7 +73,7 @@ public class SelectedTablePanel extends JPanel {
 		add(buttonsContainer, BorderLayout.SOUTH);
 		
 		setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                "Students",
+                table.getName(),
                 TitledBorder.CENTER,
                 TitledBorder.TOP));
 		

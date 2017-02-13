@@ -19,10 +19,7 @@ public class MenuBar extends JMenuBar {
 	private JMenu languageMenu;
 	private JMenu aboutMenu;
 	
-	public MenuBar() {
-		//menu.add(Box.createHorizontalGlue());
-		
-		buildFileMenu();
+	public MenuBar() {buildFileMenu();
 		buildDatabaseMenu();
 		buildViewMenu();
 		buildLanguageMenu();

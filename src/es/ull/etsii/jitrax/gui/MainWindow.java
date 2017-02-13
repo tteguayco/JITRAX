@@ -13,6 +13,9 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
+import es.ull.etsii.jitrax.controllers.SelectedDBController;
 
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -53,8 +56,11 @@ public class MainWindow extends JFrame {
 		
 		add(databaseViewerPanel, BorderLayout.WEST);
 		mainContainer.add(rightPanel, BorderLayout.CENTER);
-		//mainContainer.add(leftPanel, BorderLayout.WEST);
 		add(mainContainer, BorderLayout.CENTER);
+		
+		SelectedDBController selectedDBController = 
+				new SelectedDBController(databaseViewerPanel.getTablesPanel(), 
+										databaseViewerPanel.getSelectedTablePanel());
 	}
 	
 	public static void main(String[] args) {
@@ -78,7 +84,6 @@ public class MainWindow extends JFrame {
 		window.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		window.setLocationRelativeTo(null);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//window.pack();
 		window.setVisible(true);
 	}
 }

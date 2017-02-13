@@ -3,6 +3,7 @@ package es.ull.etsii.jitrax.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -12,6 +13,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
@@ -20,15 +23,10 @@ import es.ull.etsii.jitrax.adt.*;
 public class TablesPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
+	private static final Color TABLE_PANEL_TITLE_COLOR = new Color(60, 60, 60);
 	private static final Color SELECTED_TABLE_COLOR = Color.ORANGE;
-	private static final Color UNSELECTED_TABLE_COLOR = Color.GRAY;
+	private static final Color UNSELECTED_TABLE_COLOR = new Color(150, 150, 150);
 	
-	private static final int DEFAULT_SELECTED_PANEL_INDEX = 0;
-	private static final int NEW_TABLE_PANEL_TOP_PADDING = 10;
-	private static final int NEW_TABLE_PANEL_LEFT_PADDING = 10;
-	private static final int NEW_TABLE_PANEL_BOTTOM_PADDING = 10;
-	private static final int NEW_TABLE_PANEL_RIGHT_PADDING = 10;
-	private static final int GAP_BETWEEN_ATTRIBUTES = 5;
 	private static final int MINIMUM_WIDTH = 100;
 	private static final int MINIMUM_HEIGHT = 100;
 	private static final int MAXIMUM_WIDTH = 100;
@@ -38,19 +36,19 @@ public class TablesPanel extends JPanel {
 	
 	private ArrayList<Table> tables;		// Tables to be shown
 	private Set<String> tableNames;			// Useful for avoiding tables with the same name
-	private int selectedPanelIndex;
+	private TablePanel selectedTablePanel;
 	
 	public TablesPanel() {
 		tables = new ArrayList<Table>();
-		selectedPanelIndex = DEFAULT_SELECTED_PANEL_INDEX;
+		selectedTablePanel = null;
 		
 		buildTablesPanel();
 	}
 	
 	public TablesPanel(ArrayList<Table> newTables) {
 		tables = new ArrayList<Table>(newTables);
-		selectedPanelIndex = DEFAULT_SELECTED_PANEL_INDEX;
-		
+		selectedTablePanel = null;
+
 		buildTablesPanel();
 	}
 
@@ -76,52 +74,14 @@ public class TablesPanel extends JPanel {
 		removeAll();
 		
 		for (int i = 0; i < getTables().size(); i++) {
-			String newTableName = getTables().get(i).getName();
-			JPanel newTablePanel = new JPanel();
+			// Create the new TablePanel
+			TablePanel newTablePanel = new TablePanel(getTables().get(i));
 			
-			// Customize panel's title
-			newTablePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-	                newTableName,
-	                TitledBorder.CENTER,
-	                TitledBorder.TOP));
-			
-			// Adding the panel's border padding
-			newTablePanel.setLayout(new BoxLayout(newTablePanel, BoxLayout.Y_AXIS));
-			setBorder(BorderFactory.createEmptyBorder(NEW_TABLE_PANEL_TOP_PADDING, 
-													NEW_TABLE_PANEL_LEFT_PADDING, 
-													NEW_TABLE_PANEL_BOTTOM_PADDING, 
-													NEW_TABLE_PANEL_RIGHT_PADDING));
-			
-			// Adding attributes to the panel, along with their data types
-			for (int j = 0; j < getTables().get(i).getAttributes().size(); j++) {
-				Attribute auxAttribute = getTables().get(i).getAttributes().get(j);
-				String attributeName = auxAttribute.getName();
-				String dataType = auxAttribute.getDataType().toString();
-				
-				// Gap between attributes
-				newTablePanel.add(Box.createVerticalStrut(GAP_BETWEEN_ATTRIBUTES));
-				String newAttributeText = "";
-				JLabel newAttributeLabel = null;
-				
-				// Adding label PK to the new attribute in case it is primary key
-				if (auxAttribute.isPrimaryKey()) {
-					 newAttributeText = " (" + dataType + ", PK)";
-					 newAttributeLabel = new JLabel("<html><u>" 
-							 						+ attributeName 
-							 						+ "</u>"
-							 						+ newAttributeText
-							 						+ "</html>");
-				} else {
-					newAttributeText = attributeName + " (" + dataType + ")";
-					newAttributeLabel = new JLabel(newAttributeText);
-				}
-				
-				// Adding the new attribute's info to the current table panel
-				newTablePanel.add(newAttributeLabel);
+			// Set the first panel as selected
+			if (i == 0) {
+				changeSelectedTablePanel(newTablePanel);
 			}
-			
-			// Extra gap
-			newTablePanel.add(Box.createVerticalStrut(GAP_BETWEEN_ATTRIBUTES));
+		
 			add(newTablePanel);
 		}
 	}
@@ -138,16 +98,13 @@ public class TablesPanel extends JPanel {
 		}
 	}
 	
-	public void markTableAsSelected(JPanel tablePanel) {
-		String tableName = tablePanel.getName();
-		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(SELECTED_TABLE_COLOR);
-		tablePanel.setBorder(BorderFactory.createTitledBorder(lineBorderPanel, tableName));
-	}
-	
-	public void dismarkCurrentSelectedTable(JPanel tablePanel) {
-		String tableName = tablePanel.getName();
-		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(UNSELECTED_TABLE_COLOR);
-		tablePanel.setBorder(BorderFactory.createTitledBorder(lineBorderPanel, tableName));
+	public void changeSelectedTablePanel(TablePanel newSelectedPanel) {
+		if (getSelectedTablePanel() != null) {
+			getSelectedTablePanel().unselect();
+		}
+		
+		newSelectedPanel.select();
+		setSelectedTablePanel(newSelectedPanel);
 	}
 	
 	public ArrayList<Table> getTables() {
@@ -166,11 +123,11 @@ public class TablesPanel extends JPanel {
 		this.tableNames = tableNames;
 	}
 
-	public int getSelectedPanelIndex() {
-		return selectedPanelIndex;
+	public TablePanel getSelectedTablePanel() {
+		return selectedTablePanel;
 	}
 
-	public void setSelectedPanelIndex(int selectedPanelIndex) {
-		this.selectedPanelIndex = selectedPanelIndex;
+	public void setSelectedTablePanel(TablePanel selectedTablePanel) {
+		this.selectedTablePanel = selectedTablePanel;
 	}
 }

@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -26,14 +27,15 @@ import es.ull.etsii.jitrax.exceptions.DuplicatePrimaryKeyException;
 
 public class DatabaseViewerPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
-
+	private static final int EXTRA_GAP_SIZE = 10;
+	
 	private static final String PANEL_TITLE = "DB Viewer";
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
 	private ArrayList<Database> databases;
 	private SelectedDatabasePanel selectedDatabasePanel;
 	private TablesPanel tablesPanel;
-	private SelectedTablePanel selectedTablePanel;
+	private SelectedTablePanelViewer selectedTablePanel;
 	
 	public DatabaseViewerPanel() {
 		databases = new ArrayList<Database>();
@@ -43,7 +45,10 @@ public class DatabaseViewerPanel extends JPanel {
 		
 		ArrayList<Attribute> attrList = new ArrayList<Attribute>();
 		Attribute dniAttr = new Attribute("DNI", true, DataType.STRING);
+		Attribute nameAttr = new Attribute("Name", true, DataType.STRING);
+		
 		attrList.add(dniAttr);
+		attrList.add(nameAttr);
 		Table table1 = new Table("Students", attrList);
 		Table table2 = new Table("Teachers", attrList);
 		Table table3 = new Table("Others", attrList);
@@ -56,7 +61,7 @@ public class DatabaseViewerPanel extends JPanel {
 		
 		selectedDatabasePanel = new SelectedDatabasePanel(databases);
 		tablesPanel = new TablesPanel(tables);
-		selectedTablePanel = new SelectedTablePanel(table1);
+		selectedTablePanel = new SelectedTablePanelViewer(table1);
 		
 		JScrollPane tablesSP = new JScrollPane(tablesPanel);
 		tablesSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -65,7 +70,7 @@ public class DatabaseViewerPanel extends JPanel {
 		add(selectedDatabasePanel);
 		add(tablesSP);
 		
-		//add(selectedTablePanel);
+		add(Box.createVerticalStrut(EXTRA_GAP_SIZE));
 		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
@@ -95,7 +100,7 @@ public class DatabaseViewerPanel extends JPanel {
 		firstRowData5.add(dniDatum);
 		firstRowData6.add(dniDatum);
 		firstRowData7.add(dniDatum);
-		
+		firstRowData.add(new Datum(nameAttr, "Juan"));
 		
 		
 		Table table = new Table("Students", attrList);
@@ -113,7 +118,7 @@ public class DatabaseViewerPanel extends JPanel {
 			e.printStackTrace();
 		}
 		
-		selectedTablePanel = new SelectedTablePanel(table); 
+		selectedTablePanel = new SelectedTablePanelViewer(table); 
 		add(selectedTablePanel);
 	}
 
@@ -123,5 +128,29 @@ public class DatabaseViewerPanel extends JPanel {
 
 	public void setDatabases(ArrayList<Database> databases) {
 		this.databases = databases;
+	}
+
+	public SelectedDatabasePanel getSelectedDatabasePanel() {
+		return selectedDatabasePanel;
+	}
+
+	public void setSelectedDatabasePanel(SelectedDatabasePanel selectedDatabasePanel) {
+		this.selectedDatabasePanel = selectedDatabasePanel;
+	}
+
+	public TablesPanel getTablesPanel() {
+		return tablesPanel;
+	}
+
+	public void setTablesPanel(TablesPanel tablesPanel) {
+		this.tablesPanel = tablesPanel;
+	}
+
+	public SelectedTablePanelViewer getSelectedTablePanel() {
+		return selectedTablePanel;
+	}
+
+	public void setSelectedTablePanel(SelectedTablePanelViewer selectedTablePanel) {
+		this.selectedTablePanel = selectedTablePanel;
 	}
 }
