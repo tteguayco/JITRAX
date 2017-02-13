@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="rsyntaxtextarea-3.0.0-SNAPSHOT-javadoc.jar"/>
 	<classpathentry kind="lib" path="rsyntaxtextarea-3.0.0-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="lib" path="rsyntaxtextarea-3.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="antlr-4.6-complete.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

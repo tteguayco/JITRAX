@@ -115,30 +115,6 @@ public class DatabaseViewerPanel extends JPanel {
 		
 		selectedTablePanel = new SelectedTablePanel(table); 
 		add(selectedTablePanel);
-		
-		/*
-		Object rowData[][] = { { "12345678R", "Antonio"},
-		        { "87654321L", "Juan" } };
-		Object columnNames[] = { "DNI", "Name" };
-		JTable table = new JTable(rowData, columnNames);
-		table.setEnabled(false);
-		JPanel tablePanel = new JPanel();
-		tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
-		JPanel buttonPanel = new JPanel();
-	    buttonPanel.add(new JButton("DETAILS"));
-		JScrollPane scrollPane = new JScrollPane(table);
-	    tablePanel.add(scrollPane);
-		tablePanel.add(buttonPanel);
-		add(tablePanel);
-		scrollPane.setPreferredSize(new Dimension(100, 100));
-		scrollPane.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (),
-                "Students Content",
-                TitledBorder.CENTER,
-                TitledBorder.TOP));*/
-		
-		/*UIDefaults defaults = UIManager.getLookAndFeelDefaults();
-		if (defaults.get("Table.alternateRowColor") == null)
-		    defaults.put("Table.alternateRowColor", new Color(240, 240, 240));*/
 	}
 
 	public ArrayList<Database> getDatabases() {
