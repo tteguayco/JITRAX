@@ -7,9 +7,9 @@ import java.awt.event.MouseAdapter;
 
 import javax.swing.JPanel;
 
-import es.ull.etsii.jitrax.gui.SelectedTablePanelViewer;
-import es.ull.etsii.jitrax.gui.TablePanel;
-import es.ull.etsii.jitrax.gui.TablesPanel;
+import es.ull.etsii.jitrax.gui.main.SelectedTablePanelViewer;
+import es.ull.etsii.jitrax.gui.main.TablePanel;
+import es.ull.etsii.jitrax.gui.main.TablesPanel;
 
 /**
  * Changes the color of the selected table and shows
@@ -39,8 +39,13 @@ public class SelectedDBController {
 					String[] newColsNames = targetTablePanel.getTable().getColumnsNames();
 					String[][] newRowsData = targetTablePanel.getTable().getRowsData();
 					
+					// Update table's model
+					selectedTablePanelViewer.setTable(targetTablePanel.getTable());
 					selectedTablePanelViewer.getTableModel().setDataVector(newRowsData, newColsNames);
 					selectedTablePanelViewer.getTableModel().fireTableDataChanged();
+					
+					// Change title for selectedTablePanelViewer
+					selectedTablePanelViewer.updateTitle();
 				}
 			});
 		}

@@ -66,6 +66,6 @@ public class StarterFrame extends JFrame {
 		starterFrame.setLocationRelativeTo(null);
 		starterFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		starterFrame.setVisible(true);
-		starterFrame.setResizable(true);
+		starterFrame.setResizable(false);
 	}
 }

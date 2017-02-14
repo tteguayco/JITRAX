@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.gui;
+package es.ull.etsii.jitrax.gui.main;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -27,7 +27,7 @@ import es.ull.etsii.jitrax.exceptions.DuplicatePrimaryKeyException;
 
 public class DatabaseViewerPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private static final int EXTRA_GAP_SIZE = 10;
+	private static final int EXTRA_GAP_SIZE = 15;
 	
 	private static final String PANEL_TITLE = "DB Viewer";
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
@@ -63,7 +63,6 @@ public class DatabaseViewerPanel extends JPanel {
 		try {
 			table1.addRow(table1Data);
 		} catch (DuplicatePrimaryKeyException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		

@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.gui;
+package es.ull.etsii.jitrax.gui.main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -75,10 +75,7 @@ public class SelectedTablePanelViewer extends JPanel {
 		add(tableSP, BorderLayout.CENTER);
 		add(buttonsContainer, BorderLayout.SOUTH);
 		
-		setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                table.getName(),
-                TitledBorder.CENTER,
-                TitledBorder.TOP));
+		updateTitle();
 		
 		tableSP.setPreferredSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
@@ -141,6 +138,13 @@ public class SelectedTablePanelViewer extends JPanel {
 		return tableRowsData;
 	}
 
+	public void updateTitle() {
+		setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+                getTable().getName(),
+                TitledBorder.CENTER,
+                TitledBorder.TOP));
+	}
+	
 	public Table getTable() {
 		return table;
 	}

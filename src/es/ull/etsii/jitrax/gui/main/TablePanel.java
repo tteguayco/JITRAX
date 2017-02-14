@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.gui;
+package es.ull.etsii.jitrax.gui.main;
 
 import java.awt.Color;
 
@@ -14,14 +14,15 @@ import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Table;
 
 public class TablePanel extends JPanel {
-	private static final Color TABLE_PANEL_TITLE_COLOR = new Color(60, 60, 60);
-	private static final Color SELECTED_TABLE_COLOR = Color.ORANGE;
-	private static final Color UNSELECTED_TABLE_COLOR = new Color(150, 150, 150);
+	private static final Color SELECTED_TABLE_COLOR = Color.BLACK;
+	private static final Color UNSELECTED_TABLE_COLOR = new Color(70, 70, 70);
 	
 	private static final int NEW_TABLE_PANEL_TOP_PADDING = 10;
 	private static final int NEW_TABLE_PANEL_LEFT_PADDING = 10;
 	private static final int NEW_TABLE_PANEL_BOTTOM_PADDING = 0;
 	private static final int NEW_TABLE_PANEL_RIGHT_PADDING = 10;
+	private static final int SELECTED_PANEL_BORDER_THICKNESS = 2;
+	private static final int UNSELECTED_PANEL_BORDER_THICKNESS = 1;
 	private static final int GAP_BETWEEN_ATTRIBUTES = 5;
 	
 	private Table table;
@@ -78,21 +79,21 @@ public class TablePanel extends JPanel {
 	}
 	
 	public void select() {
-		buildBorderWithColor(SELECTED_TABLE_COLOR);
+		buildBorder(SELECTED_TABLE_COLOR, SELECTED_PANEL_BORDER_THICKNESS);
 	}
 	
 	public void unselect() {
-		buildBorderWithColor(UNSELECTED_TABLE_COLOR);
+		buildBorder(UNSELECTED_TABLE_COLOR, UNSELECTED_PANEL_BORDER_THICKNESS);
 	}
 	
-	private void buildBorderWithColor(Color color) {
+	private void buildBorder(Color color, int borderThickness) {
 		setBorder(BorderFactory.createTitledBorder(
-				new LineBorder(color),
+				new LineBorder(color, borderThickness),
                 getTable().getName(),
                 TitledBorder.CENTER,
                 TitledBorder.TOP,
                 null,
-                TABLE_PANEL_TITLE_COLOR));
+                color));
 	}
 	
 	public Table getTable() {
