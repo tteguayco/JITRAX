@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.controllers;
+package es.ull.etsii.jitrax.gui;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
@@ -7,22 +7,18 @@ import java.awt.event.MouseAdapter;
 
 import javax.swing.JPanel;
 
-import es.ull.etsii.jitrax.gui.main.SelectedTablePanelViewer;
-import es.ull.etsii.jitrax.gui.main.TablePanel;
-import es.ull.etsii.jitrax.gui.main.TablesPanel;
-
 /**
  * Changes the color of the selected table and shows
  * its content in the panel which shows the content of 
  * a table in the main frame.
  */
-public class SelectedDBController {
+public class SelectedDatabaseExchanger {
 	private static final Color selectedTableColor = Color.ORANGE;
 	
 	private TablesPanel tablesPanel;
 	private SelectedTablePanelViewer selectedTablePanelViewer;
 	
-	public SelectedDBController(TablesPanel aTablesPanel, SelectedTablePanelViewer aSelectedTablePanelViewer) {
+	public SelectedDatabaseExchanger(TablesPanel aTablesPanel, SelectedTablePanelViewer aSelectedTablePanelViewer) {
 		tablesPanel = aTablesPanel;
 		selectedTablePanelViewer = aSelectedTablePanelViewer;
 		

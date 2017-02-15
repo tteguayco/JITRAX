@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.gui.databaseSetup;
+package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

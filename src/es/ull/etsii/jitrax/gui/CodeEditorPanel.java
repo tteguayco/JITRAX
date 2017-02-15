@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.gui.main;
+package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -139,6 +139,8 @@ public class CodeEditorPanel extends JPanel {
 		tabbedPane.setFocusable(false);
 		add(tabbedPane, BorderLayout.CENTER);
 		
+		setListeners();
+		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
 	}
@@ -160,6 +162,10 @@ public class CodeEditorPanel extends JPanel {
 	 */
 	private void setSyntaxHighlightingForSQL() {
 		getSQLCodeEditor().setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
+	}
+	
+	private void setListeners() {
+		
 	}
 
 	public RSyntaxTextArea getRelationalAlgebraCodeEditor() {

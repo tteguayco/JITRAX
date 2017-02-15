@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.gui.main;
+package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,8 +14,6 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-
-import es.ull.etsii.jitrax.controllers.SelectedDBController;
 
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -55,8 +53,8 @@ public class MainWindow extends JFrame {
 		mainContainer.add(rightPanel, BorderLayout.CENTER);
 		add(mainContainer, BorderLayout.CENTER);
 		
-		SelectedDBController selectedDBController = 
-				new SelectedDBController(databaseViewerPanel.getTablesPanel(), 
+		SelectedDatabaseExchanger selectedDBController = 
+				new SelectedDatabaseExchanger(databaseViewerPanel.getTablesPanel(), 
 										databaseViewerPanel.getSelectedTablePanel());
 	}
 	
