@@ -39,11 +39,9 @@ public class MainWindow extends JFrame {
 		databaseViewerPanel = new DatabaseViewerPanel();
 		
 		JPanel mainContainer = new JPanel();
-		JPanel leftPanel = new JPanel();
 		JPanel rightPanel = new JPanel();
 		
 		mainContainer.setLayout(new BorderLayout());
-		leftPanel.add(databaseViewerPanel);
 		rightPanel.setLayout(new BorderLayout());
 		rightPanel.add(codeEditorPanel, BorderLayout.CENTER);
 		rightPanel.add(infoConsolePanel, BorderLayout.SOUTH);
@@ -53,8 +51,7 @@ public class MainWindow extends JFrame {
 		mainContainer.setBorder(new EmptyBorder(BORDER_GAP, BORDER_GAP, BORDER_GAP, BORDER_GAP));
 		
 		setLayout(new BorderLayout());
-		
-		add(databaseViewerPanel, BorderLayout.WEST);
+		mainContainer.add(databaseViewerPanel, BorderLayout.WEST);
 		mainContainer.add(rightPanel, BorderLayout.CENTER);
 		add(mainContainer, BorderLayout.CENTER);
 		
