@@ -53,9 +53,10 @@ public class MainWindow extends JFrame {
 		mainContainer.add(rightPanel, BorderLayout.CENTER);
 		add(mainContainer, BorderLayout.CENTER);
 		
-		SelectedDatabaseExchanger selectedDBController = 
-				new SelectedDatabaseExchanger(databaseViewerPanel.getTablesPanel(), 
-										databaseViewerPanel.getSelectedTablePanel());
+		// Object that shows the selected table in the quick view in the GUI
+		SelectedDatabaseExchanger selectedDatabaseExchanger = 
+			new SelectedDatabaseExchanger(databaseViewerPanel.getTablesPanel(), 
+				databaseViewerPanel.getSelectedTablePanel());
 	}
 	
 	public static void main(String[] args) {
