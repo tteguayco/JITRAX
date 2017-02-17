@@ -1,6 +1,7 @@
 package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -8,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -23,7 +25,7 @@ import es.ull.etsii.jitrax.gui.main.MainWindow;
 
 public class StarterFrame extends JFrame {
 	private static final int FRAME_WIDTH = 400;
-	private static final int FRAME_HEIGHT = 130;
+	private static final int FRAME_HEIGHT = 140;
 	
 	private static final String FRAME_TITLE = "Welcome to JITRAX";
 	
@@ -38,30 +40,36 @@ public class StarterFrame extends JFrame {
 		String firstMessage = "To start, we need a database."; 
 		String secondMessage = "Would you like to create or load an existing one?";
 		
-		Border padding = BorderFactory.createEmptyBorder(5, 10, 5, 10);
+		JLabel firstMessageLabel = new JLabel(firstMessage);
+		JLabel secondMessageLabel = new JLabel(secondMessage);
+		firstMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		secondMessageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
 		
 		setLayout(new BorderLayout());
 		JPanel messagePanel = new JPanel();
 		JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
 		messagePanel.setBorder(padding);
-		buttonsPanel.setBorder(padding);
-		messagePanel.add(new JLabel(firstMessage));
-		messagePanel.add(new JLabel(secondMessage));
+		messagePanel.add(firstMessageLabel);
+		messagePanel.add(Box.createVerticalStrut(3));
+		messagePanel.add(secondMessageLabel);
 		buttonsPanel.add(createButton);
 		buttonsPanel.add(loadButton);
 		
-		add(messagePanel, BorderLayout.CENTER);
-		add(buttonsPanel, BorderLayout.SOUTH);
+		JPanel mainContainer = new JPanel(new BorderLayout());
+		mainContainer.setBorder(padding);
+		
+		mainContainer.add(messagePanel, BorderLayout.CENTER);
+		mainContainer.add(buttonsPanel, BorderLayout.SOUTH);
+		add(mainContainer, BorderLayout.CENTER);
 		
 		setListeners();
 	}
 	
-	private void buildWindow() {
-		
-	}
-	
 	private void setListeners() {
-		// LOAD BUTTON
+		// Create a DB from file specification
 		loadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -93,6 +101,14 @@ public class StarterFrame extends JFrame {
 		        }
 			}
 		});
+		
+		// Create a DB from GUI
+		createButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 	}
 	
 	private Database createDatabaseFromFile() {
@@ -119,9 +135,11 @@ public class StarterFrame extends JFrame {
 		
 		starterFrame.setTitle(FRAME_TITLE);
 		starterFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		starterFrame.setMaximumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		starterFrame.setLocationRelativeTo(null);
 		starterFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		starterFrame.setVisible(true);
 		starterFrame.setResizable(false);
+		starterFrame.pack();
 	}
 }
