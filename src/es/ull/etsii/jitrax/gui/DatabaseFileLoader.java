@@ -13,10 +13,10 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import es.ull.etsii.jitrax.OutputStreamExchanger.StreamExchanger;
 import es.ull.etsii.jitrax.adt.Database;
-import es.ull.etsii.jitrax.databaseFileLoading.DatabaseLexer;
-import es.ull.etsii.jitrax.databaseFileLoading.DatabaseParser;
-import es.ull.etsii.jitrax.databaseFileLoading.FileLoaderEvalVisitor;
-import es.ull.etsii.relationalAlgebraAnalysis.EvalVisitor;
+import es.ull.etsii.jitrax.analysisDatabaseDSL.DatabaseLexer;
+import es.ull.etsii.jitrax.analysisDatabaseDSL.DatabaseParser;
+import es.ull.etsii.jitrax.analysisDatabaseDSL.FileLoaderEvalVisitor;
+import es.ull.etsii.jitrax.analysisRelationalAlgebra.EvalVisitor;
 
 public class DatabaseFileLoader {
 

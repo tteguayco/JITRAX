@@ -5,10 +5,10 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.analysisRelationalAlgebra.EvalVisitor;
+import es.ull.etsii.jitrax.analysisRelationalAlgebra.RelationalAlgebraLexer;
+import es.ull.etsii.jitrax.analysisRelationalAlgebra.RelationalAlgebraParser;
 import es.ull.etsii.jitrax.gui.main.InfoConsolePanel;
-import es.ull.etsii.relationalAlgebraAnalysis.EvalVisitor;
-import es.ull.etsii.relationalAlgebraAnalysis.RelationalAlgebraLexer;
-import es.ull.etsii.relationalAlgebraAnalysis.RelationalAlgebraParser;
 
 public class RelationalAlgebraInterpreter {
 	
