@@ -12,24 +12,24 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface DatabaseVisitor<T> extends ParseTreeVisitor<T> {
 	/**
+	 * Visit a parse tree produced by {@link DatabaseParser#start}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStart(DatabaseParser.StartContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DatabaseParser#comment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComment(DatabaseParser.CommentContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code databaseCreation}
-	 * labeled alternative in {@link DatabaseParser#start}.
+	 * labeled alternative in {@link DatabaseParser#database}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitDatabaseCreation(DatabaseParser.DatabaseCreationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DatabaseParser#inline_comment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInline_comment(DatabaseParser.Inline_commentContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DatabaseParser#multiline_comment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMultiline_comment(DatabaseParser.Multiline_commentContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code tableCreation}
 	 * labeled alternative in {@link DatabaseParser#table}.
@@ -79,4 +79,39 @@ public interface DatabaseVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDatumValue(DatabaseParser.DatumValueContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stringValue}
+	 * labeled alternative in {@link DatabaseParser#datatype}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringValue(DatabaseParser.StringValueContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code charValue}
+	 * labeled alternative in {@link DatabaseParser#datatype}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCharValue(DatabaseParser.CharValueContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code IntegerValue}
+	 * labeled alternative in {@link DatabaseParser#datatype}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIntegerValue(DatabaseParser.IntegerValueContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code floatValue}
+	 * labeled alternative in {@link DatabaseParser#datatype}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFloatValue(DatabaseParser.FloatValueContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code dateValue}
+	 * labeled alternative in {@link DatabaseParser#datatype}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDateValue(DatabaseParser.DateValueContext ctx);
 }

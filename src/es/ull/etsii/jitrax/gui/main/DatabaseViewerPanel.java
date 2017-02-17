@@ -3,6 +3,8 @@ package es.ull.etsii.jitrax.gui.main;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -38,41 +40,16 @@ public class DatabaseViewerPanel extends JPanel {
 	private TablesPanel tablesPanel;
 	private SelectedTablePanelViewer selectedTablePanel;
 	
-	public DatabaseViewerPanel() {
-		databases = new ArrayList<Database>();
-		ArrayList<Table> tables = new ArrayList<Table>();
+	public DatabaseViewerPanel(ArrayList<Database> databases) {
+		
+		ArrayList<Table> tables = databases.get(0).getTables();
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		ArrayList<Attribute> attrList = new ArrayList<Attribute>();
-		Attribute dniAttr = new Attribute("DNI", true, DataType.STRING);
-		Attribute nameAttr = new Attribute("Name", true, DataType.STRING);
-		
-		attrList.add(dniAttr);
-		attrList.add(nameAttr);
-		Table table1 = new Table("Students", attrList);
-		Table table2 = new Table("Teachers", attrList);
-		Table table3 = new Table("Others", attrList);
-		tables.add(table1);
-		tables.add(table2);
-		tables.add(table3);
-		
-		ArrayList<Datum> table1Data = new ArrayList<Datum>();
-		table1Data.add(new Datum(dniAttr, "21323L"));
-		table1Data.add(new Datum(nameAttr, "sad"));
-		
-		try {
-			table1.addRow(table1Data);
-		} catch (DuplicatePrimaryKeyException e1) {
-			e1.printStackTrace();
-		}
-		
-		Database myDB = new Database("MyDB");
-		databases.add(myDB);
-		
 		selectedDatabasePanel = new SelectedDatabasePanel(databases);
 		tablesPanel = new TablesPanel(tables);
-		selectedTablePanel = new SelectedTablePanelViewer(table1);
+		
+		selectedTablePanel = new SelectedTablePanelViewer(tables.get(0));
 		
 		JScrollPane tablesSP = new JScrollPane(tablesPanel);
 		tablesSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -80,50 +57,23 @@ public class DatabaseViewerPanel extends JPanel {
 		
 		add(selectedDatabasePanel);
 		add(tablesSP);
-		
 		add(Box.createVerticalStrut(EXTRA_GAP_SIZE));
+		add(selectedTablePanel);
 		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
 		
-		ArrayList<Datum> firstRowData = new ArrayList<Datum>();
-		ArrayList<Datum> firstRowData1 = new ArrayList<Datum>();
-		ArrayList<Datum> firstRowData2 = new ArrayList<Datum>();
-		ArrayList<Datum> firstRowData3 = new ArrayList<Datum>();
-		ArrayList<Datum> firstRowData4 = new ArrayList<Datum>();
-		ArrayList<Datum> firstRowData5 = new ArrayList<Datum>();
-		ArrayList<Datum> firstRowData6 = new ArrayList<Datum>();
-		ArrayList<Datum> firstRowData7 = new ArrayList<Datum>();
-		
-		Datum dniDatum = new Datum(dniAttr, "12345678R");
+		setListeners();
+	}
 	
-		//attrList.add(dniAttr);
-		firstRowData.add(dniDatum);
-		firstRowData1.add(dniDatum);
-		firstRowData2.add(dniDatum);
-		firstRowData3.add(dniDatum);
-		firstRowData4.add(dniDatum);
-		firstRowData5.add(dniDatum);
-		firstRowData6.add(dniDatum);
-		firstRowData7.add(dniDatum);
-		firstRowData.add(new Datum(nameAttr, "Juan"));
-		
-		Table table = new Table("Students", attrList);
-		try {
-			table.addRow(firstRowData);
-			table.addRow(firstRowData1);
-			table.addRow(firstRowData2);
-			table.addRow(firstRowData3);
-			table.addRow(firstRowData4);
-			table.addRow(firstRowData5);
-			table.addRow(firstRowData6);
-			table.addRow(firstRowData7);
-		} catch (DuplicatePrimaryKeyException e) {
-			e.printStackTrace();
-		}
-		
-		selectedTablePanel = new SelectedTablePanelViewer(table); 
-		add(selectedTablePanel);
+	private void setListeners() {
+		selectedDatabasePanel.getDbComboBox().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selectedDatabaseIndex = selectedDatabasePanel.getDbComboBox().getSelectedIndex();
+				tablesPanel.setTables(databases.get(selectedDatabaseIndex).getTables());
+			}
+		});
 	}
 
 	/**

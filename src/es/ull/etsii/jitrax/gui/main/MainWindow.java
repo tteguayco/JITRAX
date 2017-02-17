@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import es.ull.etsii.interpreters.RelationalAlgebraInterpreter;
+import es.ull.etsii.jitrax.adt.Database;
 
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -32,14 +34,14 @@ public class MainWindow extends JFrame {
 	private InfoConsolePanel infoConsolePanel;
 	private DatabaseViewerPanel databaseViewerPanel;
 	
-	SelectedTableExchanger selectedDatabaseExchanger;
+	private SelectedTableExchanger selectedTableExchanger;
 	private RelationalAlgebraInterpreter raInterpreter;
 	
-	public MainWindow() {
+	public MainWindow(ArrayList<Database> newDatabases) {
 		horizontalMenuPanel = new MenuBar();
 		codeEditorPanel = new CodeEditorPanel();
 		infoConsolePanel = new InfoConsolePanel();
-		databaseViewerPanel = new DatabaseViewerPanel();
+		databaseViewerPanel = new DatabaseViewerPanel(newDatabases);
 		
 		JPanel mainContainer = new JPanel();
 		JPanel rightPanel = new JPanel();
@@ -59,11 +61,22 @@ public class MainWindow extends JFrame {
 		add(mainContainer, BorderLayout.CENTER);
 		
 		// Object that shows the selected table in the quick view in the GUI
-		selectedDatabaseExchanger = 
+		selectedTableExchanger = 
 			new SelectedTableExchanger(databaseViewerPanel.getTablesPanel(), 
 				databaseViewerPanel.getSelectedTablePanel());
 		
 		//raInterpreter = new RelationalAlgebraInterpreter(databaseViewerPanel);
+		
+		buildWindow();
+	}
+	
+	private void buildWindow() {
+		setTitle(FRAME_TITLE);
+		setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
 	}
 	
 	public static void main(String[] args) {
@@ -80,13 +93,13 @@ public class MainWindow extends JFrame {
 			e.printStackTrace();
 		}
 		
-		MainWindow window = new MainWindow();
-		
+		//MainWindow window = new MainWindow();
+		/*
 		window.setTitle(FRAME_TITLE);
 		window.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		window.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		window.setLocationRelativeTo(null);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setVisible(true);
+		window.setVisible(true);*/
 	}
 }

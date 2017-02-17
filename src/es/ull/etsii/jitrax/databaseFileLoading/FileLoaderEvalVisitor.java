@@ -2,15 +2,14 @@ package es.ull.etsii.jitrax.databaseFileLoading;
 
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.adt.Datum;
+import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Row;
 import es.ull.etsii.jitrax.adt.Table;
+import es.ull.etsii.jitrax.adt.DataType;
 import es.ull.etsii.jitrax.exceptions.DuplicatePrimaryKeyException;
 import es.ull.etsii.jitrax.exceptions.DuplicateTableException;
 
 import java.util.ArrayList;
-
-import es.ull.etsii.jitrax.adt.Attribute;
-import es.ull.etsii.jitrax.adt.DataType;
 
 public class FileLoaderEvalVisitor extends DatabaseBaseVisitor<Object> {
 
@@ -88,7 +87,45 @@ public class FileLoaderEvalVisitor extends DatabaseBaseVisitor<Object> {
 	
 	public Object visitAttributeValue(DatabaseParser.AttributeValueContext ctx) {
 		String attrName = ctx.IDENTIFIER().getText();
-		Attribute attribute = new Attribute(attrName, DataType.STRING);
+		String dataTypeString = (String) visit(ctx.datatype());
+		DataType dataType = null;
+		boolean primaryKey = false;
+		
+		switch (dataTypeString) {
+			case "string": dataType = DataType.STRING;
+			case "char": dataType = DataType.CHAR;
+			case "int": dataType = DataType.INT;
+			case "float": dataType = DataType.FLOAT;
+			case "date": dataType = DataType.DATE;
+			default: dataType = DataType.STRING;
+		}
+		
+		// PrimaryKey?
+		if (ctx.PK() != null) {
+			primaryKey = true;
+		}
+		
+		Attribute attribute = new Attribute(attrName, primaryKey, dataType);
 		return attribute;
+	}
+	
+	public Object visitStringValue(DatabaseParser.StringValueContext ctx) {
+		return (String) "string";
+	}
+	
+	public Object visitCharValue(DatabaseParser.CharValueContext ctx) {
+		return (String) "char";
+	}
+	
+	public Object visitIntegerValue(DatabaseParser.IntegerValueContext ctx) {
+		return (String) "int";
+	}
+	
+	public Object visitFloatValue(DatabaseParser.FloatValueContext ctx) {
+		return (String) "float";
+	}
+	
+	public Object visitDateValue(DatabaseParser.DateValueContext ctx) {
+		return (String) "date";
 	}
 }
