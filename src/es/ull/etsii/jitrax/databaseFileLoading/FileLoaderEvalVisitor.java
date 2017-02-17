@@ -11,6 +11,11 @@ import es.ull.etsii.jitrax.exceptions.DuplicateTableException;
 
 import java.util.ArrayList;
 
+/**
+ * This class allows to analyze semantically a expression which describes
+ * a database specification (using a DSL). It has to be syntactically correct.
+ * @author teguayco
+ */
 public class FileLoaderEvalVisitor extends DatabaseBaseVisitor<Object> {
 
 	private Database database;
@@ -91,13 +96,18 @@ public class FileLoaderEvalVisitor extends DatabaseBaseVisitor<Object> {
 		DataType dataType = null;
 		boolean primaryKey = false;
 		
-		switch (dataTypeString) {
-			case "string": dataType = DataType.STRING;
-			case "char": dataType = DataType.CHAR;
-			case "int": dataType = DataType.INT;
-			case "float": dataType = DataType.FLOAT;
-			case "date": dataType = DataType.DATE;
-			default: dataType = DataType.STRING;
+		if (dataTypeString.equals("string")) {
+			dataType = DataType.STRING;
+		} else if (dataTypeString.equals("char")) {
+			dataType = DataType.CHAR;
+		} else if (dataTypeString.equals("int")) {
+			dataType = DataType.INT;
+		} else if (dataTypeString.equals("float")) {
+			dataType = DataType.FLOAT;
+		} else if (dataTypeString.equals("date")) {
+			dataType = DataType.DATE;
+		} else { // Should never happen
+			dataType = DataType.STRING;
 		}
 		
 		// PrimaryKey?

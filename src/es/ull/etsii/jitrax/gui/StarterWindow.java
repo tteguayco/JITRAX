@@ -23,7 +23,7 @@ import javax.swing.border.Border;
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.gui.main.MainWindow;
 
-public class StarterFrame extends JFrame {
+public class StarterWindow extends JFrame {
 	private static final int FRAME_WIDTH = 400;
 	private static final int FRAME_HEIGHT = 140;
 	
@@ -34,7 +34,7 @@ public class StarterFrame extends JFrame {
 	
 	private Database database;
 	
-	public StarterFrame() {
+	public StarterWindow() {
 		createButton = new JButton("CREATE");
 		loadButton = new JButton("LOAD");
 		String firstMessage = "To start, we need a database."; 
@@ -74,7 +74,7 @@ public class StarterFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
-			    int option = fileChooser.showOpenDialog(StarterFrame.this);
+			    int option = fileChooser.showOpenDialog(StarterWindow.this);
 			    String fileDir;
 			    String fileName;
 			    
@@ -96,8 +96,8 @@ public class StarterFrame extends JFrame {
 		        	MainWindow window = new MainWindow(newDatabase);
 		        	
 		        	// Close this frame
-		        	StarterFrame.this.setVisible(false);
-		        	StarterFrame.this.dispose();
+		        	StarterWindow.this.setVisible(false);
+		        	StarterWindow.this.dispose();
 		        }
 			}
 		});
@@ -131,15 +131,15 @@ public class StarterFrame extends JFrame {
 			e.printStackTrace();
 		}
 		
-		StarterFrame starterFrame = new StarterFrame();
+		StarterWindow window = new StarterWindow();
 		
-		starterFrame.setTitle(FRAME_TITLE);
-		starterFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-		starterFrame.setMaximumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
-		starterFrame.setLocationRelativeTo(null);
-		starterFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		starterFrame.setVisible(true);
-		starterFrame.setResizable(false);
-		starterFrame.pack();
+		window.setTitle(FRAME_TITLE);
+		window.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		window.setMaximumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+		window.setLocationRelativeTo(null);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setVisible(true);
+		window.setResizable(false);
+		window.pack();
 	}
 }
