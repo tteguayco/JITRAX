@@ -40,6 +40,37 @@ public class Database {
 		return tablesNames;
 	}
 	
+	public String toString() {
+		String toString = "";
+		
+		toString += "DATABASE " + getName() + "\n";
+		toString += "UniqueIDE " + getUniqueID() + "\n\n";
+		
+		for (int i = 0; i < getTables().size(); i++) {
+			toString += getTables().get(i).getName() + " (";
+			
+			// Attributes with domains
+			for (int j = 0; j < getTables().get(i).getAttributes().size(); j++) {
+				toString += getTables().get(i).getAttributes().get(j).getName() + ": " +
+						getTables().get(i).getAttributes().get(j).getDataType() + ", ";
+			}
+			
+			toString += ")\n => \n";
+			
+			// Rows
+			toString += "(";
+			for (int j = 0; j < getTables().get(i).getRows().size(); j++) {
+				for (int k = 0; k < getTables().get(i).getRows().get(j).size(); k++) {
+					toString += getTables().get(i).getRows().get(j).getData().get(k).getStringValue() + ", ";
+				}
+			}
+			
+			toString += ")\n\n";
+		}
+		
+		return toString;
+	}
+	
 	/**
 	 * Returns the number of tables the DB has.
 	 * @return

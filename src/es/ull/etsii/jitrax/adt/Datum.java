@@ -7,12 +7,18 @@ package es.ull.etsii.jitrax.adt;
 public class Datum {
 	private String stringValue;
 	private Attribute attachedAttribute;
+	private DataType dataType;
 	
 	public Datum(Attribute anAttribute, String aValue) {
 		stringValue = aValue;
 		attachedAttribute = anAttribute;
 	}
 
+	public Datum(String aValue, DataType aDataType) {
+		stringValue = aValue;
+		dataType = aDataType;
+	}
+	
 	public String getStringValue() {
 		return stringValue;
 	}

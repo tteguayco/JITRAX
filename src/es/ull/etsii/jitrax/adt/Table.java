@@ -75,6 +75,14 @@ public class Table {
 		getRows().add(newRow);
 	}
 	
+	public void addRow(Row newRow) throws DuplicatePrimaryKeyException {
+		/**
+		 * PROVISIONAL
+		 */
+		
+		getRows().add(newRow);
+	}
+	
 	/**
 	 * Returns true if the specified set of values already
 	 * exists as a primary key.

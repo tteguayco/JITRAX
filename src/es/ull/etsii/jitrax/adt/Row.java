@@ -20,7 +20,7 @@ public class Row {
 	 * @return
 	 */
 	public int size() {
-		return getTableAttributes().size();
+		return getData().size();
 	}
 	
 	public ArrayList<Attribute> getTableAttributes() {
