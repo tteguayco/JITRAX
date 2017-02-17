@@ -5,10 +5,13 @@ import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 
 public class MenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
@@ -18,6 +21,11 @@ public class MenuBar extends JMenuBar {
 	private JMenu viewMenu;
 	private JMenu languageMenu;
 	private JMenu aboutMenu;
+	
+	private JRadioButtonMenuItem defaultViewRadioButton;
+	private JRadioButtonMenuItem nimbusViewRadioButton;
+	
+	private JRadioButtonMenuItem englishRadioButton;
 	
 	public MenuBar() {buildFileMenu();
 		buildDatabaseMenu();
@@ -47,11 +55,26 @@ public class MenuBar extends JMenuBar {
 	}
 	
 	private void buildViewMenu() {
+		setDefaultViewRadioButton(new JRadioButtonMenuItem("SO Default", true));
+		setNimbusViewRadioButton(new JRadioButtonMenuItem("Nimbus", true));
+		
+		ButtonGroup buttonGroup = new ButtonGroup();
+		buttonGroup.add(getDefaultViewRadioButton());
+		buttonGroup.add(getNimbusViewRadioButton());
+		
 		setViewMenu(new JMenu("View"));
+		getViewMenu().add(getDefaultViewRadioButton());
+		getViewMenu().add(getNimbusViewRadioButton());
 	}
 	
 	private void buildLanguageMenu() {
+		setEnglishRadioButton(new JRadioButtonMenuItem("English", true));
+		
+		ButtonGroup buttonGroup = new ButtonGroup();
+		buttonGroup.add(getEnglishRadioButton());
+		
 		setLanguageMenu(new JMenu("Language"));
+		getLanguageMenu().add(getEnglishRadioButton());
 	}
 	
 	private void buildAboutMenu() {
@@ -96,5 +119,29 @@ public class MenuBar extends JMenuBar {
 
 	public void setAboutMenu(JMenu aboutMenu) {
 		this.aboutMenu = aboutMenu;
+	}
+
+	public JRadioButtonMenuItem getDefaultViewRadioButton() {
+		return defaultViewRadioButton;
+	}
+
+	public void setDefaultViewRadioButton(JRadioButtonMenuItem defaultViewRadioButton) {
+		this.defaultViewRadioButton = defaultViewRadioButton;
+	}
+
+	public JRadioButtonMenuItem getNimbusViewRadioButton() {
+		return nimbusViewRadioButton;
+	}
+
+	public void setNimbusViewRadioButton(JRadioButtonMenuItem nimbusViewRadioButton) {
+		this.nimbusViewRadioButton = nimbusViewRadioButton;
+	}
+
+	public JRadioButtonMenuItem getEnglishRadioButton() {
+		return englishRadioButton;
+	}
+
+	public void setEnglishRadioButton(JRadioButtonMenuItem englishRadioButton) {
+		this.englishRadioButton = englishRadioButton;
 	}
 }
