@@ -41,12 +41,10 @@ public class DatabaseViewerPanel extends JPanel {
 	private SelectedTablePanelViewer selectedTablePanel;
 	
 	public DatabaseViewerPanel(ArrayList<Database> databases) {
-		
+		// There will be at least one table for each database
 		ArrayList<Table> tables = databases.get(0).getTables();
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
-		System.out.println(tables.get(0));
 		
 		selectedDatabasePanel = new SelectedDatabasePanel(databases);
 		tablesPanel = new TablesPanel(tables);

@@ -63,7 +63,7 @@ public class SelectedTablePanelViewer extends JPanel {
 		
 		setLayout(new BorderLayout());
 		graphicTable.setEnabled(false);
-		
+		graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
 		JPanel buttonsContainer = new JPanel();
 		buttonsContainer.add(detailsButton);
