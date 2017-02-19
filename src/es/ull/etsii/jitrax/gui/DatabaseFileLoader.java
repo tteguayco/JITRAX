@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -45,8 +46,9 @@ public class DatabaseFileLoader {
 	/**
 	 * Returns true if the file was read correctly.
 	 * False otherwise.
+	 * Returns true if there were not errors.
 	 */
-	public void readDatabaseFromFile() {
+	public boolean readDatabaseFromFile() {
 		try {
 			String inputString = readFile();
 			
@@ -66,20 +68,23 @@ public class DatabaseFileLoader {
 		    
 		    // Syntax analysis
 		    ParseTree tree = parser.start();
-		    System.out.println("num of errors: " + errorListener.getSyntaxErrorsList());
 		    
 		    // Semantic analysis
 		    if (errorListener.getSyntaxErrorsList().size() == 0) {	
 		    	DatabaseEvalVisitor eval = new DatabaseEvalVisitor();
 				database = (Database) eval.visit(tree);
+				return true;
 		    } else {
-		    	// TODO Mostrar ventana con errores de sintaxis
-		    	System.out.println("no se procederá con el análisis semántico");
+		    	// Window showing the errors for the user
+		    	ArrayList<String> errors = errorListener.getSyntaxErrorsList();
+		    	ErrorsDialog errorsDialog = new ErrorsDialog(errors);
+		    	return false;
 		    }
 		}
 		
 		catch (Exception e){
 			e.printStackTrace();
+			return false;
 		}		
 	}
 	

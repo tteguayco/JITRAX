@@ -75,14 +75,15 @@ public class SelectedDatabasePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Object[] options = { "Yes", "No" };
-				int choice = JOptionPane.showOptionDialog(SelectedDatabasePanel.this, 
+				int choice = JOptionPane.showOptionDialog(
+						SelectedDatabasePanel.this.getParent().getParent(), 
 						"Would you like to load it from a file?",
 						"Add New Database", 
 						JOptionPane.YES_NO_OPTION, 
 						JOptionPane.QUESTION_MESSAGE, 
 						null, options, null);
 				
-				// TODO
+				// TODO launch gui to create a db if user chooses no
 			}
 		});
 	}

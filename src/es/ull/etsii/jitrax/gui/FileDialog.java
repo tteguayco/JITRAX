@@ -36,11 +36,15 @@ public class FileDialog {
         	
         	// Open the file and create a database from it
         	DatabaseFileLoader databaseFileLoader = new DatabaseFileLoader(fileDir + fileName);
-        	databaseFileLoader.readDatabaseFromFile();
+        	boolean success = databaseFileLoader.readDatabaseFromFile();
         	
-        	// return the created DB
-        	return databaseFileLoader.getDatabase();
-        
+        	// return the created DB if success
+        	if (success) {
+        		return databaseFileLoader.getDatabase();
+        	} else {
+        		return null;
+        	}
+        	
         } else {
         	return null;
         }
