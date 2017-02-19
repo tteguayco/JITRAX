@@ -32,8 +32,6 @@ public class StarterWindow extends JFrame {
 	private JButton createButton;
 	private JButton loadButton;
 	
-	private Database database;
-	
 	public StarterWindow() {
 		createButton = new JButton("CREATE");
 		loadButton = new JButton("LOAD");
@@ -73,37 +71,19 @@ public class StarterWindow extends JFrame {
 		loadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				/**
-				 * NOTE: NEED TO CREATE A CLASS FOR THIS
+				/*
+				 * Show a FileDialog to get the file with a new DB specification.
+				 * Create a new DB from it.
+				 * Launch a MainWindow with the former DB loaded.
 				 */
+				FileDialog fileDialog = new FileDialog(StarterWindow.this);
+				Database newDatabase = fileDialog.importDatabaseDialog();
 				
-				
-				JFileChooser fileChooser = new JFileChooser();
-			    int option = fileChooser.showOpenDialog(StarterWindow.this);
-			    String fileDir;
-			    String fileName;
-			    
-			    // If the user presses OK
-		        if (option == JFileChooser.APPROVE_OPTION) {
-		        	// Take the file's path
-		        	fileDir = fileChooser.getCurrentDirectory().toString() + "/";
-		        	fileName = fileChooser.getSelectedFile().getName();
-		        	
-		        	// Open the file and create a database from it
-		        	DatabaseFileLoader databaseFileLoader = new DatabaseFileLoader(fileDir + fileName);
-		        	databaseFileLoader.readDatabaseFromFile();
-		        	
-		        	// Fetch the created DB
-		        	database = databaseFileLoader.getDatabase();
-		        	
-		        	ArrayList<Database> newDatabase = new ArrayList<Database>();
-		        	newDatabase.add(database);
-		        	MainWindow window = new MainWindow(newDatabase);
-		        	
-		        	// Close this frame
-		        	StarterWindow.this.setVisible(false);
-		        	StarterWindow.this.dispose();
-		        }
+				if (newDatabase != null) {
+					ArrayList<Database> databases = new ArrayList<Database>();
+					databases.add(newDatabase);
+					launchMainWindow(databases);
+				}
 			}
 		});
 		
@@ -116,10 +96,13 @@ public class StarterWindow extends JFrame {
 		});
 	}
 	
-	private Database createDatabaseFromFile() {
-		Database newDatabase = null;
+	private void launchMainWindow(ArrayList<Database> databases) {
+		// Close this frame
+    	StarterWindow.this.setVisible(false);
+    	StarterWindow.this.dispose();
 		
-		return newDatabase;
+		// Load the new database in the main frame
+    	MainWindow window = new MainWindow(databases);
 	}
 	
 	public static void main(String[] args) {

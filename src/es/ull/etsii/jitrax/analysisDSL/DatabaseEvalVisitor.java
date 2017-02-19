@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.analysisDatabaseDSL;
+package es.ull.etsii.jitrax.analysisDSL;
 
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.adt.Datum;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * a database specification (using a DSL). It has to be syntactically correct.
  * @author teguayco
  */
-public class FileLoaderEvalVisitor extends DatabaseBaseVisitor<Object> {
+public class DatabaseEvalVisitor extends DatabaseBaseVisitor<Object> {
 
 	private Database database;
 	private ArrayList<Attribute> auxAttributeList;
@@ -30,7 +30,6 @@ public class FileLoaderEvalVisitor extends DatabaseBaseVisitor<Object> {
 			try {
 				database.addTable((Table) visit(ctx.table(i)));
 			} catch (DuplicateTableException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -50,7 +49,7 @@ public class FileLoaderEvalVisitor extends DatabaseBaseVisitor<Object> {
 			try {
 				newTable.addRow(newRow);
 			} catch (DuplicatePrimaryKeyException e) {
-				System.out.println("Provisional: tabla duplicada");
+				System.out.println("DatabaseEvalVisitor: tabla duplicada");
 				e.printStackTrace();
 			}
 		}
@@ -69,24 +68,21 @@ public class FileLoaderEvalVisitor extends DatabaseBaseVisitor<Object> {
 		ArrayList<Attribute> attrList = new ArrayList<Attribute>();
 		attrList.addAll((ArrayList<Attribute>) visit(ctx.attrlist()));
 		attrList.add(0, firstAttribute);
-		
 		return attrList;
 	}
 	
 	public Object visitSingleDatum(DatabaseParser.SingleDatumContext ctx) {
-		String datumName = ctx.datum().getText();
 		ArrayList<Datum> singleDatum = new ArrayList<Datum>();
-		singleDatum.add(new Datum(datumName, DataType.STRING));
-		
+		String singleDatumValue = ctx.datum().getText();
+		singleDatum.add(new Datum(singleDatumValue));
 		return singleDatum;
 	}
 	
 	public Object visitDataList(DatabaseParser.DataListContext ctx) {
-		Datum firstDatum = (Datum) visit(ctx.datum());
+		Datum firstDatum = new Datum (ctx.datum().getText());
 		ArrayList<Datum> dataList = new ArrayList<Datum>();
 		dataList.addAll((ArrayList<Datum>) visit(ctx.datalist()));
 		dataList.add(0, firstDatum);
-		
 		return dataList;
 	}
 	
@@ -106,7 +102,7 @@ public class FileLoaderEvalVisitor extends DatabaseBaseVisitor<Object> {
 			dataType = DataType.FLOAT;
 		} else if (dataTypeString.equals("date")) {
 			dataType = DataType.DATE;
-		} else { // Should never happen
+		} else {
 			dataType = DataType.STRING;
 		}
 		

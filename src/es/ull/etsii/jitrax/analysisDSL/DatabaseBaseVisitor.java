@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.analysisDatabaseDSL;
+package es.ull.etsii.jitrax.analysisDSL;
 
 // Generated from Database.g4 by ANTLR 4.6
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
@@ -81,7 +81,7 @@ public class DatabaseBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitDatumValue(DatabaseParser.DatumValueContext ctx) { return visitChildren(ctx); }
+	@Override public T visitDatum(DatabaseParser.DatumContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

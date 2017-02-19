@@ -5,10 +5,10 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import es.ull.etsii.jitrax.adt.Database;
-import es.ull.etsii.jitrax.analysisRelationalAlgebra.EvalVisitor;
-import es.ull.etsii.jitrax.analysisRelationalAlgebra.RelationalAlgebraLexer;
-import es.ull.etsii.jitrax.analysisRelationalAlgebra.RelationalAlgebraParser;
-import es.ull.etsii.jitrax.gui.main.InfoConsolePanel;
+import es.ull.etsii.jitrax.analysisRA.EvalVisitor;
+import es.ull.etsii.jitrax.analysisRA.RelationalAlgebraLexer;
+import es.ull.etsii.jitrax.analysisRA.RelationalAlgebraParser;
+import es.ull.etsii.jitrax.gui.main.Console;
 
 public class RelationalAlgebraInterpreter {
 	
@@ -19,9 +19,9 @@ public class RelationalAlgebraInterpreter {
 	private ParseTree tree;
 	private EvalVisitor eval;
 	private Database database;
-	private InfoConsolePanel console;
+	private Console console;
 	
-	public RelationalAlgebraInterpreter(Database aDatabase, InfoConsolePanel aConsole) {
+	public RelationalAlgebraInterpreter(Database aDatabase, Console aConsole) {
 		database = aDatabase;
 		console = aConsole;
 	}

@@ -18,6 +18,20 @@ public class Attribute {
 		dataType = aDataType;
 	}
 	
+	public String toString() {
+		String toString = "";
+		
+		toString += "(" + getName() + ": " + getDataType();
+		
+		if (isPrimaryKey()) {
+			toString += ", PK)";
+		} else {
+			toString += ")";
+		}
+		
+		return toString;
+	}
+	
 	public String getName() {
 		return name;
 	}

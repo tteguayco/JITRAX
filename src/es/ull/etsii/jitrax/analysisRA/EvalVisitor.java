@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.analysisRelationalAlgebra;
+package es.ull.etsii.jitrax.analysisRA;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -2,21 +2,19 @@ package es.ull.etsii.jitrax.adt;
 
 /**
  * Represents a specific data of a table's row.
- * @param <T>
  */
 public class Datum {
 	private String stringValue;
-	private Attribute attachedAttribute;
-	private DataType dataType;
 	
-	public Datum(Attribute anAttribute, String aValue) {
+	public Datum(String aValue) {
 		stringValue = aValue;
-		attachedAttribute = anAttribute;
 	}
-
-	public Datum(String aValue, DataType aDataType) {
-		stringValue = aValue;
-		dataType = aDataType;
+	
+	public String toString() {
+		String toString = "";
+		toString += getStringValue();
+		
+		return toString;
 	}
 	
 	public String getStringValue() {
@@ -25,13 +23,5 @@ public class Datum {
 
 	public void setStringValue(String stringValue) {
 		this.stringValue = stringValue;
-	}
-
-	public Attribute getAttachedAttribute() {
-		return attachedAttribute;
-	}
-
-	public void setAttachedAttribute(Attribute attachedAttribute) {
-		this.attachedAttribute = attachedAttribute;
 	}
 }

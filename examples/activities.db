@@ -12,9 +12,9 @@ TABLE Course(Department: String, PK;
 (CSCI, 2910, 001, Spring, 2006, 4);
 (CSCI, 2910, 201, Spring, 2006, 3);
 
-TABLE Instructor(ID: Integer, PK; Name: String; Phone: String)
+TABLE Instructor(ID: Integer, PK; Name: String; Email: String; Phone: String)
 =>
-(1, Bailes,  4234396958);
-(2, Bailey,  4234396959);
-(3, Laws,    4234396952);
-(4, Tarnoff, 4234396404);
+(1, Bailes,  bailes@etsu.edu,  4234396958);
+(2, Bailey,  bailey@etsu.edu,  4234396959);
+(3, Laws,    laws@etsu.edu,    4234396952);
+(4, Tarnoff, tarnoff@etsu.edu, 4234396404);

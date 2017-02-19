@@ -46,9 +46,10 @@ public class DatabaseViewerPanel extends JPanel {
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
+		System.out.println(tables.get(0));
+		
 		selectedDatabasePanel = new SelectedDatabasePanel(databases);
 		tablesPanel = new TablesPanel(tables);
-		
 		selectedTablePanel = new SelectedTablePanelViewer(tables.get(0));
 		
 		JScrollPane tablesSP = new JScrollPane(tablesPanel);

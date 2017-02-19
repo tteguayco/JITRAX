@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.analysisDatabaseDSL;
+package es.ull.etsii.jitrax.analysisDSL;
 
 // Generated from Database.g4 by ANTLR 4.6
 import org.antlr.v4.runtime.atn.*;
@@ -19,8 +19,8 @@ public class DatabaseParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, DATABASE=8, TABLE=9, 
-		STRING=10, CHAR=11, INT=12, FLOAT=13, DATE=14, PK=15, IDENTIFIER=16, NUMBER=17, 
-		WHITESPACES=18;
+		STRING=10, CHAR=11, INT=12, FLOAT=13, DATE=14, PK=15, IDENTIFIER=16, DATUM=17, 
+		NUMBER=18, WHITESPACES=19;
 	public static final int
 		RULE_start = 0, RULE_comment = 1, RULE_database = 2, RULE_table = 3, RULE_attrlist = 4, 
 		RULE_datalist = 5, RULE_attribute = 6, RULE_datum = 7, RULE_datatype = 8;
@@ -34,7 +34,8 @@ public class DatabaseParser extends Parser {
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, "DATABASE", "TABLE", "STRING", 
-		"CHAR", "INT", "FLOAT", "DATE", "PK", "IDENTIFIER", "NUMBER", "WHITESPACES"
+		"CHAR", "INT", "FLOAT", "DATE", "PK", "IDENTIFIER", "DATUM", "NUMBER", 
+		"WHITESPACES"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -612,21 +613,15 @@ public class DatabaseParser extends Parser {
 	}
 
 	public static class DatumContext extends ParserRuleContext {
+		public TerminalNode IDENTIFIER() { return getToken(DatabaseParser.IDENTIFIER, 0); }
+		public TerminalNode DATUM() { return getToken(DatabaseParser.DATUM, 0); }
 		public DatumContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_datum; }
-	 
-		public DatumContext() { }
-		public void copyFrom(DatumContext ctx) {
-			super.copyFrom(ctx);
-		}
-	}
-	public static class DatumValueContext extends DatumContext {
-		public DatumValueContext(DatumContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DatabaseVisitor ) return ((DatabaseVisitor<? extends T>)visitor).visitDatumValue(this);
+			if ( visitor instanceof DatabaseVisitor ) return ((DatabaseVisitor<? extends T>)visitor).visitDatum(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -634,31 +629,20 @@ public class DatabaseParser extends Parser {
 	public final DatumContext datum() throws RecognitionException {
 		DatumContext _localctx = new DatumContext(_ctx, getState());
 		enterRule(_localctx, 14, RULE_datum);
+		int _la;
 		try {
-			int _alt;
-			_localctx = new DatumValueContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(91); 
-			_errHandler.sync(this);
-			_alt = 1+1;
-			do {
-				switch (_alt) {
-				case 1+1:
-					{
-					{
-					setState(90);
-					matchWildcard();
-					}
-					}
-					break;
-				default:
-					throw new NoViableAltException(this);
-				}
-				setState(93); 
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,10,_ctx);
-			} while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
+			setState(90);
+			_la = _input.LA(1);
+			if ( !(_la==IDENTIFIER || _la==DATUM) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -733,14 +717,14 @@ public class DatabaseParser extends Parser {
 		DatatypeContext _localctx = new DatatypeContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_datatype);
 		try {
-			setState(100);
+			setState(97);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case STRING:
 				_localctx = new StringValueContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(95);
+				setState(92);
 				match(STRING);
 				}
 				break;
@@ -748,7 +732,7 @@ public class DatabaseParser extends Parser {
 				_localctx = new CharValueContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(96);
+				setState(93);
 				match(CHAR);
 				}
 				break;
@@ -756,7 +740,7 @@ public class DatabaseParser extends Parser {
 				_localctx = new IntegerValueContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(97);
+				setState(94);
 				match(INT);
 				}
 				break;
@@ -764,7 +748,7 @@ public class DatabaseParser extends Parser {
 				_localctx = new FloatValueContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(98);
+				setState(95);
 				match(FLOAT);
 				}
 				break;
@@ -772,7 +756,7 @@ public class DatabaseParser extends Parser {
 				_localctx = new DateValueContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(99);
+				setState(96);
 				match(DATE);
 				}
 				break;
@@ -792,32 +776,31 @@ public class DatabaseParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\24i\4\2\t\2\4\3\t"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\25f\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\3\2\7\2\26"+
 		"\n\2\f\2\16\2\31\13\2\3\2\3\2\7\2\35\n\2\f\2\16\2 \13\2\3\3\3\3\7\3$\n"+
 		"\3\f\3\16\3\'\13\3\3\4\3\4\3\4\3\4\6\4-\n\4\r\4\16\4.\3\5\7\5\62\n\5\f"+
 		"\5\16\5\65\13\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\6\5B\n\5\r"+
 		"\5\16\5C\5\5F\n\5\3\6\3\6\3\6\3\6\3\6\5\6M\n\6\3\7\3\7\3\7\3\7\3\7\5\7"+
-		"T\n\7\3\b\3\b\3\b\3\b\3\b\5\b[\n\b\3\t\6\t^\n\t\r\t\16\t_\3\n\3\n\3\n"+
-		"\3\n\3\n\5\ng\n\n\3\n\4%_\2\13\2\4\6\b\n\f\16\20\22\2\2n\2\27\3\2\2\2"+
-		"\4!\3\2\2\2\6(\3\2\2\2\b\63\3\2\2\2\nL\3\2\2\2\fS\3\2\2\2\16U\3\2\2\2"+
-		"\20]\3\2\2\2\22f\3\2\2\2\24\26\5\4\3\2\25\24\3\2\2\2\26\31\3\2\2\2\27"+
-		"\25\3\2\2\2\27\30\3\2\2\2\30\32\3\2\2\2\31\27\3\2\2\2\32\36\5\6\4\2\33"+
-		"\35\5\4\3\2\34\33\3\2\2\2\35 \3\2\2\2\36\34\3\2\2\2\36\37\3\2\2\2\37\3"+
-		"\3\2\2\2 \36\3\2\2\2!%\7\3\2\2\"$\13\2\2\2#\"\3\2\2\2$\'\3\2\2\2%&\3\2"+
-		"\2\2%#\3\2\2\2&\5\3\2\2\2\'%\3\2\2\2()\7\n\2\2)*\7\22\2\2*,\7\4\2\2+-"+
-		"\5\b\5\2,+\3\2\2\2-.\3\2\2\2.,\3\2\2\2./\3\2\2\2/\7\3\2\2\2\60\62\5\4"+
-		"\3\2\61\60\3\2\2\2\62\65\3\2\2\2\63\61\3\2\2\2\63\64\3\2\2\2\64\66\3\2"+
-		"\2\2\65\63\3\2\2\2\66\67\7\13\2\2\678\7\22\2\289\7\5\2\29:\5\n\6\2:E\7"+
-		"\6\2\2;A\7\7\2\2<=\7\5\2\2=>\5\f\7\2>?\7\6\2\2?@\7\4\2\2@B\3\2\2\2A<\3"+
-		"\2\2\2BC\3\2\2\2CA\3\2\2\2CD\3\2\2\2DF\3\2\2\2E;\3\2\2\2EF\3\2\2\2F\t"+
-		"\3\2\2\2GM\5\16\b\2HI\5\16\b\2IJ\7\4\2\2JK\5\n\6\2KM\3\2\2\2LG\3\2\2\2"+
-		"LH\3\2\2\2M\13\3\2\2\2NT\5\20\t\2OP\5\20\t\2PQ\7\b\2\2QR\5\f\7\2RT\3\2"+
-		"\2\2SN\3\2\2\2SO\3\2\2\2T\r\3\2\2\2UV\7\22\2\2VW\7\t\2\2WZ\5\22\n\2XY"+
-		"\7\b\2\2Y[\7\21\2\2ZX\3\2\2\2Z[\3\2\2\2[\17\3\2\2\2\\^\13\2\2\2]\\\3\2"+
-		"\2\2^_\3\2\2\2_`\3\2\2\2_]\3\2\2\2`\21\3\2\2\2ag\7\f\2\2bg\7\r\2\2cg\7"+
-		"\16\2\2dg\7\17\2\2eg\7\20\2\2fa\3\2\2\2fb\3\2\2\2fc\3\2\2\2fd\3\2\2\2"+
-		"fe\3\2\2\2g\23\3\2\2\2\16\27\36%.\63CELSZ_f";
+		"T\n\7\3\b\3\b\3\b\3\b\3\b\5\b[\n\b\3\t\3\t\3\n\3\n\3\n\3\n\3\n\5\nd\n"+
+		"\n\3\n\3%\2\13\2\4\6\b\n\f\16\20\22\2\3\3\2\22\23j\2\27\3\2\2\2\4!\3\2"+
+		"\2\2\6(\3\2\2\2\b\63\3\2\2\2\nL\3\2\2\2\fS\3\2\2\2\16U\3\2\2\2\20\\\3"+
+		"\2\2\2\22c\3\2\2\2\24\26\5\4\3\2\25\24\3\2\2\2\26\31\3\2\2\2\27\25\3\2"+
+		"\2\2\27\30\3\2\2\2\30\32\3\2\2\2\31\27\3\2\2\2\32\36\5\6\4\2\33\35\5\4"+
+		"\3\2\34\33\3\2\2\2\35 \3\2\2\2\36\34\3\2\2\2\36\37\3\2\2\2\37\3\3\2\2"+
+		"\2 \36\3\2\2\2!%\7\3\2\2\"$\13\2\2\2#\"\3\2\2\2$\'\3\2\2\2%&\3\2\2\2%"+
+		"#\3\2\2\2&\5\3\2\2\2\'%\3\2\2\2()\7\n\2\2)*\7\22\2\2*,\7\4\2\2+-\5\b\5"+
+		"\2,+\3\2\2\2-.\3\2\2\2.,\3\2\2\2./\3\2\2\2/\7\3\2\2\2\60\62\5\4\3\2\61"+
+		"\60\3\2\2\2\62\65\3\2\2\2\63\61\3\2\2\2\63\64\3\2\2\2\64\66\3\2\2\2\65"+
+		"\63\3\2\2\2\66\67\7\13\2\2\678\7\22\2\289\7\5\2\29:\5\n\6\2:E\7\6\2\2"+
+		";A\7\7\2\2<=\7\5\2\2=>\5\f\7\2>?\7\6\2\2?@\7\4\2\2@B\3\2\2\2A<\3\2\2\2"+
+		"BC\3\2\2\2CA\3\2\2\2CD\3\2\2\2DF\3\2\2\2E;\3\2\2\2EF\3\2\2\2F\t\3\2\2"+
+		"\2GM\5\16\b\2HI\5\16\b\2IJ\7\4\2\2JK\5\n\6\2KM\3\2\2\2LG\3\2\2\2LH\3\2"+
+		"\2\2M\13\3\2\2\2NT\5\20\t\2OP\5\20\t\2PQ\7\b\2\2QR\5\f\7\2RT\3\2\2\2S"+
+		"N\3\2\2\2SO\3\2\2\2T\r\3\2\2\2UV\7\22\2\2VW\7\t\2\2WZ\5\22\n\2XY\7\b\2"+
+		"\2Y[\7\21\2\2ZX\3\2\2\2Z[\3\2\2\2[\17\3\2\2\2\\]\t\2\2\2]\21\3\2\2\2^"+
+		"d\7\f\2\2_d\7\r\2\2`d\7\16\2\2ad\7\17\2\2bd\7\20\2\2c^\3\2\2\2c_\3\2\2"+
+		"\2c`\3\2\2\2ca\3\2\2\2cb\3\2\2\2d\23\3\2\2\2\r\27\36%.\63CELSZc";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

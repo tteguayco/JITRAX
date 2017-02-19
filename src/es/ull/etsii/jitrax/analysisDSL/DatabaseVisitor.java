@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.analysisDatabaseDSL;
+package es.ull.etsii.jitrax.analysisDSL;
 
 // Generated from Database.g4 by ANTLR 4.6
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
@@ -73,12 +73,11 @@ public interface DatabaseVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAttributeValue(DatabaseParser.AttributeValueContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code datumValue}
-	 * labeled alternative in {@link DatabaseParser#datum}.
+	 * Visit a parse tree produced by {@link DatabaseParser#datum}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDatumValue(DatabaseParser.DatumValueContext ctx);
+	T visitDatum(DatabaseParser.DatumContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code stringValue}
 	 * labeled alternative in {@link DatabaseParser#datatype}.

@@ -23,6 +23,16 @@ public class Row {
 		return getData().size();
 	}
 	
+	public String toString() {
+		String toString = "";
+		
+		for (int i = 0; i < getData().size(); i++) {
+			toString += getData().get(i).getStringValue();
+		}
+		
+		return toString;
+	}
+	
 	public ArrayList<Attribute> getTableAttributes() {
 		return tableAttributes;
 	}

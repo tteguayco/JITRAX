@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.analysisRelationalAlgebra;
+package es.ull.etsii.jitrax.analysisRA;
 
 // Generated from RelationalAlgebra.g4 by ANTLR 4.6
 import org.antlr.v4.runtime.atn.*;

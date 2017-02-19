@@ -12,7 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
 
-public class InfoConsolePanel extends JPanel {
+public class Console extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String PANEL_TITLE = "Console";
@@ -29,7 +29,7 @@ public class InfoConsolePanel extends JPanel {
 	private JButton clearButton;
 	private JButton exportButton;
 	
-	public InfoConsolePanel() {
+	public Console() {
 		console = new JTextArea();
 		clearButton = new JButton("Clear");
 		exportButton = new JButton("Export");

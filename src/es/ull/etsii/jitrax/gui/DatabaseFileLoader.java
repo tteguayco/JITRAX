@@ -13,10 +13,10 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import es.ull.etsii.jitrax.OutputStreamExchanger.StreamExchanger;
 import es.ull.etsii.jitrax.adt.Database;
-import es.ull.etsii.jitrax.analysisDatabaseDSL.DatabaseLexer;
-import es.ull.etsii.jitrax.analysisDatabaseDSL.DatabaseParser;
-import es.ull.etsii.jitrax.analysisDatabaseDSL.FileLoaderEvalVisitor;
-import es.ull.etsii.jitrax.analysisRelationalAlgebra.EvalVisitor;
+import es.ull.etsii.jitrax.analysisDSL.DatabaseLexer;
+import es.ull.etsii.jitrax.analysisDSL.DatabaseParser;
+import es.ull.etsii.jitrax.analysisDSL.DatabaseEvalVisitor;
+import es.ull.etsii.jitrax.analysisRA.EvalVisitor;
 
 public class DatabaseFileLoader {
 
@@ -53,7 +53,7 @@ public class DatabaseFileLoader {
 		    // Semantic analysis
 		    if (parser.getNumberOfSyntaxErrors() == 0) {
 		    	ParseTree tree = parser.start();	
-		    	FileLoaderEvalVisitor eval = new FileLoaderEvalVisitor();
+		    	DatabaseEvalVisitor eval = new DatabaseEvalVisitor();
 				database = (Database) eval.visit(tree);
 		    } else {
 		    	syntaxErrors += streamExchanger.getSavedString();

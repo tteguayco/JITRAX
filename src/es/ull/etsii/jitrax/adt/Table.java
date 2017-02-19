@@ -112,6 +112,23 @@ public class Table {
 		}
 	}
 	
+	public String toString() {
+		String toString = "";
+		
+		toString += "TABLE " + getName() + "\n";
+		toString += "ATTRIBUTES\n";
+		for (int i = 0; i < getAttributes().size(); i++) {
+			toString += getAttributes().get(i).toString() + "\n";
+		}
+		
+		toString += "DATA\n";
+		for (int i = 0; i < getRows().size(); i++) {
+			toString += getRows().get(i).toString() + "\n";
+		}
+		
+		return toString;
+	}
+	
 	public String getName() {
 		return name;
 	}

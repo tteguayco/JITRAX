@@ -31,7 +31,7 @@ public class MainWindow extends JFrame {
 	
 	private MenuBar horizontalMenuPanel;
 	private CodeEditorPanel codeEditorPanel;
-	private InfoConsolePanel infoConsolePanel;
+	private Console infoConsolePanel;
 	private DatabaseViewerPanel databaseViewerPanel;
 	
 	private SelectedTableExchanger selectedTableExchanger;
@@ -40,7 +40,7 @@ public class MainWindow extends JFrame {
 	public MainWindow(ArrayList<Database> newDatabases) {
 		horizontalMenuPanel = new MenuBar();
 		codeEditorPanel = new CodeEditorPanel();
-		infoConsolePanel = new InfoConsolePanel();
+		infoConsolePanel = new Console();
 		databaseViewerPanel = new DatabaseViewerPanel(newDatabases);
 		
 		JPanel mainContainer = new JPanel();
