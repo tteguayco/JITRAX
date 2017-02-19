@@ -73,6 +73,11 @@ public class StarterWindow extends JFrame {
 		loadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				/**
+				 * NOTE: NEED TO CREATE A CLASS FOR THIS
+				 */
+				
+				
 				JFileChooser fileChooser = new JFileChooser();
 			    int option = fileChooser.showOpenDialog(StarterWindow.this);
 			    String fileDir;
