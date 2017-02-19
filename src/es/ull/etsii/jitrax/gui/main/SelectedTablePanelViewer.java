@@ -105,6 +105,13 @@ public class SelectedTablePanelViewer extends JPanel {
 	}
 	
 	/**
+	 * Sets a tool tip for each column in the graphic table.
+	 */
+	private void setToolTipsTableHeaders() {
+	
+	}
+	
+	/**
 	 * Gets the names to be printed in the columns of the graphical table.
 	 * @return
 	 */

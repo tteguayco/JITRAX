@@ -3,11 +3,14 @@ package es.ull.etsii.jitrax.gui.main;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -63,6 +66,25 @@ public class SelectedDatabasePanel extends JPanel {
 		
 		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMaximumSize(new Dimension(MAXIMUM_WIDTH, MAXIMUM_HEIGHT));
+		
+		setListeners();
+	}
+	
+	public void setListeners() {
+		addButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Object[] options = { "Yes", "No" };
+				int choice = JOptionPane.showOptionDialog(SelectedDatabasePanel.this, 
+						"Would you like to load it from a file?",
+						"Add New Database", 
+						JOptionPane.YES_NO_OPTION, 
+						JOptionPane.QUESTION_MESSAGE, 
+						null, options, null);
+				
+				// TODO
+			}
+		});
 	}
 	
 	/**
