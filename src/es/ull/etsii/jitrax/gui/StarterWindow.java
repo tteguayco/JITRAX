@@ -107,7 +107,7 @@ public class StarterWindow extends JFrame {
 	
 	public static void main(String[] args) {
 		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
@@ -115,9 +115,9 @@ public class StarterWindow extends JFrame {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (UnsupportedLookAndFeelException e) {
-			System.out.println("Unsupported Lookn' Feel. Setting the default one...");
 			e.printStackTrace();
 		}
+		
 		
 		StarterWindow window = new StarterWindow();
 		

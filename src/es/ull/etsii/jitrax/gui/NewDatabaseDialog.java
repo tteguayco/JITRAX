@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class NewDatabaseWindow extends JFrame {
+public class NewDatabaseDialog extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private static final int FRAME_WIDTH = 260;
@@ -26,7 +26,7 @@ public class NewDatabaseWindow extends JFrame {
 	private JTextField newDatabaseNameField;
 	private JButton nextButton;
 	
-	public NewDatabaseWindow() {
+	public NewDatabaseDialog() {
 		newDatabaseNameField = new JTextField();
 		nextButton = new JButton("NEXT");
 		newDatabaseNameField.setPreferredSize(new Dimension(TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT));
@@ -59,7 +59,7 @@ public class NewDatabaseWindow extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		NewDatabaseWindow createDBWindow = new NewDatabaseWindow();
+		NewDatabaseDialog createDBWindow = new NewDatabaseDialog();
 		createDBWindow.setVisible(true);
 	}
 }
