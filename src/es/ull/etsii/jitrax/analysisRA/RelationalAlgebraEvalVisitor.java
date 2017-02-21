@@ -10,6 +10,17 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		 views = new HashMap<String, String>();
 	}	
 
+	/**
+	 * Appends the prefix 'SELECT * FROM' to the sqlTranslation.
+	 */
+	private void appendSelectStar() {
+		
+	}
+	
+	private void formatTranslationResult() {
+		
+	}
+	
 	@Override 
 	public String visitStart(RelationalAlgebraParser.StartContext ctx) {
 		sqlTranslation = visit(ctx.expr()) + ";";
@@ -19,12 +30,12 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 
 	@Override
 	public String visitProjection(RelationalAlgebraParser.ProjectionContext ctx) {
-		return "SELECT " + visit(ctx.attrlist()) + " FROM " + visit(ctx.expr());
+		return "SELECT " + visit(ctx.attrlist()) + "\nFROM " + visit(ctx.expr());
 	}
 	
 	@Override
 	public String visitSelection(RelationalAlgebraParser.SelectionContext ctx) {
-		return "WHERE " + visit(ctx.condlist());
+		return visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist());
 	}
 	
 	@Override
