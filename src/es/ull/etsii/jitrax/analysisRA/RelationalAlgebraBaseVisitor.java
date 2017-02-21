@@ -25,20 +25,6 @@ public class RelationalAlgebraBaseVisitor<T> extends AbstractParseTreeVisitor<T>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitInline_comment(RelationalAlgebraParser.Inline_commentContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitMultiline_comment(RelationalAlgebraParser.Multiline_commentContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
 	@Override public T visitViewAssignment(RelationalAlgebraParser.ViewAssignmentContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

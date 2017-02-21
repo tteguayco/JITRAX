@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.gui.tables;
+package es.ull.etsii.jitrax.gui.dbcreation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

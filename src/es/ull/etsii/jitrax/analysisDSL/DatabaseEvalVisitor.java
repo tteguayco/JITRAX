@@ -22,7 +22,7 @@ public class DatabaseEvalVisitor extends DatabaseBaseVisitor<Object> {
 	private ArrayList<Attribute> auxAttributeList;
 	
 	public Object visitDatabaseCreation(DatabaseParser.DatabaseCreationContext ctx) {
-		String databaseName = ctx.IDENTIFIER().getText();
+		String databaseName = ctx.DATUM().getText();
 		database = new Database(databaseName);
 		
 		// We have to visit each table
@@ -38,7 +38,7 @@ public class DatabaseEvalVisitor extends DatabaseBaseVisitor<Object> {
 	}
 	
 	public Object visitTableCreation(DatabaseParser.TableCreationContext ctx) {
-		String tableName = ctx.IDENTIFIER().getText();
+		String tableName = ctx.DATUM().getText();
 		ArrayList<Attribute> attrList = (ArrayList<Attribute>) visit(ctx.attrlist());
 		Table newTable = new Table(tableName, attrList);
 		
@@ -87,7 +87,7 @@ public class DatabaseEvalVisitor extends DatabaseBaseVisitor<Object> {
 	}
 	
 	public Object visitAttributeValue(DatabaseParser.AttributeValueContext ctx) {
-		String attrName = ctx.IDENTIFIER().getText();
+		String attrName = ctx.DATUM().getText();
 		String dataTypeString = (String) visit(ctx.datatype());
 		DataType dataType = null;
 		boolean primaryKey = false;

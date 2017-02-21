@@ -1,41 +1,27 @@
 package es.ull.etsii.jitrax.gui;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
-import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import es.ull.etsii.jitrax.OutputStreamExchanger.StreamExchanger;
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.analysisDSL.DatabaseLexer;
 import es.ull.etsii.jitrax.analysisDSL.DatabaseParser;
 import es.ull.etsii.jitrax.analysisDSL.DescriptiveErrorListenerDSL;
 import es.ull.etsii.jitrax.analysisDSL.DatabaseEvalVisitor;
-import es.ull.etsii.jitrax.analysisRA.EvalVisitor;
 
 public class DatabaseFileLoader {
 
 	private Database database;
 	private String filePath;
 	private String syntaxErrors;
-	private StreamExchanger streamExchanger;
 	
 	public DatabaseFileLoader(String aFilePath) {
 		filePath = aFilePath;
-		streamExchanger = new StreamExchanger(System.err);
 	}
 	
 	private String readFile() throws IOException {
@@ -69,7 +55,7 @@ public class DatabaseFileLoader {
 		    // Syntax analysis
 		    ParseTree tree = parser.start();
 		    
-		    // Semantic analysis
+		    // Semantic analysis if syntax analysis was successful
 		    if (errorListener.getSyntaxErrorsList().size() == 0) {	
 		    	DatabaseEvalVisitor eval = new DatabaseEvalVisitor();
 				database = (Database) eval.visit(tree);

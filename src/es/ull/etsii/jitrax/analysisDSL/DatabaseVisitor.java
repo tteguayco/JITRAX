@@ -73,11 +73,12 @@ public interface DatabaseVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAttributeValue(DatabaseParser.AttributeValueContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DatabaseParser#datum}.
+	 * Visit a parse tree produced by the {@code datumValue}
+	 * labeled alternative in {@link DatabaseParser#datum}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDatum(DatabaseParser.DatumContext ctx);
+	T visitDatumValue(DatabaseParser.DatumValueContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code stringValue}
 	 * labeled alternative in {@link DatabaseParser#datatype}.

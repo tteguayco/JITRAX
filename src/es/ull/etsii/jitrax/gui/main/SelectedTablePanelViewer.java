@@ -2,6 +2,7 @@ package es.ull.etsii.jitrax.gui.main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
@@ -18,6 +19,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Datum;
@@ -32,6 +35,8 @@ public class SelectedTablePanelViewer extends JPanel {
 	private static final int ODD_ROW_R = 220;
 	private static final int ODD_ROW_G = 220;
 	private static final int ODD_ROW_B = 220;
+	private static final int TABLE_MIN_WIDTH = 400;
+	private static final int TABLE_MIN_HEIGHT = 500;
 	
 	private Table table;
 	private JTable graphicTable;

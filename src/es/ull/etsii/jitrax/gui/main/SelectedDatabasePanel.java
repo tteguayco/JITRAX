@@ -1,6 +1,5 @@
 package es.ull.etsii.jitrax.gui.main;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -18,6 +17,8 @@ import javax.swing.border.EmptyBorder;
 import es.ull.etsii.jitrax.adt.*;
 
 public class SelectedDatabasePanel extends JPanel {
+	private static final long serialVersionUID = 1L;
+	
 	private static final int TOP_PADDING = 5;
 	private static final int LEFT_PADDING = 20;
 	private static final int BOTTOM_PADDING = 5;

@@ -18,18 +18,6 @@ public interface RelationalAlgebraVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStart(RelationalAlgebraParser.StartContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link RelationalAlgebraParser#inline_comment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInline_comment(RelationalAlgebraParser.Inline_commentContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link RelationalAlgebraParser#multiline_comment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMultiline_comment(RelationalAlgebraParser.Multiline_commentContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code viewAssignment}
 	 * labeled alternative in {@link RelationalAlgebraParser#view}.
 	 * @param ctx the parse tree
