@@ -12,7 +12,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 
 	@Override 
 	public String visitStart(RelationalAlgebraParser.StartContext ctx) {
-		sqlTranslation = visit(ctx.expr());
+		sqlTranslation = visit(ctx.expr()) + ";";
 		System.out.println(sqlTranslation);
 		return sqlTranslation;
 	}
@@ -94,8 +94,34 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		return left + " " + comparator + " " + right;
 	}
 	
-	@Override public String visitComparator(RelationalAlgebraParser.ComparatorContext ctx) {
-		return (String) visit(ctx);
+	@Override 
+	public String visitEqual(RelationalAlgebraParser.EqualContext ctx) {
+		return " = ";
+	}
+	
+	@Override 
+	public String visitNonEqual(RelationalAlgebraParser.NonEqualContext ctx) {
+		return " <> ";
+	}
+	
+	@Override 
+	public String visitGreaterThan(RelationalAlgebraParser.GreaterThanContext ctx) {
+		return " > ";
+	}
+	
+	@Override 
+	public String visitGreaterEqual(RelationalAlgebraParser.GreaterEqualContext ctx) {
+		return " >= ";
+	}
+	
+	@Override 
+	public String visitLessThan(RelationalAlgebraParser.LessThanContext ctx) {
+		return " < ";
+	}
+	
+	@Override 
+	public String visitLessEqual(RelationalAlgebraParser.LessEqualContext ctx) {
+		return " <= ";
 	}
 	
 	@Override

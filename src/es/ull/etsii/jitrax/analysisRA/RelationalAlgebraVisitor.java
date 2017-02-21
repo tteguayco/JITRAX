@@ -165,11 +165,47 @@ public interface RelationalAlgebraVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitOrCondlist(RelationalAlgebraParser.OrCondlistContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link RelationalAlgebraParser#comparator}.
+	 * Visit a parse tree produced by the {@code equal}
+	 * labeled alternative in {@link RelationalAlgebraParser#comparator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitComparator(RelationalAlgebraParser.ComparatorContext ctx);
+	T visitEqual(RelationalAlgebraParser.EqualContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code nonEqual}
+	 * labeled alternative in {@link RelationalAlgebraParser#comparator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNonEqual(RelationalAlgebraParser.NonEqualContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code greaterThan}
+	 * labeled alternative in {@link RelationalAlgebraParser#comparator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGreaterThan(RelationalAlgebraParser.GreaterThanContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code greaterEqual}
+	 * labeled alternative in {@link RelationalAlgebraParser#comparator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGreaterEqual(RelationalAlgebraParser.GreaterEqualContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code lessThan}
+	 * labeled alternative in {@link RelationalAlgebraParser#comparator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLessThan(RelationalAlgebraParser.LessThanContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code lessEqual}
+	 * labeled alternative in {@link RelationalAlgebraParser#comparator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLessEqual(RelationalAlgebraParser.LessEqualContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code attributeFromCompared}
 	 * labeled alternative in {@link RelationalAlgebraParser#compared}.

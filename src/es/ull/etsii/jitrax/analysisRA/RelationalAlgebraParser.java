@@ -942,19 +942,67 @@ public class RelationalAlgebraParser extends Parser {
 	}
 
 	public static class ComparatorContext extends ParserRuleContext {
-		public TerminalNode EQUAL() { return getToken(RelationalAlgebraParser.EQUAL, 0); }
-		public TerminalNode NOT_EQUAL() { return getToken(RelationalAlgebraParser.NOT_EQUAL, 0); }
-		public TerminalNode GREATER_THAN() { return getToken(RelationalAlgebraParser.GREATER_THAN, 0); }
-		public TerminalNode GREATER_EQUAL() { return getToken(RelationalAlgebraParser.GREATER_EQUAL, 0); }
-		public TerminalNode LESS_THAN() { return getToken(RelationalAlgebraParser.LESS_THAN, 0); }
-		public TerminalNode LESS_EQUAL() { return getToken(RelationalAlgebraParser.LESS_EQUAL, 0); }
 		public ComparatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_comparator; }
+	 
+		public ComparatorContext() { }
+		public void copyFrom(ComparatorContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class EqualContext extends ComparatorContext {
+		public TerminalNode EQUAL() { return getToken(RelationalAlgebraParser.EQUAL, 0); }
+		public EqualContext(ComparatorContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof RelationalAlgebraVisitor ) return ((RelationalAlgebraVisitor<? extends T>)visitor).visitComparator(this);
+			if ( visitor instanceof RelationalAlgebraVisitor ) return ((RelationalAlgebraVisitor<? extends T>)visitor).visitEqual(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class LessThanContext extends ComparatorContext {
+		public TerminalNode LESS_THAN() { return getToken(RelationalAlgebraParser.LESS_THAN, 0); }
+		public LessThanContext(ComparatorContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RelationalAlgebraVisitor ) return ((RelationalAlgebraVisitor<? extends T>)visitor).visitLessThan(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class GreaterEqualContext extends ComparatorContext {
+		public TerminalNode GREATER_EQUAL() { return getToken(RelationalAlgebraParser.GREATER_EQUAL, 0); }
+		public GreaterEqualContext(ComparatorContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RelationalAlgebraVisitor ) return ((RelationalAlgebraVisitor<? extends T>)visitor).visitGreaterEqual(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class LessEqualContext extends ComparatorContext {
+		public TerminalNode LESS_EQUAL() { return getToken(RelationalAlgebraParser.LESS_EQUAL, 0); }
+		public LessEqualContext(ComparatorContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RelationalAlgebraVisitor ) return ((RelationalAlgebraVisitor<? extends T>)visitor).visitLessEqual(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class NonEqualContext extends ComparatorContext {
+		public TerminalNode NOT_EQUAL() { return getToken(RelationalAlgebraParser.NOT_EQUAL, 0); }
+		public NonEqualContext(ComparatorContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RelationalAlgebraVisitor ) return ((RelationalAlgebraVisitor<? extends T>)visitor).visitNonEqual(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class GreaterThanContext extends ComparatorContext {
+		public TerminalNode GREATER_THAN() { return getToken(RelationalAlgebraParser.GREATER_THAN, 0); }
+		public GreaterThanContext(ComparatorContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RelationalAlgebraVisitor ) return ((RelationalAlgebraVisitor<? extends T>)visitor).visitGreaterThan(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -962,20 +1010,60 @@ public class RelationalAlgebraParser extends Parser {
 	public final ComparatorContext comparator() throws RecognitionException {
 		ComparatorContext _localctx = new ComparatorContext(_ctx, getState());
 		enterRule(_localctx, 10, RULE_comparator);
-		int _la;
 		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(137);
-			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EQUAL) | (1L << NOT_EQUAL) | (1L << GREATER_THAN) | (1L << GREATER_EQUAL) | (1L << LESS_THAN) | (1L << LESS_EQUAL))) != 0)) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
-			}
+			setState(143);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case EQUAL:
+				_localctx = new EqualContext(_localctx);
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(137);
+				match(EQUAL);
+				}
+				break;
+			case NOT_EQUAL:
+				_localctx = new NonEqualContext(_localctx);
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(138);
+				match(NOT_EQUAL);
+				}
+				break;
+			case GREATER_THAN:
+				_localctx = new GreaterThanContext(_localctx);
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(139);
+				match(GREATER_THAN);
+				}
+				break;
+			case GREATER_EQUAL:
+				_localctx = new GreaterEqualContext(_localctx);
+				enterOuterAlt(_localctx, 4);
+				{
+				setState(140);
+				match(GREATER_EQUAL);
+				}
+				break;
+			case LESS_THAN:
+				_localctx = new LessThanContext(_localctx);
+				enterOuterAlt(_localctx, 5);
+				{
+				setState(141);
+				match(LESS_THAN);
+				}
+				break;
+			case LESS_EQUAL:
+				_localctx = new LessEqualContext(_localctx);
+				enterOuterAlt(_localctx, 6);
+				{
+				setState(142);
+				match(LESS_EQUAL);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1025,14 +1113,14 @@ public class RelationalAlgebraParser extends Parser {
 		ComparedContext _localctx = new ComparedContext(_ctx, getState());
 		enterRule(_localctx, 12, RULE_compared);
 		try {
-			setState(141);
+			setState(147);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case IDENTIFIER:
 				_localctx = new AttributeFromComparedContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(139);
+				setState(145);
 				attribute();
 				}
 				break;
@@ -1040,7 +1128,7 @@ public class RelationalAlgebraParser extends Parser {
 				_localctx = new DataFromComparedContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(140);
+				setState(146);
 				match(NUMBER);
 				}
 				break;
@@ -1087,7 +1175,7 @@ public class RelationalAlgebraParser extends Parser {
 			_localctx = new RelationIdentifierContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(143);
+			setState(149);
 			match(IDENTIFIER);
 			}
 		}
@@ -1130,7 +1218,7 @@ public class RelationalAlgebraParser extends Parser {
 			_localctx = new AttributeIdentifierContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(145);
+			setState(151);
 			match(IDENTIFIER);
 			}
 		}
@@ -1179,14 +1267,14 @@ public class RelationalAlgebraParser extends Parser {
 		DataContext _localctx = new DataContext(_ctx, getState());
 		enterRule(_localctx, 18, RULE_data);
 		try {
-			setState(149);
+			setState(155);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case NUMBER:
 				_localctx = new DataNumberContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(147);
+				setState(153);
 				match(NUMBER);
 				}
 				break;
@@ -1194,7 +1282,7 @@ public class RelationalAlgebraParser extends Parser {
 				_localctx = new DataIdentifierContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(148);
+				setState(154);
 				match(IDENTIFIER);
 				}
 				break;
@@ -1252,7 +1340,7 @@ public class RelationalAlgebraParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3!\u009a\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3!\u00a0\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\3\2\3\2\3\2\7\2\32\n\2\f\2\16\2\35\13\2\3\2\3\2\3\2\3\2\3\3\3\3\3"+
 		"\3\3\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4"+
@@ -1261,38 +1349,42 @@ public class RelationalAlgebraParser extends Parser {
 		"\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\7\4h\n\4\f"+
 		"\4\16\4k\13\4\3\5\3\5\3\5\3\5\3\5\5\5r\n\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6"+
 		"\3\6\3\6\3\6\3\6\5\6\177\n\6\3\6\3\6\3\6\3\6\3\6\3\6\7\6\u0087\n\6\f\6"+
-		"\16\6\u008a\13\6\3\7\3\7\3\b\3\b\5\b\u0090\n\b\3\t\3\t\3\n\3\n\3\13\3"+
-		"\13\5\13\u0098\n\13\3\13\2\4\6\n\f\2\4\6\b\n\f\16\20\22\24\2\3\3\2\26"+
-		"\33\u00a3\2\33\3\2\2\2\4\"\3\2\2\2\6L\3\2\2\2\bq\3\2\2\2\n~\3\2\2\2\f"+
-		"\u008b\3\2\2\2\16\u008f\3\2\2\2\20\u0091\3\2\2\2\22\u0093\3\2\2\2\24\u0097"+
-		"\3\2\2\2\26\27\5\4\3\2\27\30\7\3\2\2\30\32\3\2\2\2\31\26\3\2\2\2\32\35"+
-		"\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2\2\34\36\3\2\2\2\35\33\3\2\2\2\36\37"+
-		"\5\6\4\2\37 \7\3\2\2 !\7\2\2\3!\3\3\2\2\2\"#\7\37\2\2#$\7\4\2\2$%\5\6"+
-		"\4\2%\5\3\2\2\2&\'\b\4\1\2\'M\5\20\t\2()\7\5\2\2)*\5\6\4\2*+\7\6\2\2+"+
-		"M\3\2\2\2,-\7\13\2\2-.\7\7\2\2./\5\b\5\2/\60\7\b\2\2\60\61\7\5\2\2\61"+
-		"\62\5\6\4\2\62\63\7\6\2\2\63M\3\2\2\2\64\65\7\f\2\2\65\66\7\7\2\2\66\67"+
-		"\5\n\6\2\678\7\b\2\289\7\5\2\29:\5\6\4\2:;\7\6\2\2;M\3\2\2\2<=\7\24\2"+
-		"\2=>\5\20\t\2>?\7\25\2\2?@\5\20\t\2@M\3\2\2\2AB\7\24\2\2BC\5\20\t\2CD"+
-		"\7\5\2\2DE\5\b\5\2EF\7\6\2\2FG\7\25\2\2GH\5\20\t\2HI\7\5\2\2IJ\5\b\5\2"+
-		"JK\7\6\2\2KM\3\2\2\2L&\3\2\2\2L(\3\2\2\2L,\3\2\2\2L\64\3\2\2\2L<\3\2\2"+
-		"\2LA\3\2\2\2Mi\3\2\2\2NO\f\13\2\2OP\7\r\2\2Ph\5\6\4\fQR\f\n\2\2RS\7\17"+
-		"\2\2Sh\5\6\4\13TU\f\t\2\2UV\7\16\2\2Vh\5\6\4\nWX\f\b\2\2XY\7\21\2\2Yh"+
-		"\5\6\4\tZ[\f\7\2\2[\\\7\20\2\2\\h\5\6\4\b]^\f\5\2\2^_\7\23\2\2_h\5\6\4"+
-		"\6`a\f\6\2\2ab\7\22\2\2bc\5\6\4\2cd\7\5\2\2de\5\n\6\2ef\7\6\2\2fh\3\2"+
-		"\2\2gN\3\2\2\2gQ\3\2\2\2gT\3\2\2\2gW\3\2\2\2gZ\3\2\2\2g]\3\2\2\2g`\3\2"+
-		"\2\2hk\3\2\2\2ig\3\2\2\2ij\3\2\2\2j\7\3\2\2\2ki\3\2\2\2lr\5\22\n\2mn\5"+
-		"\22\n\2no\7\t\2\2op\5\b\5\2pr\3\2\2\2ql\3\2\2\2qm\3\2\2\2r\t\3\2\2\2s"+
-		"t\b\6\1\2tu\7\n\2\2u\177\5\n\6\5vw\7\5\2\2wx\5\n\6\2xy\7\6\2\2y\177\3"+
-		"\2\2\2z{\5\16\b\2{|\5\f\7\2|}\5\16\b\2}\177\3\2\2\2~s\3\2\2\2~v\3\2\2"+
-		"\2~z\3\2\2\2\177\u0088\3\2\2\2\u0080\u0081\f\7\2\2\u0081\u0082\7\35\2"+
-		"\2\u0082\u0087\5\n\6\b\u0083\u0084\f\6\2\2\u0084\u0085\7\34\2\2\u0085"+
-		"\u0087\5\n\6\7\u0086\u0080\3\2\2\2\u0086\u0083\3\2\2\2\u0087\u008a\3\2"+
-		"\2\2\u0088\u0086\3\2\2\2\u0088\u0089\3\2\2\2\u0089\13\3\2\2\2\u008a\u0088"+
-		"\3\2\2\2\u008b\u008c\t\2\2\2\u008c\r\3\2\2\2\u008d\u0090\5\22\n\2\u008e"+
-		"\u0090\7 \2\2\u008f\u008d\3\2\2\2\u008f\u008e\3\2\2\2\u0090\17\3\2\2\2"+
-		"\u0091\u0092\7\37\2\2\u0092\21\3\2\2\2\u0093\u0094\7\37\2\2\u0094\23\3"+
-		"\2\2\2\u0095\u0098\7 \2\2\u0096\u0098\7\37\2\2\u0097\u0095\3\2\2\2\u0097"+
-		"\u0096\3\2\2\2\u0098\25\3\2\2\2\f\33Lgiq~\u0086\u0088\u008f\u0097";
+		"\16\6\u008a\13\6\3\7\3\7\3\7\3\7\3\7\3\7\5\7\u0092\n\7\3\b\3\b\5\b\u0096"+
+		"\n\b\3\t\3\t\3\n\3\n\3\13\3\13\5\13\u009e\n\13\3\13\2\4\6\n\f\2\4\6\b"+
+		"\n\f\16\20\22\24\2\2\u00ae\2\33\3\2\2\2\4\"\3\2\2\2\6L\3\2\2\2\bq\3\2"+
+		"\2\2\n~\3\2\2\2\f\u0091\3\2\2\2\16\u0095\3\2\2\2\20\u0097\3\2\2\2\22\u0099"+
+		"\3\2\2\2\24\u009d\3\2\2\2\26\27\5\4\3\2\27\30\7\3\2\2\30\32\3\2\2\2\31"+
+		"\26\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2\2\34\36\3\2\2\2\35"+
+		"\33\3\2\2\2\36\37\5\6\4\2\37 \7\3\2\2 !\7\2\2\3!\3\3\2\2\2\"#\7\37\2\2"+
+		"#$\7\4\2\2$%\5\6\4\2%\5\3\2\2\2&\'\b\4\1\2\'M\5\20\t\2()\7\5\2\2)*\5\6"+
+		"\4\2*+\7\6\2\2+M\3\2\2\2,-\7\13\2\2-.\7\7\2\2./\5\b\5\2/\60\7\b\2\2\60"+
+		"\61\7\5\2\2\61\62\5\6\4\2\62\63\7\6\2\2\63M\3\2\2\2\64\65\7\f\2\2\65\66"+
+		"\7\7\2\2\66\67\5\n\6\2\678\7\b\2\289\7\5\2\29:\5\6\4\2:;\7\6\2\2;M\3\2"+
+		"\2\2<=\7\24\2\2=>\5\20\t\2>?\7\25\2\2?@\5\20\t\2@M\3\2\2\2AB\7\24\2\2"+
+		"BC\5\20\t\2CD\7\5\2\2DE\5\b\5\2EF\7\6\2\2FG\7\25\2\2GH\5\20\t\2HI\7\5"+
+		"\2\2IJ\5\b\5\2JK\7\6\2\2KM\3\2\2\2L&\3\2\2\2L(\3\2\2\2L,\3\2\2\2L\64\3"+
+		"\2\2\2L<\3\2\2\2LA\3\2\2\2Mi\3\2\2\2NO\f\13\2\2OP\7\r\2\2Ph\5\6\4\fQR"+
+		"\f\n\2\2RS\7\17\2\2Sh\5\6\4\13TU\f\t\2\2UV\7\16\2\2Vh\5\6\4\nWX\f\b\2"+
+		"\2XY\7\21\2\2Yh\5\6\4\tZ[\f\7\2\2[\\\7\20\2\2\\h\5\6\4\b]^\f\5\2\2^_\7"+
+		"\23\2\2_h\5\6\4\6`a\f\6\2\2ab\7\22\2\2bc\5\6\4\2cd\7\5\2\2de\5\n\6\2e"+
+		"f\7\6\2\2fh\3\2\2\2gN\3\2\2\2gQ\3\2\2\2gT\3\2\2\2gW\3\2\2\2gZ\3\2\2\2"+
+		"g]\3\2\2\2g`\3\2\2\2hk\3\2\2\2ig\3\2\2\2ij\3\2\2\2j\7\3\2\2\2ki\3\2\2"+
+		"\2lr\5\22\n\2mn\5\22\n\2no\7\t\2\2op\5\b\5\2pr\3\2\2\2ql\3\2\2\2qm\3\2"+
+		"\2\2r\t\3\2\2\2st\b\6\1\2tu\7\n\2\2u\177\5\n\6\5vw\7\5\2\2wx\5\n\6\2x"+
+		"y\7\6\2\2y\177\3\2\2\2z{\5\16\b\2{|\5\f\7\2|}\5\16\b\2}\177\3\2\2\2~s"+
+		"\3\2\2\2~v\3\2\2\2~z\3\2\2\2\177\u0088\3\2\2\2\u0080\u0081\f\7\2\2\u0081"+
+		"\u0082\7\35\2\2\u0082\u0087\5\n\6\b\u0083\u0084\f\6\2\2\u0084\u0085\7"+
+		"\34\2\2\u0085\u0087\5\n\6\7\u0086\u0080\3\2\2\2\u0086\u0083\3\2\2\2\u0087"+
+		"\u008a\3\2\2\2\u0088\u0086\3\2\2\2\u0088\u0089\3\2\2\2\u0089\13\3\2\2"+
+		"\2\u008a\u0088\3\2\2\2\u008b\u0092\7\26\2\2\u008c\u0092\7\27\2\2\u008d"+
+		"\u0092\7\30\2\2\u008e\u0092\7\31\2\2\u008f\u0092\7\32\2\2\u0090\u0092"+
+		"\7\33\2\2\u0091\u008b\3\2\2\2\u0091\u008c\3\2\2\2\u0091\u008d\3\2\2\2"+
+		"\u0091\u008e\3\2\2\2\u0091\u008f\3\2\2\2\u0091\u0090\3\2\2\2\u0092\r\3"+
+		"\2\2\2\u0093\u0096\5\22\n\2\u0094\u0096\7 \2\2\u0095\u0093\3\2\2\2\u0095"+
+		"\u0094\3\2\2\2\u0096\17\3\2\2\2\u0097\u0098\7\37\2\2\u0098\21\3\2\2\2"+
+		"\u0099\u009a\7\37\2\2\u009a\23\3\2\2\2\u009b\u009e\7 \2\2\u009c\u009e"+
+		"\7\37\2\2\u009d\u009b\3\2\2\2\u009d\u009c\3\2\2\2\u009e\25\3\2\2\2\r\33"+
+		"Lgiq~\u0086\u0088\u0091\u0095\u009d";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
