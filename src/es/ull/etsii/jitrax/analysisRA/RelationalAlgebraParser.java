@@ -640,11 +640,11 @@ public class RelationalAlgebraParser extends Parser {
 						setState(96);
 						expr(0);
 						setState(97);
-						match(T__2);
+						match(T__4);
 						setState(98);
 						condlist(0);
 						setState(99);
-						match(T__3);
+						match(T__5);
 						}
 						break;
 					}
@@ -1366,8 +1366,8 @@ public class RelationalAlgebraParser extends Parser {
 		"\2\2\2L<\3\2\2\2LA\3\2\2\2Mi\3\2\2\2NO\f\13\2\2OP\7\r\2\2Ph\5\6\4\fQR"+
 		"\f\n\2\2RS\7\17\2\2Sh\5\6\4\13TU\f\t\2\2UV\7\16\2\2Vh\5\6\4\nWX\f\b\2"+
 		"\2XY\7\21\2\2Yh\5\6\4\tZ[\f\7\2\2[\\\7\20\2\2\\h\5\6\4\b]^\f\5\2\2^_\7"+
-		"\23\2\2_h\5\6\4\6`a\f\6\2\2ab\7\22\2\2bc\5\6\4\2cd\7\5\2\2de\5\n\6\2e"+
-		"f\7\6\2\2fh\3\2\2\2gN\3\2\2\2gQ\3\2\2\2gT\3\2\2\2gW\3\2\2\2gZ\3\2\2\2"+
+		"\23\2\2_h\5\6\4\6`a\f\6\2\2ab\7\22\2\2bc\5\6\4\2cd\7\7\2\2de\5\n\6\2e"+
+		"f\7\b\2\2fh\3\2\2\2gN\3\2\2\2gQ\3\2\2\2gT\3\2\2\2gW\3\2\2\2gZ\3\2\2\2"+
 		"g]\3\2\2\2g`\3\2\2\2hk\3\2\2\2ig\3\2\2\2ij\3\2\2\2j\7\3\2\2\2ki\3\2\2"+
 		"\2lr\5\22\n\2mn\5\22\n\2no\7\t\2\2op\5\b\5\2pr\3\2\2\2ql\3\2\2\2qm\3\2"+
 		"\2\2r\t\3\2\2\2st\b\6\1\2tu\7\n\2\2u\177\5\n\6\5vw\7\5\2\2wx\5\n\6\2x"+

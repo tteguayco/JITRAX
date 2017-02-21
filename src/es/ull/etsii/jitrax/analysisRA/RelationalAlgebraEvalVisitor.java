@@ -49,6 +49,33 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	}
 	
 	@Override 
+	public String visitIntersection(RelationalAlgebraParser.IntersectionContext ctx) {
+		String left = visit(ctx.expr(0));
+		String right = visit(ctx.expr(1));
+		return left + " INTERSECT " + right;
+	}
+	
+	@Override 
+	public String visitNaturalJoin(RelationalAlgebraParser.NaturalJoinContext ctx) {
+		String left = visit(ctx.expr(0));
+		String right = visit(ctx.expr(1));
+		return left + " NATURAL JOIN " + right;
+	}
+	
+	@Override 
+	public String visitJoin(RelationalAlgebraParser.JoinContext ctx) {
+		String left = visit(ctx.expr(0));
+		String right = visit(ctx.expr(1));
+		String condition = visit(ctx.condlist());
+		return left + " INNER JOIN " + right + "\nON " + condition;
+	}
+	
+	@Override 
+	public String visitDivision(RelationalAlgebraParser.DivisionContext ctx) {
+		return "DIVISION NOT IMPLEMENTED YET";
+	}
+	
+	@Override 
 	public String visitBracketsExpr(RelationalAlgebraParser.BracketsExprContext ctx) {
 		return "(" + visit(ctx.expr()) + ")";
 	}
@@ -96,32 +123,32 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	@Override 
 	public String visitEqual(RelationalAlgebraParser.EqualContext ctx) {
-		return " = ";
+		return "=";
 	}
 	
 	@Override 
 	public String visitNonEqual(RelationalAlgebraParser.NonEqualContext ctx) {
-		return " <> ";
+		return "<>";
 	}
 	
 	@Override 
 	public String visitGreaterThan(RelationalAlgebraParser.GreaterThanContext ctx) {
-		return " > ";
+		return ">";
 	}
 	
 	@Override 
 	public String visitGreaterEqual(RelationalAlgebraParser.GreaterEqualContext ctx) {
-		return " >= ";
+		return ">=";
 	}
 	
 	@Override 
 	public String visitLessThan(RelationalAlgebraParser.LessThanContext ctx) {
-		return " < ";
+		return "<";
 	}
 	
 	@Override 
 	public String visitLessEqual(RelationalAlgebraParser.LessEqualContext ctx) {
-		return " <= ";
+		return "<=";
 	}
 	
 	@Override
