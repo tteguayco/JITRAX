@@ -2,6 +2,11 @@ package es.ull.etsii.jitrax.analysisRA;
 
 import java.util.HashMap;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import es.ull.etsii.jitrax.analysisRA.RelationalAlgebraParser.StartContext;
+
 public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<String> {
 	HashMap<String, String> views;
 	String sqlTranslation;
@@ -35,7 +40,16 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	@Override
 	public String visitSelection(RelationalAlgebraParser.SelectionContext ctx) {
-		return visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist());
+		// We have to check that the first child of the parent of this context is
+		// a PROJECTION rule or not.
+		TerminalNode typeNode = (TerminalNode) ctx.getParent().getChild(0);
+		
+		// If this selection is inside a projection, we only return the 'where' statement
+		if (typeNode.getSymbol().getType() == RelationalAlgebraLexer.PROJECTION) {
+			return visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist()) + ")";
+		} else {
+			return "(SELECT *" + "\nFROM " + visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist()) + ")";
+		}
 	}
 	
 	@Override
@@ -129,7 +143,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		String left = (String) visit(ctx.compared(0));
 		String right = (String) visit(ctx.compared(1));
 		String comparator = (String) visit(ctx.comparator());
-		return left + " " + comparator + " " + right;
+		return "(" + left + " " + comparator + " " + right + ")";
 	}
 	
 	@Override 

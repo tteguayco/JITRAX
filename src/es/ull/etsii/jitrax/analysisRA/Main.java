@@ -28,7 +28,7 @@ public class Main {
 			eval.visit(tree);
 		}
 		catch (Exception e){
-			System.out.println("Exception was thrown...");
+			e.printStackTrace();
 		}	
 	}
 }
