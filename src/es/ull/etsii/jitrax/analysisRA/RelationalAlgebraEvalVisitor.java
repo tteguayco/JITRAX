@@ -48,7 +48,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		if (typeNode.getSymbol().getType() == RelationalAlgebraLexer.PROJECTION) {
 			return visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist()) + ")";
 		} else {
-			return "(SELECT *" + "\nFROM " + visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist()) + ")";
+			return "SELECT *" + "\nFROM " + visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist()) + "";
 		}
 	}
 	

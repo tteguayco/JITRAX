@@ -16,8 +16,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import es.ull.etsii.interpreters.RelationalAlgebraInterpreter;
 import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.interpreters.RelationalAlgebraInterpreter;
 
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;

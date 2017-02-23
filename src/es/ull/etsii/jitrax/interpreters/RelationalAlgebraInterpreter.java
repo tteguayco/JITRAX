@@ -1,4 +1,4 @@
-package es.ull.etsii.interpreters;
+package es.ull.etsii.jitrax.interpreters;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
