@@ -22,7 +22,7 @@ public class Main {
 
 		    ParseTree tree = parser.start();	
 
-		    System.out.println("SQL");
+		    System.out.println();
 		    
 			RelationalAlgebraEvalVisitor eval = new RelationalAlgebraEvalVisitor();
 			eval.visit(tree);

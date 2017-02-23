@@ -13,6 +13,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	public RelationalAlgebraEvalVisitor() {
 		 views = new HashMap<String, String>();
+		 sqlTranslation = "";
 	}	
 
 	/**
@@ -28,14 +29,34 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	@Override 
 	public String visitStart(RelationalAlgebraParser.StartContext ctx) {
-		sqlTranslation = visit(ctx.expr()) + ";";
+		// VIEWS
+		for (int i = 0; i < ctx.view().size(); i++) {
+			sqlTranslation += visit(ctx.view(i)) + "\n\n";
+		}
+		
+		// EXPRESSION
+		sqlTranslation += visit(ctx.expr()) + ";";
 		System.out.println(sqlTranslation);
 		return sqlTranslation;
 	}
 
+	@Override 
+	public String visitViewAssignment(RelationalAlgebraParser.ViewAssignmentContext ctx) {
+		return "CREATE VIEW [" + ctx.IDENTIFIER().getText() + "] AS\n" +
+				visit(ctx.expr()) + ";";
+	}
+	
 	@Override
 	public String visitProjection(RelationalAlgebraParser.ProjectionContext ctx) {
-		return "SELECT " + visit(ctx.attrlist()) + "\nFROM " + visit(ctx.expr());
+		String translation = "SELECT " + visit(ctx.attrlist()) + "\nFROM " + visit(ctx.expr());
+		
+		// Brackets if it's a nested projection
+		if (ctx.getParent().getParent() != null) {
+			translation = "(" + translation;
+			translation += ")";
+		}
+		
+		return translation;
 	}
 	
 	@Override
@@ -47,11 +68,11 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 			
 			// If this selection is inside a projection, we only return the 'where' statement
 			if (typeNode.getSymbol().getType() == RelationalAlgebraLexer.PROJECTION) {
-				return visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist()) + ")";
+				return visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist());
 			}
 		}
 		
-		return "SELECT *" + "\nFROM " + visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist()) + "";
+		return "SELECT *" + "\nFROM " + visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist());
 	}
 	
 	@Override
