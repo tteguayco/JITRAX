@@ -42,14 +42,16 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitSelection(RelationalAlgebraParser.SelectionContext ctx) {
 		// We have to check that the first child of the parent of this context is
 		// a PROJECTION rule or not.
-		TerminalNode typeNode = (TerminalNode) ctx.getParent().getChild(0);
-		
-		// If this selection is inside a projection, we only return the 'where' statement
-		if (typeNode.getSymbol().getType() == RelationalAlgebraLexer.PROJECTION) {
-			return visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist()) + ")";
-		} else {
-			return "SELECT *" + "\nFROM " + visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist()) + "";
+		if (ctx.getParent().getChild(0) instanceof TerminalNode) {
+			TerminalNode typeNode = (TerminalNode) ctx.getParent().getChild(0);
+			
+			// If this selection is inside a projection, we only return the 'where' statement
+			if (typeNode.getSymbol().getType() == RelationalAlgebraLexer.PROJECTION) {
+				return visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist()) + ")";
+			}
 		}
+		
+		return "SELECT *" + "\nFROM " + visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist()) + "";
 	}
 	
 	@Override
