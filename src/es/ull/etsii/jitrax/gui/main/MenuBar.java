@@ -14,6 +14,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -23,28 +24,37 @@ public class MenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
 	
 	private JMenu fileMenu;
-	private JMenu databaseMenu;
+	private JMenu editMenu;
 	private JMenu viewMenu;
 	private JMenu languageMenu;
-	private JMenu aboutMenu;
+	private JMenu helpMenu;
 	
 	private JRadioButtonMenuItem defaultViewRadioButton;
 	private JRadioButtonMenuItem nimbusViewRadioButton;
 	private JRadioButtonMenuItem metalViewRadioButton;
 	
+	private JMenuItem openDatabase;
+	private JMenuItem newDatabase;
+	private JMenuItem saveDatabase;
+	private JMenuItem saveDatabaseAs;
+	private JMenuItem importOption;
+	private JMenuItem exportOption;
+	private JMenuItem exitOption;
+	
 	private JRadioButtonMenuItem englishRadioButton;
 	
-	public MenuBar() {buildFileMenu();
-		buildDatabaseMenu();
+	public MenuBar() {
+		buildFileMenu();
+		buildEditMenu();
 		buildViewMenu();
 		buildLanguageMenu();
-		buildAboutMenu();
+		buildHelpMenu();
 		
 		add(fileMenu);
-		add(databaseMenu);
+		add(editMenu);
 		add(viewMenu);
 		add(languageMenu);
-		add(aboutMenu);
+		add(helpMenu);
 		
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		setListeners();
@@ -52,14 +62,38 @@ public class MenuBar extends JMenuBar {
 	
 	private void buildFileMenu() {
 		setFileMenu(new JMenu("File"));
-		JMenuItem saveRAQueryMI = new JMenuItem("Save RA Query");
-		saveRAQueryMI.setMnemonic(KeyEvent.VK_N);
-
-		getFileMenu().add(saveRAQueryMI);
+		fileMenu.setMnemonic(KeyEvent.VK_F);
+		
+		openDatabase = new JMenuItem("Open");
+		openDatabase.setMnemonic(KeyEvent.VK_O);
+		
+		newDatabase = new JMenuItem("New");
+		newDatabase.setMnemonic(KeyEvent.VK_N);
+		
+		saveDatabase = new JMenuItem("Save");
+		saveDatabase.setMnemonic(KeyEvent.VK_S);
+		
+		saveDatabaseAs = new JMenuItem("Save as...");
+		
+		importOption = new JMenuItem("Import");
+		exportOption = new JMenuItem("Export");
+		
+		exitOption = new JMenuItem("Exit");
+		
+		getFileMenu().add(openDatabase);
+		getFileMenu().add(newDatabase);
+		getFileMenu().add(saveDatabase);
+		getFileMenu().add(saveDatabaseAs);
+		getFileMenu().add(new JSeparator());
+		getFileMenu().add(importOption);
+		getFileMenu().add(exportOption);
+		getFileMenu().add(new JSeparator());
+		getFileMenu().add(exitOption);
 	}
 	
-	private void buildDatabaseMenu() {
-		setDatabaseMenu(new JMenu("Database"));
+	private void buildEditMenu() {
+		editMenu = new JMenu("Edit");
+		editMenu.setMnemonic(KeyEvent.VK_E);
 	}
 	
 	private void buildViewMenu() {
@@ -73,6 +107,7 @@ public class MenuBar extends JMenuBar {
 		buttonGroup.add(getMetalViewRadioButton());
 		
 		setViewMenu(new JMenu("View"));
+		getViewMenu().setMnemonic(KeyEvent.VK_V);
 		getViewMenu().add(getDefaultViewRadioButton());
 		getViewMenu().add(getNimbusViewRadioButton());
 		getViewMenu().add(getMetalViewRadioButton());
@@ -85,11 +120,13 @@ public class MenuBar extends JMenuBar {
 		buttonGroup.add(getEnglishRadioButton());
 		
 		setLanguageMenu(new JMenu("Language"));
+		getLanguageMenu().setMnemonic(KeyEvent.VK_L);
 		getLanguageMenu().add(getEnglishRadioButton());
 	}
 	
-	private void buildAboutMenu() {
-		setAboutMenu(new JMenu("About"));
+	private void buildHelpMenu() {
+		setHelpMenu(new JMenu("Help"));
+		getHelpMenu().setMnemonic(KeyEvent.VK_H);
 	}
 
 	private void setListeners() {
@@ -157,14 +194,6 @@ public class MenuBar extends JMenuBar {
 		this.fileMenu = fileMenu;
 	}
 
-	public JMenu getDatabaseMenu() {
-		return databaseMenu;
-	}
-
-	public void setDatabaseMenu(JMenu databaseMenu) {
-		this.databaseMenu = databaseMenu;
-	}
-
 	public JMenu getViewMenu() {
 		return viewMenu;
 	}
@@ -181,12 +210,12 @@ public class MenuBar extends JMenuBar {
 		this.languageMenu = languageMenu;
 	}
 
-	public JMenu getAboutMenu() {
-		return aboutMenu;
+	public JMenu getHelpMenu() {
+		return helpMenu;
 	}
 
-	public void setAboutMenu(JMenu aboutMenu) {
-		this.aboutMenu = aboutMenu;
+	public void setHelpMenu(JMenu helpMenu) {
+		this.helpMenu = helpMenu;
 	}
 
 	public JRadioButtonMenuItem getDefaultViewRadioButton() {
@@ -219,5 +248,77 @@ public class MenuBar extends JMenuBar {
 
 	public void setMetalViewRadioButton(JRadioButtonMenuItem metalViewRadioButton) {
 		this.metalViewRadioButton = metalViewRadioButton;
+	}
+
+	public JMenu getQueryMenu() {
+		return editMenu;
+	}
+
+	public void setQueryMenu(JMenu queryMenu) {
+		this.editMenu = queryMenu;
+	}
+
+	public JMenuItem getOpenDatabase() {
+		return openDatabase;
+	}
+
+	public void setOpenDatabase(JMenuItem openDatabase) {
+		this.openDatabase = openDatabase;
+	}
+
+	public JMenuItem getNewDatabase() {
+		return newDatabase;
+	}
+
+	public void setNewDatabase(JMenuItem newDatabase) {
+		this.newDatabase = newDatabase;
+	}
+
+	public JMenuItem getSaveDatabase() {
+		return saveDatabase;
+	}
+
+	public void setSaveDatabase(JMenuItem saveDatabase) {
+		this.saveDatabase = saveDatabase;
+	}
+
+	public JMenuItem getSaveDatabaseAs() {
+		return saveDatabaseAs;
+	}
+
+	public void setSaveDatabaseAs(JMenuItem saveDatabaseAs) {
+		this.saveDatabaseAs = saveDatabaseAs;
+	}
+
+	public JMenuItem getImportOption() {
+		return importOption;
+	}
+
+	public void setImportOption(JMenuItem importOption) {
+		this.importOption = importOption;
+	}
+
+	public JMenuItem getExportOption() {
+		return exportOption;
+	}
+
+	public void setExportOption(JMenuItem exportOption) {
+		this.exportOption = exportOption;
+	}
+
+	public JMenuItem getExitOption() {
+		return exitOption;
+	}
+
+	public void setExitOption(JMenuItem exitOption) {
+		this.exitOption = exitOption;
+	}
+
+	public JMenu getEditMenu() {
+		return editMenu;
+	}
+
+	public void setEditMenu(JMenu editMenu) {
+		this.editMenu = editMenu;
 	}
 }

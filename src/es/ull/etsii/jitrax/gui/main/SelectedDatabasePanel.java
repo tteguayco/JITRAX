@@ -35,20 +35,21 @@ public class SelectedDatabasePanel extends JPanel {
 	private static final int NCOLS = 1;
 	
 	private JComboBox<String> dbComboBox;
-	private JButton addButton;
-	private JButton eraseButton;
+	private JButton alterButton;
+	private JButton removeButton;
 	
 	public SelectedDatabasePanel(ArrayList<Database> databases) {
 		dbComboBox = new JComboBox<String>();
-		addButton = new JButton("ADD");
-		eraseButton = new JButton("ERASE");
+		alterButton = new JButton("ALTER");
+		removeButton = new JButton("REMOVE");
 		
-		updateComboBox(databases);
 		setLayout(new GridLayout(NROWS, NCOLS, VGAP, HGAP));
 		setBorder(new EmptyBorder(TOP_PADDING,
 								LEFT_PADDING,
 								BOTTOM_PADDING,
 								RIGHT_PADDING));
+		
+		updateComboBox(databases);
 		
 		// ComboBox settings
 		dbComboBox.setPreferredSize(new Dimension(COMBOBOX_WIDTH, COMBOBOX_HEIGHT));
@@ -59,8 +60,8 @@ public class SelectedDatabasePanel extends JPanel {
 		comboBoxContainer.add(dbComboBox);
 		
 		JPanel buttonsPanel = new JPanel();
-		buttonsPanel.add(addButton);
-		buttonsPanel.add(eraseButton);
+		buttonsPanel.add(alterButton);
+		buttonsPanel.add(removeButton);
 		
 		add(comboBoxContainer);
 		add(buttonsPanel);
@@ -72,19 +73,10 @@ public class SelectedDatabasePanel extends JPanel {
 	}
 	
 	public void setListeners() {
-		addButton.addActionListener(new ActionListener() {
+		alterButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Object[] options = { "Yes", "No" };
-				int choice = JOptionPane.showOptionDialog(
-						SelectedDatabasePanel.this.getParent().getParent(), 
-						"Would you like to load it from a file?",
-						"Add New Database", 
-						JOptionPane.YES_NO_OPTION, 
-						JOptionPane.QUESTION_MESSAGE, 
-						null, options, null);
 				
-				// TODO launch gui to create a db if user chooses no
 			}
 		});
 	}
@@ -107,19 +99,11 @@ public class SelectedDatabasePanel extends JPanel {
 		this.dbComboBox = dbComboBox;
 	}
 
-	public JButton getAddButton() {
-		return addButton;
+	public JButton getAlterButton() {
+		return alterButton;
 	}
 
-	public void setAddButton(JButton addButton) {
-		this.addButton = addButton;
-	}
-
-	public JButton getEraseButton() {
-		return eraseButton;
-	}
-
-	public void setEraseButton(JButton eraseButton) {
-		this.eraseButton = eraseButton;
+	public void setAlterButton(JButton alterButton) {
+		this.alterButton = alterButton;
 	}
 }

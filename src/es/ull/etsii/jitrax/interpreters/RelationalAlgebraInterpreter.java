@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import es.ull.etsii.jitrax.adt.Database;
-import es.ull.etsii.jitrax.analysisRA.RelationalAlgebraEvalVisitor;
+import es.ull.etsii.jitrax.analysisRA.RelationalAlgebraTranslator;
 import es.ull.etsii.jitrax.analysisRA.RelationalAlgebraLexer;
 import es.ull.etsii.jitrax.analysisRA.RelationalAlgebraParser;
 import es.ull.etsii.jitrax.gui.main.Console;
@@ -17,7 +17,7 @@ public class RelationalAlgebraInterpreter {
 	private CommonTokenStream tokens;
 	private RelationalAlgebraParser parser;
 	private ParseTree tree;
-	private RelationalAlgebraEvalVisitor eval;
+	private RelationalAlgebraTranslator eval;
 	private Database database;
 	private Console console;
 	

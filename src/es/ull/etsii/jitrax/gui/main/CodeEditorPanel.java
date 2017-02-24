@@ -53,7 +53,7 @@ public class CodeEditorPanel extends JPanel {
 	
 	private JComboBox raFontStyles;
 	private JComboBox sqlFontStyles;
-	private JComboBox sgbdList;
+	//private JComboBox sgbdList;
 	private JSpinner raFontSizeSelector;
 	private JSpinner sqlFontSizeSelector;
 	private SpinnerModel raFontSizeModel;
@@ -62,12 +62,16 @@ public class CodeEditorPanel extends JPanel {
 	private JTabbedPane tabbedPane = new JTabbedPane();
 	private JButton translateButton;
 	private JButton executeButton;
+	private JButton saveRaButton;
+	private JButton saveSqlButton;
 	
 	public CodeEditorPanel() {
 		relationalAlgebraCodeEditor = new RSyntaxTextArea();
 		sqlCodeEditor = new RSyntaxTextArea();
 		translateButton = new JButton("Translate to SQL");
-		executeButton = new JButton("Execute on");
+		executeButton = new JButton("Execute on DBMS");
+		saveRaButton = new JButton("Save");
+		saveSqlButton = new JButton("Save");
 		
 		relationalAlgebraCodeEditor.setCaretColor(RA_CARET_COLOR);
 		String currentFontName = relationalAlgebraCodeEditor.getFont().getName();
@@ -103,7 +107,7 @@ public class CodeEditorPanel extends JPanel {
 				MAX_FONT_SIZE, 
 				SPINNER_STEP); 
 		sqlFontSizeSelector = new JSpinner(sqlFontSizeModel);
-		sgbdList = new JComboBox(DBMS_LIST);
+		//sgbdList = new JComboBox(DBMS_LIST);
 		
 	    // Relational Algebra Tab
 	    JPanel raPanel = new JPanel(new BorderLayout());
@@ -113,6 +117,7 @@ public class CodeEditorPanel extends JPanel {
 	    raPanel.add(relationalAlgebraSP, BorderLayout.CENTER);
 	    raPanel.add(raControlPanel, BorderLayout.SOUTH);
 	    translationPanel.add(translateButton);
+	    translationPanel.add(saveRaButton);
 	    raControlPanel.add(translationPanel, BorderLayout.WEST);
 	    raControlPanel.add(raEditorElementsPanel);
 	    raEditorElementsPanel.add(new JLabel("Style: "));
@@ -128,7 +133,8 @@ public class CodeEditorPanel extends JPanel {
 	    sqlPanel.add(sqlSP, BorderLayout.CENTER);
 	    sqlPanel.add(sqlControlPanel, BorderLayout.SOUTH);
 	    executionPanel.add(executeButton);
-	    executionPanel.add(sgbdList);
+	    executionPanel.add(saveSqlButton);
+	    //executionPanel.add(sgbdList);
 	    sqlControlPanel.add(executionPanel, BorderLayout.WEST);
 	    sqlControlPanel.add(sqlEditorElementsPanel);
 	    sqlEditorElementsPanel.add(new JLabel("Style: "));
@@ -142,12 +148,22 @@ public class CodeEditorPanel extends JPanel {
 		tabbedPane.addTab("SQL", sqlPanel);
 		tabbedPane.addTab("Parse Tree", new JPanel());
 		tabbedPane.setFocusable(false);
+		tabbedPane.setEnabledAt(1, false);
+		tabbedPane.setEnabledAt(2, false);
 		add(tabbedPane, BorderLayout.CENTER);
 		
 		setListeners();
 		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
+	}
+	
+	public void enableSqlTab() {
+		tabbedPane.setEnabledAt(1, true);
+	}
+	
+	public void enableParseTreeTab() {
+		tabbedPane.setEnabledAt(2, true);
 	}
 	
 	/**
@@ -248,14 +264,6 @@ public class CodeEditorPanel extends JPanel {
 
 	public void setSqlFontStyles(JComboBox sqlFontStyles) {
 		this.sqlFontStyles = sqlFontStyles;
-	}
-
-	public JComboBox getSgbdList() {
-		return sgbdList;
-	}
-
-	public void setSgbdList(JComboBox sgbdList) {
-		this.sgbdList = sgbdList;
 	}
 
 	public JSpinner getRaFontSizeSelector() {

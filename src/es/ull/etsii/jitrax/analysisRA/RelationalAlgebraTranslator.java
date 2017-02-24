@@ -7,11 +7,11 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import es.ull.etsii.jitrax.analysisRA.RelationalAlgebraParser.StartContext;
 
-public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<String> {
+public class RelationalAlgebraTranslator extends RelationalAlgebraBaseVisitor<String> {
 	HashMap<String, String> views;
 	String sqlTranslation;
 	
-	public RelationalAlgebraEvalVisitor() {
+	public RelationalAlgebraTranslator() {
 		 views = new HashMap<String, String>();
 		 sqlTranslation = "";
 	}	
@@ -61,14 +61,17 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	@Override
 	public String visitSelection(RelationalAlgebraParser.SelectionContext ctx) {
-		// We have to check that the first child of the parent of this context is
-		// a PROJECTION rule or not.
+		// We have to check the parent's type of this context
 		if (ctx.getParent().getChild(0) instanceof TerminalNode) {
 			TerminalNode typeNode = (TerminalNode) ctx.getParent().getChild(0);
 			
 			// If this selection is inside a projection, we only return the 'where' statement
 			if (typeNode.getSymbol().getType() == RelationalAlgebraLexer.PROJECTION) {
 				return visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist());
+			} 
+			// If the parent is a selection as well, we'll construct a conjuction of selections
+			else if (typeNode.getSymbol().getType() == RelationalAlgebraLexer.SELECTION) {
+				
 			}
 		}
 		

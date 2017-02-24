@@ -40,15 +40,18 @@ public class DatabaseViewerPanel extends JPanel {
 	private TablesPanel tablesPanel;
 	private SelectedTablePanelViewer selectedTablePanel;
 	
-	public DatabaseViewerPanel(ArrayList<Database> databases) {
+	public DatabaseViewerPanel(Database database) {
+		databases = new ArrayList<Database>();
+		
 		// There will be at least one table for each database
-		ArrayList<Table> tables = databases.get(0).getTables();
-		
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
+		databases.add(database);
+		ArrayList<Table> tables = database.getTables();
+
 		selectedDatabasePanel = new SelectedDatabasePanel(databases);
 		tablesPanel = new TablesPanel(tables);
 		selectedTablePanel = new SelectedTablePanelViewer(tables.get(0));
+		
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		JScrollPane tablesSP = new JScrollPane(tablesPanel);
 		tablesSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -63,6 +66,10 @@ public class DatabaseViewerPanel extends JPanel {
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
 		
 		setListeners();
+	}
+	
+	public void addNewDatabase(Database newDatabase) {
+		
 	}
 	
 	private void setListeners() {

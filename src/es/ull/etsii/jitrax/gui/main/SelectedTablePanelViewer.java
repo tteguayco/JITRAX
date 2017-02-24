@@ -43,6 +43,12 @@ public class SelectedTablePanelViewer extends JPanel {
 	private JButton detailsButton;
 	private DefaultTableModel tableModel;
 	
+	public SelectedTablePanelViewer() {
+		table = null;
+		detailsButton = null;
+		graphicTable = null;
+	}
+	
 	public SelectedTablePanelViewer(Table aTable) {
 		table = aTable;
 		detailsButton = new JButton("DETAILS");

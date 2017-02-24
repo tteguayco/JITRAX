@@ -24,7 +24,7 @@ public class Main {
 
 		    System.out.println();
 		    
-			RelationalAlgebraEvalVisitor eval = new RelationalAlgebraEvalVisitor();
+			RelationalAlgebraTranslator eval = new RelationalAlgebraTranslator();
 			eval.visit(tree);
 		}
 		catch (Exception e){

@@ -9,7 +9,10 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -17,6 +20,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.controllers.MenuBarController;
 import es.ull.etsii.jitrax.interpreters.RelationalAlgebraInterpreter;
 
 public class MainWindow extends JFrame {
@@ -27,37 +31,51 @@ public class MainWindow extends JFrame {
 	private static final int MINIMUM_HEIGHT = 500;
 	private static final int BORDER_GAP = 10;
 	
+	private static final double HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT = 0.95;
+	private static final double VERTICAL_SPLITPANE_DEFAULT_WEIGHT = 0.02;
+	
 	private static final String FRAME_TITLE = "JITRAX";
 	
-	private MenuBar horizontalMenuPanel;
+	private MenuBar barMenu;
 	private CodeEditorPanel codeEditorPanel;
-	private Console infoConsolePanel;
+	private Console console;
 	private DatabaseViewerPanel databaseViewerPanel;
 	
 	private SelectedTableExchanger selectedTableExchanger;
 	private RelationalAlgebraInterpreter raInterpreter;
 	
-	public MainWindow(ArrayList<Database> newDatabases) {
-		horizontalMenuPanel = new MenuBar();
+	public MainWindow() {
+		barMenu = new MenuBar();
+		
+		setJMenuBar(barMenu);
+		buildWindow();
+	}
+	
+	public void addDatabase(Database database) {
 		codeEditorPanel = new CodeEditorPanel();
-		infoConsolePanel = new Console();
-		databaseViewerPanel = new DatabaseViewerPanel(newDatabases);
+		console = new Console();
+		databaseViewerPanel = new DatabaseViewerPanel(database);
 		
-		JPanel mainContainer = new JPanel();
-		JPanel rightPanel = new JPanel();
+		JPanel mainContainer = new JPanel(new BorderLayout());
+		JPanel rightPanel = new JPanel(new BorderLayout());
 		
-		mainContainer.setLayout(new BorderLayout());
-		rightPanel.setLayout(new BorderLayout());
-		rightPanel.add(codeEditorPanel, BorderLayout.CENTER);
-		rightPanel.add(infoConsolePanel, BorderLayout.SOUTH);
+		// HORIZONTAL SPLITPANE
+		JSplitPane horSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true,
+				codeEditorPanel, console);
+		horSplitPane.setResizeWeight(HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT);
+		horSplitPane.setOneTouchExpandable(true);
 		
-		setJMenuBar(horizontalMenuPanel);
+		// VERTICAL SPLITPANE
+		JSplitPane verSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, 
+				databaseViewerPanel, rightPanel);
+		verSplitPane.setResizeWeight(VERTICAL_SPLITPANE_DEFAULT_WEIGHT);
+		verSplitPane.setOneTouchExpandable(true);
 		
+		rightPanel.add(horSplitPane, BorderLayout.CENTER);
 		mainContainer.setBorder(new EmptyBorder(BORDER_GAP, BORDER_GAP, BORDER_GAP, BORDER_GAP));
 		
 		setLayout(new BorderLayout());
-		mainContainer.add(databaseViewerPanel, BorderLayout.WEST);
-		mainContainer.add(rightPanel, BorderLayout.CENTER);
+		mainContainer.add(verSplitPane, BorderLayout.CENTER);
 		add(mainContainer, BorderLayout.CENTER);
 		
 		// Object that shows the selected table in the quick view in the GUI
@@ -65,9 +83,8 @@ public class MainWindow extends JFrame {
 			new SelectedTableExchanger(databaseViewerPanel.getTablesPanel(), 
 				databaseViewerPanel.getSelectedTablePanel());
 		
-		//raInterpreter = new RelationalAlgebraInterpreter(databaseViewerPanel);
-		
-		buildWindow();
+		// Refresh this window
+		SwingUtilities.updateComponentTreeUI(MainWindow.this);
 	}
 	
 	private void buildWindow() {
@@ -77,5 +94,77 @@ public class MainWindow extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+	}
+	
+	public static void main(String[] args) {
+		try {
+	        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	        setDefaultLookAndFeelDecorated(true);
+	    } 
+	    catch (UnsupportedLookAndFeelException e) {
+	    	e.printStackTrace();
+	    }
+	    catch (ClassNotFoundException e) {
+	    	e.printStackTrace();
+	    }
+	    catch (InstantiationException e) {
+	    	e.printStackTrace();
+	    }
+	    catch (IllegalAccessException e) {
+	    	e.printStackTrace();
+	    }
+		
+		MainWindow window = new MainWindow();
+		
+		// Initialize controllers
+		MenuBarController menuBarController = new MenuBarController(window);
+	}
+	
+	public MenuBar getBarMenu() {
+		return barMenu;
+	}
+
+	public void setBarMenu(MenuBar barMenu) {
+		this.barMenu = barMenu;
+	}
+
+	public CodeEditorPanel getCodeEditorPanel() {
+		return codeEditorPanel;
+	}
+
+	public void setCodeEditorPanel(CodeEditorPanel codeEditorPanel) {
+		this.codeEditorPanel = codeEditorPanel;
+	}
+
+	public Console getConsole() {
+		return console;
+	}
+
+	public void setConsole(Console console) {
+		this.console = console;
+	}
+
+	public DatabaseViewerPanel getDatabaseViewerPanel() {
+		return databaseViewerPanel;
+	}
+
+	public void setDatabaseViewerPanel(DatabaseViewerPanel databaseViewerPanel) {
+		this.databaseViewerPanel = databaseViewerPanel;
+	}
+
+	public SelectedTableExchanger getSelectedTableExchanger() {
+		return selectedTableExchanger;
+	}
+
+	public void setSelectedTableExchanger(SelectedTableExchanger selectedTableExchanger) {
+		this.selectedTableExchanger = selectedTableExchanger;
+	}
+
+	public RelationalAlgebraInterpreter getRaInterpreter() {
+		return raInterpreter;
+	}
+
+	public void setRaInterpreter(RelationalAlgebraInterpreter raInterpreter) {
+		this.raInterpreter = raInterpreter;
 	}
 }
