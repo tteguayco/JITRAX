@@ -75,7 +75,7 @@ public class Database {
 	 * Returns the number of tables the DB has.
 	 * @return
 	 */
-	public int getSize() {
+	public int getNumOfTables() {
 		return getTables().size();
 	}
 

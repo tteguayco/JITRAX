@@ -79,8 +79,7 @@ public class MainWindow extends JFrame {
 		add(mainContainer, BorderLayout.CENTER);
 		
 		// Object that shows the selected table in the quick view in the GUI
-		selectedTableExchanger = 
-			new SelectedTableExchanger(databaseViewerPanel.getTablesPanel(), 
+		selectedTableExchanger = new SelectedTableExchanger(databaseViewerPanel.getTablesPanel(), 
 				databaseViewerPanel.getSelectedTablePanel());
 		
 		// Refresh this window
