@@ -30,28 +30,31 @@ public class MenuBarController {
 				FileDialog fileDialog = new FileDialog(mainWindow);
 				Database databaseFromFile = fileDialog.importDatabaseDialog();
 				
-				try {
-					// Establish a connection and create the database
-					PostgreDriver postgreDriver = new PostgreDriver();
-					String databaseName = databaseFromFile.getName();
-					
-					// If it does not exist, create it
-					if (!postgreDriver.databaseAlreadyExists(databaseName)) {
-						postgreDriver.createDatabase(databaseFromFile);
-					} 
-					
-					// If it already exists, drop it and create a new one
-					else {
-						postgreDriver.dropDatabase(databaseName);
-						postgreDriver.createDatabase(databaseFromFile);
+				if (databaseFromFile != null) {
+					try {
+						// Establish a connection and create the database
+						PostgreDriver postgreDriver = new PostgreDriver();
+						
+						// If it does not exist, create, switch and set it up
+						if (!postgreDriver.databaseAlreadyExists(databaseFromFile.getName())) {
+							postgreDriver.createDatabase(databaseFromFile.getName());
+							postgreDriver.switchDatabase(databaseFromFile.getName());
+							postgreDriver.setUpDatabase(databaseFromFile);
+							
+							// Launch main window
+							mainWindow.addDatabase(databaseFromFile);
+						}
+						
+						// If it already exists, drop it and create a new one
+						else {
+							System.out.println("A database with that name already exists...");
+						}
+		
+					} catch (PSQLException e) {
+						e.printStackTrace();
+					} catch (SQLException e) {
+						e.printStackTrace();
 					}
-					
-					mainWindow.addDatabase(databaseFromFile);
-	
-				} catch (PSQLException e) {
-					e.printStackTrace();
-				} catch (SQLException e) {
-					e.printStackTrace();
 				}
 			}
 		});

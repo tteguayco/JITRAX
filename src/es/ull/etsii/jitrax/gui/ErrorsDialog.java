@@ -71,8 +71,7 @@ public class ErrorsDialog extends JFrame {
 		okButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ErrorsDialog.this.dispatchEvent(new WindowEvent(ErrorsDialog.this, 
-						WindowEvent.WINDOW_CLOSING));
+				ErrorsDialog.this.dispose();
 			}
 		});
 	}

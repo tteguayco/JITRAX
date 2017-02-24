@@ -18,12 +18,6 @@ public interface DatabaseVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStart(DatabaseParser.StartContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DatabaseParser#comment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitComment(DatabaseParser.CommentContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code databaseCreation}
 	 * labeled alternative in {@link DatabaseParser#database}.
 	 * @param ctx the parse tree
@@ -73,12 +67,19 @@ public interface DatabaseVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAttributeValue(DatabaseParser.AttributeValueContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code datumValue}
+	 * Visit a parse tree produced by the {@code stringDatum}
 	 * labeled alternative in {@link DatabaseParser#datum}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDatumValue(DatabaseParser.DatumValueContext ctx);
+	T visitStringDatum(DatabaseParser.StringDatumContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code numberDatum}
+	 * labeled alternative in {@link DatabaseParser#datum}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNumberDatum(DatabaseParser.NumberDatumContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code stringValue}
 	 * labeled alternative in {@link DatabaseParser#datatype}.

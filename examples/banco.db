@@ -4,26 +4,26 @@ TABLE CLIENTE(DNI_Cliente: String, PK;
 		Nombre: String;
 		Direccion: String)
 =>
-(12345678, Pepe, 	direccion1);
-(32414233, Antonio, 	direccion2);
-(56442354, Juan, 	direccion3);
+('12345678', 'Pepe', 	'direccion1');
+('32414233', 'Antonio', 	'direccion2');
+('56442354', 'Juan', 	'direccion3');
 
 TABLE DEPOSITO(Codigo_sucursal: String, PK; 
 		Num_cuenta: INTEGER, PK;
 		DNI_Cliente: String;
 		Saldo: Float)
 =>
-(1234, 1, 12345678, 100);
+('1234', 1, '12345678', 100.5);
 
 TABLE PRESTAMO(Codigo_sucursal: String, PK;
 		Num_Prestamo: Integer, PK;
 		DNI_Cliente: String;
 		Importe: Float)
 =>
-(3, 123, 32414233, 21312);
+('3', 123, '32414233', 21312);
 
 TABLE SUCURSAL(Codigo_sucursal: String, PK;
 		Nombre: String;
 		Ciudad: String)
 =>
-(3, sucursal1, ciudad1);
+('3', 'sucursal1', 'ciudad1');

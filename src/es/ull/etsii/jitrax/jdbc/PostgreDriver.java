@@ -7,25 +7,58 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import es.ull.etsii.jitrax.adt.Attribute;
-import es.ull.etsii.jitrax.adt.DataType;
 import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.adt.Datum;
+import es.ull.etsii.jitrax.adt.Row;
 import es.ull.etsii.jitrax.adt.Table;
 
 public class PostgreDriver {
-	private static final String DEFAULT_URL = "jdbc:postgresql://localhost:5432/";
+	private static final String DEFAULT_HOSTNAME = "localhost";
+	private static final String DEFAULT_PORT 	 = "5432"; 
 	private static final String DEFAULT_USERNAME = "postgres";
 	private static final String DEFAULT_PASSWORD = "postgres";
+	
+	private String hostname;
+	private String port;
+	private String username;
+	private String password;
 	
 	private Connection connection;
 	private ResultSet queryResultSet;
 	
 	public PostgreDriver() throws SQLException {
-		connection = DriverManager.getConnection(DEFAULT_URL, DEFAULT_USERNAME, DEFAULT_PASSWORD);
+		hostname = DEFAULT_HOSTNAME;
+		port = DEFAULT_PORT;
+		username = DEFAULT_USERNAME;
+		password = DEFAULT_PASSWORD;
+		
+		String url = makeUrlConnection(hostname, port, "");
+		connection = DriverManager.getConnection(url, username, password);
 	}
 	
-	public PostgreDriver(String hostname, int port, String username, String password) throws SQLException {
-		String url = "jdbc:postgresql://" + hostname + ":" + port + "/";
+	public PostgreDriver(String aHostname, int aPort, String anUsername, String aPassword) throws SQLException {
+		hostname = aHostname;
+		port = String.valueOf(aPort);
+		username = anUsername;
+		password = aPassword;
+		
+		String url = makeUrlConnection(hostname, port, "");
 		connection = DriverManager.getConnection(url, username, password);
+	}
+	
+	private String makeUrlConnection(String hostname, String port, String databaseName) {
+		return "jdbc:postgresql://" + hostname + ":" + port + "/" + databaseName;
+	}
+	
+	/**
+	 * Switches to an existing database in PostgreSQL.
+	 * @param databaseName
+	 * @throws SQLException
+	 */
+	public void switchDatabase(String databaseName) throws SQLException {
+		databaseName = databaseName.toLowerCase();
+		String newUrl = makeUrlConnection(hostname, port, databaseName);
+		connection = DriverManager.getConnection(newUrl, username, password);
 	}
 	
 	/**
@@ -54,28 +87,37 @@ public class PostgreDriver {
 		return false;
 	}
 	
+	public void createDatabase(String databaseName) throws SQLException {
+		databaseName = databaseName.toLowerCase();
+		Statement statement = connection.createStatement();
+		statement.executeUpdate("CREATE DATABASE " + databaseName);
+	}
+	
 	/**
-	 * Creates a new database with the specified name and switches to it.
+	 * For the current database, sets up tables, attributes, rows, etc.
 	 * @param databaseName
 	 * @throws SQLException
 	 */
-	public void createDatabase(Database database) throws SQLException {
-		Statement statement = connection.createStatement();
+	public void setUpDatabase(Database database) throws SQLException {
 		Table auxTable;
-		
-		// CREATE DATABASE
-		statement.executeUpdate("CREATE DATABASE " + database.getName());
+		Row auxRow;
 		
 		// CREATE TABLES
 		for (int i = 0; i < database.getNumOfTables(); i++) {
 			auxTable = database.getTables().get(i);
 			createTable(auxTable);
+			
+			// INSERT ROWS
+			for (int j = 0; j < auxTable.getRows().size(); j++) {
+				insertRow(auxTable.getRows().get(j), auxTable);
+			}
 		}
-		
-		// INSERT ROWS
-		// TO-DO
 	}
 	
+	/**
+	 * Creates the specified table on the current database of PostgreSQL.
+	 * @param table
+	 */
 	public void createTable(Table table) {
 		Attribute auxAttr;
 		String createTableStatement = "CREATE TABLE ";
@@ -105,17 +147,37 @@ public class PostgreDriver {
 			}
 		}
 		
-		Statement statement;
 		try {
-			statement = connection.createStatement();
+			Statement statement = connection.createStatement();
 			statement.executeUpdate(createTableStatement);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void insertRow() {
+	public void insertRow(Row row, Table table) {
+		Datum auxDatum;
+		String insertRowStatement = "INSERT INTO " + table.getName() + " VALUES(";
 		
+		for (int i = 0; i < row.getData().size(); i++) {
+			auxDatum = row.getData().get(i);
+			insertRowStatement += auxDatum.getStringValue();
+			
+			// Add comma
+			if (i < row.getData().size() - 1) {
+				insertRowStatement += ",";
+			} else {
+				insertRowStatement += ")";
+			}
+		}
+		
+		try {
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(insertRowStatement);
+			System.out.println(insertRowStatement);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void dropDatabase(String databaseName) throws SQLException {
