@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.gui.main;
+package es.ull.etsii.jitrax.gui;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -53,7 +54,9 @@ public class SelectedDatabasePanel extends JPanel {
 		
 		// ComboBox settings
 		dbComboBox.setPreferredSize(new Dimension(COMBOBOX_WIDTH, COMBOBOX_HEIGHT));
-		((JLabel)dbComboBox.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+		DefaultListCellRenderer dlcr = new DefaultListCellRenderer(); 
+		dlcr.setHorizontalAlignment(DefaultListCellRenderer.CENTER); 
+		dbComboBox.setRenderer(dlcr);
 		dbComboBox.setFocusable(false);
 		
 		JPanel comboBoxContainer = new JPanel();

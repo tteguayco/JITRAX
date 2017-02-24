@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.gui.main;
+package es.ull.etsii.jitrax.gui;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;

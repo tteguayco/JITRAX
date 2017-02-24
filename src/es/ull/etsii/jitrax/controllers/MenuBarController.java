@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import org.postgresql.util.PSQLException;
 
 import es.ull.etsii.jitrax.adt.Database;
-import es.ull.etsii.jitrax.gui.FileDialog;
-import es.ull.etsii.jitrax.gui.main.MainWindow;
+import es.ull.etsii.jitrax.gui.MainWindow;
+import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
 import es.ull.etsii.jitrax.jdbc.PostgreDriver;
 
 public class MenuBarController {

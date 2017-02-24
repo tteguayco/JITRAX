@@ -12,6 +12,7 @@ import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.analysisDSL.DatabaseLexer;
 import es.ull.etsii.jitrax.analysisDSL.DatabaseParser;
 import es.ull.etsii.jitrax.analysisDSL.DescriptiveErrorListenerDSL;
+import es.ull.etsii.jitrax.gui.dialogs.ErrorsDialog;
 import es.ull.etsii.jitrax.analysisDSL.DatabaseEvalVisitor;
 
 public class DatabaseFileLoader {

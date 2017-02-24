@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.gui;
+package es.ull.etsii.jitrax.gui.dialogs;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.gui;
+package es.ull.etsii.jitrax.gui.dialogs;
 
 import java.util.ArrayList;
 
@@ -6,8 +6,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
 import es.ull.etsii.jitrax.adt.Database;
-import es.ull.etsii.jitrax.gui.main.Console;
-import es.ull.etsii.jitrax.gui.main.MainWindow;
+import es.ull.etsii.jitrax.gui.Console;
+import es.ull.etsii.jitrax.gui.DatabaseFileLoader;
 
 public class FileDialog {
 

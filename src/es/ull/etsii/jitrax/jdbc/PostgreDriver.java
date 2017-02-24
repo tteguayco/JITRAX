@@ -174,7 +174,6 @@ public class PostgreDriver {
 		try {
 			Statement statement = connection.createStatement();
 			statement.executeUpdate(insertRowStatement);
-			System.out.println(insertRowStatement);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
