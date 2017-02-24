@@ -37,7 +37,7 @@ public class MainWindow extends JFrame {
 	private static final String FRAME_TITLE = "JITRAX";
 	
 	private MenuBar barMenu;
-	private CodeEditorPanel codeEditorPanel;
+	private WorkspacePanel codeEditorPanel;
 	private Console console;
 	private DatabaseViewerPanel databaseViewerPanel;
 	
@@ -52,7 +52,7 @@ public class MainWindow extends JFrame {
 	}
 	
 	public void addDatabase(Database database) {
-		codeEditorPanel = new CodeEditorPanel();
+		codeEditorPanel = new WorkspacePanel();
 		console = new Console();
 		databaseViewerPanel = new DatabaseViewerPanel(database);
 		
@@ -127,11 +127,11 @@ public class MainWindow extends JFrame {
 		this.barMenu = barMenu;
 	}
 
-	public CodeEditorPanel getCodeEditorPanel() {
+	public WorkspacePanel getCodeEditorPanel() {
 		return codeEditorPanel;
 	}
 
-	public void setCodeEditorPanel(CodeEditorPanel codeEditorPanel) {
+	public void setCodeEditorPanel(WorkspacePanel codeEditorPanel) {
 		this.codeEditorPanel = codeEditorPanel;
 	}
 

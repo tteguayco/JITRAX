@@ -26,14 +26,14 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-public class CodeEditorPanel extends JPanel {
+public class WorkspacePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String[] FONT_STYLES = { "Plain", "Bold", "Italic" };
 	private static final int[] FONT_STYLES_CONSTANTS = { Font.PLAIN, Font.BOLD, Font.ITALIC };
 	private static final String[] DBMS_LIST = { "PostgreSQL" };
 	
-	private static final String PANEL_TITLE = "Editor";
+	private static final String PANEL_TITLE = "Workspace";
 	private static final String RA_SYNTAX_STYLE_ID = "text/RelationalAlgebra";
 	private static final String TOKEN_MAKER_LOCATION =
 			"es.ull.etsii.jitrax.tokenMaker.RelationalAlgebraTokenMaker";
@@ -65,7 +65,7 @@ public class CodeEditorPanel extends JPanel {
 	private JButton saveRaButton;
 	private JButton saveSqlButton;
 	
-	public CodeEditorPanel() {
+	public WorkspacePanel() {
 		relationalAlgebraCodeEditor = new RSyntaxTextArea();
 		sqlCodeEditor = new RSyntaxTextArea();
 		translateButton = new JButton("Translate to SQL");
@@ -147,9 +147,11 @@ public class CodeEditorPanel extends JPanel {
 		tabbedPane.add("Relational Algebra", raPanel);
 		tabbedPane.addTab("SQL", sqlPanel);
 		tabbedPane.addTab("Parse Tree", new JPanel());
+		tabbedPane.addTab("Query Result", new JPanel());
 		tabbedPane.setFocusable(false);
 		tabbedPane.setEnabledAt(1, false);
 		tabbedPane.setEnabledAt(2, false);
+		tabbedPane.setEnabledAt(3, false);
 		add(tabbedPane, BorderLayout.CENTER);
 		
 		setListeners();
