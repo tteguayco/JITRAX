@@ -20,8 +20,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import com.alee.laf.WebLookAndFeel;
-
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.controllers.MenuBarController;
 import es.ull.etsii.jitrax.interpreters.RelationalAlgebraInterpreter;
@@ -102,7 +100,7 @@ public class MainWindow extends JFrame {
 		try {
 	        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 	        setDefaultLookAndFeelDecorated(true);
-	    } 
+	    }
 	    catch (UnsupportedLookAndFeelException e) {
 	    	e.printStackTrace();
 	    }
