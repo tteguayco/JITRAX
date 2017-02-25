@@ -21,7 +21,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class DBMSConnectionDialog extends JFrame {
 	private static final String WINDOW_TITLE = "DBMS Connection";
 	private static final String[] DBMS_LIST = { "PostgreSQL" };
-	private static final String DEFAULT_HOSTNAME = "localhost";
+	private static final String DEFAULT_HOSTNAME = "127.0.0.1";
+	private static final String DEFAULT_PORT = "5432";
 
 	private static final int WINDOW_WIDTH = 240;
 	private static final int WINDOW_HEIGHT = 240;
@@ -44,6 +45,9 @@ public class DBMSConnectionDialog extends JFrame {
 		username = new JTextField();
 		password = new JPasswordField();
 		nextButton = new JButton("✔ Next");
+		
+		hostname.setText(DEFAULT_HOSTNAME);
+		port.setText(DEFAULT_PORT);
 		
 		dbmsList.setPreferredSize(new Dimension(TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT));
 		hostname.setPreferredSize(new Dimension(TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT));
@@ -96,6 +100,7 @@ public class DBMSConnectionDialog extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+		pack();
 		setResizable(false);
 	}
 	

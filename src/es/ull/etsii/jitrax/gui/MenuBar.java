@@ -31,7 +31,6 @@ public class MenuBar extends JMenuBar {
 	
 	private JRadioButtonMenuItem defaultViewRadioButton;
 	private JRadioButtonMenuItem nimbusViewRadioButton;
-	private JRadioButtonMenuItem metalViewRadioButton;
 	
 	private JMenuItem openDatabase;
 	private JMenuItem newDatabase;
@@ -99,18 +98,15 @@ public class MenuBar extends JMenuBar {
 	private void buildViewMenu() {
 		setDefaultViewRadioButton(new JRadioButtonMenuItem("OS Default", true));
 		setNimbusViewRadioButton(new JRadioButtonMenuItem("Nimbus", true));
-		setMetalViewRadioButton(new JRadioButtonMenuItem("Metal", true));
 		
 		ButtonGroup buttonGroup = new ButtonGroup();
 		buttonGroup.add(getDefaultViewRadioButton());
 		buttonGroup.add(getNimbusViewRadioButton());
-		buttonGroup.add(getMetalViewRadioButton());
 		
 		setViewMenu(new JMenu("View"));
 		getViewMenu().setMnemonic(KeyEvent.VK_V);
 		getViewMenu().add(getDefaultViewRadioButton());
 		getViewMenu().add(getNimbusViewRadioButton());
-		getViewMenu().add(getMetalViewRadioButton());
 	}
 	
 	private void buildLanguageMenu() {
@@ -156,24 +152,6 @@ public class MenuBar extends JMenuBar {
 				try {
                     for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                         if ("Nimbus".equals(info.getName())) {
-                                UIManager.setLookAndFeel(info.getClassName());
-                                SwingUtilities.updateComponentTreeUI(MenuBar.this.getParent());
-                                break;
-                        }
-                    }
-                 } catch (Exception exc) {
-                	 exc.printStackTrace();
-                 }
-			}	
-		});
-		
-		// METAL LOOK AND FEEL
-		getMetalViewRadioButton().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-                    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                        if ("Metal".equals(info.getName())) {
                                 UIManager.setLookAndFeel(info.getClassName());
                                 SwingUtilities.updateComponentTreeUI(MenuBar.this.getParent());
                                 break;
@@ -240,14 +218,6 @@ public class MenuBar extends JMenuBar {
 
 	public void setEnglishRadioButton(JRadioButtonMenuItem englishRadioButton) {
 		this.englishRadioButton = englishRadioButton;
-	}
-
-	public JRadioButtonMenuItem getMetalViewRadioButton() {
-		return metalViewRadioButton;
-	}
-
-	public void setMetalViewRadioButton(JRadioButtonMenuItem metalViewRadioButton) {
-		this.metalViewRadioButton = metalViewRadioButton;
 	}
 
 	public JMenu getQueryMenu() {
