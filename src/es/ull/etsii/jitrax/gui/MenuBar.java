@@ -64,24 +64,24 @@ public class MenuBar extends JMenuBar {
 		setFileMenu(new JMenu("File"));
 		fileMenu.setMnemonic(KeyEvent.VK_F);
 		
+		newDatabase = new JMenuItem("New Database");
+		newDatabase.setMnemonic(KeyEvent.VK_N);
+		
 		openDatabase = new JMenuItem("Open");
 		openDatabase.setMnemonic(KeyEvent.VK_O);
-		
-		newDatabase = new JMenuItem("New");
-		newDatabase.setMnemonic(KeyEvent.VK_N);
 		
 		saveDatabase = new JMenuItem("Save");
 		saveDatabase.setMnemonic(KeyEvent.VK_S);
 		
-		saveDatabaseAs = new JMenuItem("Save as...");
+		saveDatabaseAs = new JMenuItem("Save As...");
 		
 		importOption = new JMenuItem("Import");
 		exportOption = new JMenuItem("Export");
 		
 		exitOption = new JMenuItem("Exit");
 		
-		getFileMenu().add(openDatabase);
 		getFileMenu().add(newDatabase);
+		getFileMenu().add(openDatabase);
 		getFileMenu().add(saveDatabase);
 		getFileMenu().add(saveDatabaseAs);
 		getFileMenu().add(new JSeparator());

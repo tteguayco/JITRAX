@@ -54,9 +54,9 @@ public class SelectedDatabasePanel extends JPanel {
 		
 		// ComboBox settings
 		dbComboBox.setPreferredSize(new Dimension(COMBOBOX_WIDTH, COMBOBOX_HEIGHT));
-		DefaultListCellRenderer dlcr = new DefaultListCellRenderer(); 
-		dlcr.setHorizontalAlignment(DefaultListCellRenderer.CENTER); 
-		dbComboBox.setRenderer(dlcr);
+		//DefaultListCellRenderer dlcr = new DefaultListCellRenderer(); 
+		//dlcr.setHorizontalAlignment(DefaultListCellRenderer.CENTER); 
+		//dbComboBox.setRenderer(dlcr);
 		dbComboBox.setFocusable(false);
 		
 		JPanel comboBoxContainer = new JPanel();

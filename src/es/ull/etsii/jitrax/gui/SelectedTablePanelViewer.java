@@ -65,22 +65,15 @@ public class SelectedTablePanelViewer extends JPanel {
 		String[][] rowsData = getTableRowsData();
 		tableModel = new DefaultTableModel(rowsData, columnNames);
 		
-		// Table's alignments
-		centerGraphicTableHeaders();
-		centerGraphicTableContent();
-		
 		// Mark odd rows with a different color
 		markOddRows();
 		
 		setLayout(new BorderLayout());
 		graphicTable.setEnabled(false);
-		//graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		graphicTable.setMinimumSize(graphicTable.getPreferredScrollableViewportSize());
 		//graphicTable.setPreferredScrollableViewportSize(graphicTable.getPreferredSize());
 		//graphicTable.setFillsViewportHeight(true);
-		
-		
-		
 		
 		JPanel buttonsContainer = new JPanel();
 		buttonsContainer.add(detailsButton);
@@ -97,21 +90,6 @@ public class SelectedTablePanelViewer extends JPanel {
 		tableSP.setPreferredSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMaximumSize(new Dimension(MAXIMUM_WIDTH, MAXIMUM_HEIGHT));
-	}
-	
-	private void centerGraphicTableHeaders() {
-		((DefaultTableCellRenderer)getGraphicTable()
-				.getTableHeader()
-				.getDefaultRenderer())
-	    		.setHorizontalAlignment(JLabel.CENTER);
-	}
-	
-	private void centerGraphicTableContent() {
-		DefaultTableCellRenderer render = new DefaultTableCellRenderer();
-		render.setHorizontalAlignment(SwingConstants.CENTER);
-		for (int i = 0; i < getGraphicTable().getColumnCount(); i++) {
-			getGraphicTable().getColumnModel().getColumn(i).setCellRenderer(render);
-		}
 	}
 	
 	/**

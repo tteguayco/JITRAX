@@ -7,6 +7,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -18,6 +19,8 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+
+import com.alee.laf.WebLookAndFeel;
 
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.controllers.MenuBarController;
@@ -37,7 +40,7 @@ public class MainWindow extends JFrame {
 	private static final String FRAME_TITLE = "JITRAX";
 	
 	private MenuBar barMenu;
-	private WorkspacePanel codeEditorPanel;
+	private WorkspacePanel workspacePanel;
 	private Console console;
 	private DatabaseViewerPanel databaseViewerPanel;
 	
@@ -51,8 +54,8 @@ public class MainWindow extends JFrame {
 		buildWindow();
 	}
 	
-	public void addDatabase(Database database) {
-		codeEditorPanel = new WorkspacePanel();
+	public void setupContent(Database database) {
+		workspacePanel = new WorkspacePanel();
 		console = new Console();
 		databaseViewerPanel = new DatabaseViewerPanel(database);
 		
@@ -61,7 +64,7 @@ public class MainWindow extends JFrame {
 		
 		// HORIZONTAL SPLITPANE
 		JSplitPane horSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true,
-				codeEditorPanel, console);
+				workspacePanel, console);
 		horSplitPane.setResizeWeight(HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT);
 		horSplitPane.setOneTouchExpandable(true);
 		
@@ -128,11 +131,11 @@ public class MainWindow extends JFrame {
 	}
 
 	public WorkspacePanel getCodeEditorPanel() {
-		return codeEditorPanel;
+		return workspacePanel;
 	}
 
 	public void setCodeEditorPanel(WorkspacePanel codeEditorPanel) {
-		this.codeEditorPanel = codeEditorPanel;
+		this.workspacePanel = codeEditorPanel;
 	}
 
 	public Console getConsole() {

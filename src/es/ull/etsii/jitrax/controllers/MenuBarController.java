@@ -42,7 +42,7 @@ public class MenuBarController {
 							postgreDriver.setUpDatabase(databaseFromFile);
 							
 							// Launch main window
-							mainWindow.addDatabase(databaseFromFile);
+							mainWindow.setupContent(databaseFromFile);
 						}
 						
 						// If it already exists, drop it and create a new one

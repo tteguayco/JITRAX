@@ -7,5 +7,8 @@
 	<classpathentry kind="lib" path="lib/rsyntaxtextarea-3.0.0-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="lib" path="lib/rsyntaxtextarea-3.0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/postgresql-42.0.0.jre6.jar"/>
+	<classpathentry kind="lib" path="lib/seaglass-demo.jar"/>
+	<classpathentry kind="lib" path="lib/weblaf-complete-1.28.jar"/>
+	<classpathentry kind="lib" path="lib/weblaf-complete-1.29.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
