@@ -23,9 +23,9 @@ import es.ull.etsii.jitrax.adt.Table;
 public class SelectedTablePanelViewer extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
-	private static final int MINIMUM_WIDTH = 270;
+	private static final int MINIMUM_WIDTH = 290;
 	private static final int MINIMUM_HEIGHT = 130;
-	private static final int MAXIMUM_WIDTH = 270;
+	private static final int MAXIMUM_WIDTH = 290;
 	private static final int MAXIMUM_HEIGHT = 130;
 	private static final int ODD_ROW_R = 220;
 	private static final int ODD_ROW_G = 220;
@@ -33,7 +33,6 @@ public class SelectedTablePanelViewer extends JPanel {
 	
 	private Table table;
 	private JTable graphicTable;
-	private JButton detailsButton;
 	private DefaultTableModel tableModel;
 	
 	public SelectedTablePanelViewer() {
@@ -51,7 +50,6 @@ public class SelectedTablePanelViewer extends JPanel {
 	
 	private void initializeGuiComponents() {
 		graphicTable = new JTable();
-		detailsButton = new JButton("DETAILS");
 	}
 	
 	public void updateTable(Table aTable) {
@@ -79,7 +77,6 @@ public class SelectedTablePanelViewer extends JPanel {
 		//graphicTable.setFillsViewportHeight(true);
 		
 		JPanel buttonsContainer = new JPanel();
-		buttonsContainer.add(detailsButton);
 		
 		JScrollPane tableSP = new JScrollPane(graphicTable);
 		tableSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -160,14 +157,6 @@ public class SelectedTablePanelViewer extends JPanel {
 
 	public void setGraphicTable(JTable graphicTable) {
 		this.graphicTable = graphicTable;
-	}
-
-	public JButton getDetailsButton() {
-		return detailsButton;
-	}
-
-	public void setDetailsButton(JButton detailsButton) {
-		this.detailsButton = detailsButton;
 	}
 
 	public DefaultTableModel getTableModel() {

@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -18,8 +20,6 @@ public class Console extends JPanel {
 	private static final String PANEL_TITLE = "Console";
 	private static final String DEFAULT_QUERY = "PROJECT [name, age] (Students)";
 	private static final String CONSOLE_STYLE = "Courier New";
-	private static final String CONSOLE_START_STR = "> ";
-	private static final String WELCOME_MESSAGE = "JITRAX v1.0";
 	
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
@@ -44,7 +44,6 @@ public class Console extends JPanel {
 		console.setEditable(false);
 		JScrollPane sp = new JScrollPane(console);
 		console.setSelectedTextColor(Color.GRAY);
-		appendLine(WELCOME_MESSAGE);
 		
 		setLayout(new BorderLayout());
 		
@@ -55,8 +54,8 @@ public class Console extends JPanel {
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
 	}
 	
-	public void appendLine(String newLine) {
-		getConsole().append(CONSOLE_START_STR + newLine + "\n");
+	public void appendMessage(String newMessage) {
+		getConsole().append(newMessage);
 	}
 
 	public JTextArea getConsole() {

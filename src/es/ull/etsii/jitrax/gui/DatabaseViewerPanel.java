@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,6 +14,8 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -30,7 +34,7 @@ import es.ull.etsii.jitrax.exceptions.DuplicatePrimaryKeyException;
 
 public class DatabaseViewerPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private static final int EXTRA_GAP_SIZE = 15;
+	private static final int EXTRA_GAP_SIZE = 10;
 	
 	private static final String PANEL_TITLE = "DB Viewer";
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
@@ -56,6 +60,7 @@ public class DatabaseViewerPanel extends JPanel {
 		tablesSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		tablesSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
+		add(Box.createVerticalStrut(EXTRA_GAP_SIZE));
 		add(selectedDatabasePanel);
 		add(tablesSP);
 		add(Box.createVerticalStrut(EXTRA_GAP_SIZE));
@@ -94,12 +99,57 @@ public class DatabaseViewerPanel extends JPanel {
 	}
 	
 	private void setListeners() {
-		selectedDatabasePanel.getDbComboBox().addActionListener(new ActionListener() {
+		setComboBoxListener();
+		setAlterButtonListener();
+		setRemoveButtonListener();
+	}
+	
+	private void setComboBoxListener() {
+		selectedDatabasePanel.getDbComboBox().addItemListener(new ItemListener() {
+			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				// CHANGE SELECTED DATABASE
-				String selectedDatabaseName = (String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
-				updateSelectedDatabase(selectedDatabaseName);
+			public void itemStateChanged(ItemEvent event) {
+				// If the values changes
+				if (event.getStateChange() == ItemEvent.SELECTED) {
+					String selectedDatabaseName = 
+							(String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
+					updateSelectedDatabase(selectedDatabaseName);
+			    }
+			}
+		});
+	}
+	
+	private void setAlterButtonListener() {
+		selectedDatabasePanel.getAlterButton().addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+	}
+	
+	private void setRemoveButtonListener() {
+		selectedDatabasePanel.getRemoveButton().addActionListener(new ActionListener() {
+			JComboBox<String> databasesCombo = selectedDatabasePanel.getDbComboBox();
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// There must be at least one database
+				if (databasesCombo.getItemCount() > 1) {
+					String databaseToRemoveName = 
+							(String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
+					databases.remove(databaseToRemoveName);
+					System.out.println(databases);
+					selectedDatabasePanel.updateComboBox(databases);
+				}
+				
+				else {
+					JOptionPane.showMessageDialog(DatabaseViewerPanel.this.getParent(), 
+							"There must be at least one database.", 
+							"Warning", 
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+				
 			}
 		});
 	}

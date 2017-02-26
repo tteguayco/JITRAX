@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -93,10 +95,14 @@ public class SelectedDatabasePanel extends JPanel {
 	 * Fills the combobox with the list of databases.
 	 * @param databases
 	 */
-	private void updateComboBox(HashMap<String, Database> databases) {
-		for (int i = 0; i < databases.size(); i++) {
-			getDbComboBox().addItem(databases.get(i).getName());
-		}
+	public void updateComboBox(HashMap<String, Database> databases) {
+		Iterator it = databases.entrySet().iterator();
+	    
+		while (it.hasNext()) {
+	        Map.Entry pair = (Map.Entry)it.next();
+	        getDbComboBox().addItem(databases.get(pair.getKey()).getName());
+	        it.remove();
+	    }
 	}
 
 	public JComboBox<String> getDbComboBox() {
@@ -113,5 +119,13 @@ public class SelectedDatabasePanel extends JPanel {
 
 	public void setAlterButton(JButton alterButton) {
 		this.alterButton = alterButton;
+	}
+
+	public JButton getRemoveButton() {
+		return removeButton;
+	}
+
+	public void setRemoveButton(JButton removeButton) {
+		this.removeButton = removeButton;
 	}
 }

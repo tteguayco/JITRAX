@@ -2,6 +2,12 @@ package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -67,9 +73,15 @@ public class MainWindow extends JFrame {
 		add(mainContainer, BorderLayout.CENTER);
 		
 		mainContainer.setVisible(false);
-		
+
+		setListeners();
 		setJMenuBar(barMenu);
 		buildWindow();
+		
+		/**
+		 * Redirect System.out to the console in the GUI.
+		 */
+		redirectOutputToConsole();
 	}
 	
 	public void addDatabase(Database database) {
@@ -106,8 +118,40 @@ public class MainWindow extends JFrame {
 		
 		MainWindow window = new MainWindow();
 		
+		System.out.println("> Welcome to JITRAX (v1.0)");
+		
 		// Initialize controllers
 		MenuBarController menuBarController = new MenuBarController(window);
+		
+		UIManager.put("OptionPane.cancelButtonText", "Cancel");
+	    UIManager.put("OptionPane.noButtonText", "No");
+	    UIManager.put("OptionPane.okButtonText", "OK");
+	    UIManager.put("OptionPane.yesButtonText", "Yes");
+	}
+	
+	public void setListeners() {
+		
+	}
+	
+	public void setConsoleListener() {
+		
+	}
+	
+	/**
+	 * Everything written through System.out will be displayed in the console.
+	 */
+	public void redirectOutputToConsole() {
+		
+		class ConsoleOutputStream extends ByteArrayOutputStream {
+			@Override
+			public void write(byte[] bytes, int off, int len) {
+				String message = new String(bytes, off, len, StandardCharsets.UTF_8);
+				console.appendMessage(message);
+			}
+		}
+		
+		PrintStream ps = new PrintStream(new ConsoleOutputStream());
+		System.setOut(ps);
 	}
 	
 	public MenuBar getBarMenu() {
