@@ -24,9 +24,9 @@ public class SelectedTablePanelViewer extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private static final int MINIMUM_WIDTH = 270;
-	private static final int MINIMUM_HEIGHT = 110;
+	private static final int MINIMUM_HEIGHT = 130;
 	private static final int MAXIMUM_WIDTH = 270;
-	private static final int MAXIMUM_HEIGHT = 110;
+	private static final int MAXIMUM_HEIGHT = 130;
 	private static final int ODD_ROW_R = 220;
 	private static final int ODD_ROW_G = 220;
 	private static final int ODD_ROW_B = 220;

@@ -48,6 +48,7 @@ public class DatabaseViewerPanel extends JPanel {
 		selectedDatabasePanel = new SelectedDatabasePanel(databases);
 		tablesPanel = new TablesPanel();
 		selectedTablePanel = new SelectedTablePanelViewer();
+		selectedTableExchanger = new SelectedTableExchanger();
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -79,11 +80,17 @@ public class DatabaseViewerPanel extends JPanel {
 		tablesPanel.updateTables(database.getTables());
 		selectedTablePanel.updateTable(database.getTables().get(0));
 		
-		/*
-		 *  Object that shows the selected table in the quick view in the GUI
-		 */
-		selectedTableExchanger = new SelectedTableExchanger(getTablesPanel(), 
-				getSelectedTablePanel());
+		// Update SelectedDatabaseExchanger
+		selectedTableExchanger.update(getTablesPanel(), getSelectedTablePanel());
+	}
+	
+	private void updateSelectedDatabase(String newSelectedDatabaseName) {
+		Database newSelectedDatabase = databases.get(newSelectedDatabaseName);
+		tablesPanel.updateTables(newSelectedDatabase.getTables());
+		selectedTablePanel.updateTable(newSelectedDatabase.getTables().get(0));
+		selectedTableExchanger.update(getTablesPanel(), getSelectedTablePanel());
+		revalidate();
+		selectedTablePanel.revalidate();
 	}
 	
 	private void setListeners() {
@@ -92,7 +99,7 @@ public class DatabaseViewerPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				// CHANGE SELECTED DATABASE
 				String selectedDatabaseName = (String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
-				tablesPanel.setTables(databases.get(selectedDatabaseName).getTables());
+				updateSelectedDatabase(selectedDatabaseName);
 			}
 		});
 	}

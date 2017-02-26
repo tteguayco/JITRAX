@@ -6,21 +6,21 @@ TABLE Flight(Number: Integer, PK;
 	DeptTime: String;
 	ArrivalTime: String)
 =>
-(1, Chicago, Washington, 4am, 7am);
-(2, Kansas, Madrid, 6pm, 10pm);
-(3, Florida, Paris, 5pm, 12pm);
-(4, Memphis, London, 4am, 11am);
+(1, 'Chicago', 'Washington', '4am', '7am');
+(2, 'Kansas', 'Madrid', '6pm', '10pm');
+(3, 'Florida', 'Paris', '5pm', '12pm');
+(4, 'Memphis', 'London', '4am', '11am');
 
 TABLE Pilot(CompanyID: Integer, PK; Name: String; ExperienceLevel: Integer)
 =>
-(3, Doe, 75);
-(4, Swiss, 67);
-(8, Lawrence, 102);
+(3, 'Doe', 75);
+(4, 'Swiss', 67);
+(8, 'Lawrence', 102);
 
-TABLE ASSIGNED-TO(CompanyID: Integer, PK; 
+TABLE ASSIGNEDTO(CompanyID: Integer, PK; 
 		FlightNumber: Integer, PK;
 		DestDate: Date)
 =>
-(3, 2, 2014-11-04);
-(8, 3, 2015-01-19);
-(4, 1, 2014-11-03);
+(3, 2, '2014-11-04');
+(8, 3, '2015-01-19');
+(4, 1, '2014-11-03');

@@ -17,7 +17,9 @@ public class SelectedTableExchanger {
 	private TablesPanel tablesPanel;
 	private SelectedTablePanelViewer selectedTablePanelViewer;
 	
-	public SelectedTableExchanger(TablesPanel aTablesPanel, SelectedTablePanelViewer aSelectedTablePanelViewer) {
+	public SelectedTableExchanger() {}
+	
+	public void update(TablesPanel aTablesPanel, SelectedTablePanelViewer aSelectedTablePanelViewer) {
 		tablesPanel = aTablesPanel;
 		selectedTablePanelViewer = aSelectedTablePanelViewer;
 		

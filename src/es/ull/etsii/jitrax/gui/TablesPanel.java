@@ -39,9 +39,7 @@ public class TablesPanel extends JPanel {
 		tables = newTables;
 		selectedTablePanel = null;
 		
-		//add(new TablePanel(newTables.get(0)));
 		buildTablesPanel();
-		//revalidate();
 	}
 
 	/**
