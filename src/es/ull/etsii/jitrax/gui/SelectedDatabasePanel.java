@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -39,7 +40,7 @@ public class SelectedDatabasePanel extends JPanel {
 	private JButton alterButton;
 	private JButton removeButton;
 	
-	public SelectedDatabasePanel(ArrayList<Database> databases) {
+	public SelectedDatabasePanel(HashMap<String, Database> databases) {
 		dbComboBox = new JComboBox<String>();
 		alterButton = new JButton("ALTER");
 		removeButton = new JButton("REMOVE");
@@ -54,9 +55,9 @@ public class SelectedDatabasePanel extends JPanel {
 		
 		// ComboBox settings
 		dbComboBox.setPreferredSize(new Dimension(COMBOBOX_WIDTH, COMBOBOX_HEIGHT));
-		//DefaultListCellRenderer dlcr = new DefaultListCellRenderer(); 
-		//dlcr.setHorizontalAlignment(DefaultListCellRenderer.CENTER); 
-		//dbComboBox.setRenderer(dlcr);
+		DefaultListCellRenderer dlcr = new DefaultListCellRenderer(); 
+		dlcr.setHorizontalAlignment(DefaultListCellRenderer.CENTER); 
+		dbComboBox.setRenderer(dlcr);
 		dbComboBox.setFocusable(false);
 		
 		JPanel comboBoxContainer = new JPanel();
@@ -75,6 +76,10 @@ public class SelectedDatabasePanel extends JPanel {
 		setListeners();
 	}
 	
+	public void addDatabase(String databaseName) {
+		getDbComboBox().addItem(databaseName);
+	}
+	
 	public void setListeners() {
 		alterButton.addActionListener(new ActionListener() {
 			@Override
@@ -88,7 +93,7 @@ public class SelectedDatabasePanel extends JPanel {
 	 * Fills the combobox with the list of databases.
 	 * @param databases
 	 */
-	private void updateComboBox(ArrayList<Database> databases) {
+	private void updateComboBox(HashMap<String, Database> databases) {
 		for (int i = 0; i < databases.size(); i++) {
 			getDbComboBox().addItem(databases.get(i).getName());
 		}

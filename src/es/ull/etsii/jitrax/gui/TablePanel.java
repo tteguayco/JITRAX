@@ -41,7 +41,7 @@ public class TablePanel extends JPanel {
 		// Fill the panel with the attributes info
 		addAttributes();
 	}
-
+	
 	private void addAttributes() {
 		// Adding attributes to the panel, along with their data types
 		for (int i = 0; i < getTable().getAttributes().size(); i++) {
@@ -76,6 +76,12 @@ public class TablePanel extends JPanel {
 			// Extra gap
 			add(Box.createVerticalStrut(GAP_BETWEEN_ATTRIBUTES));
 		}
+	}
+	
+	public void updateTable(Table aTable) {
+		table = aTable;
+		revalidate();
+		repaint();
 	}
 	
 	public void select() {

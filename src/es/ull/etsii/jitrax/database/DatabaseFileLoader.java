@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.gui;
+package es.ull.etsii.jitrax.database;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -61,7 +61,9 @@ public class DatabaseFileLoader {
 		    	DatabaseEvalVisitor eval = new DatabaseEvalVisitor();
 				database = (Database) eval.visit(tree);
 				return true;
-		    } else {
+		    } 
+		    
+		    else {
 		    	// Window showing the errors for the user
 		    	ArrayList<String> errors = errorListener.getSyntaxErrorsList();
 		    	ErrorsDialog errorsDialog = new ErrorsDialog(errors);

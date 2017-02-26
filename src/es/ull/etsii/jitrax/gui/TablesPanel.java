@@ -23,10 +23,6 @@ import es.ull.etsii.jitrax.adt.*;
 public class TablesPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
-	private static final Color TABLE_PANEL_TITLE_COLOR = new Color(60, 60, 60);
-	private static final Color SELECTED_TABLE_COLOR = Color.ORANGE;
-	private static final Color UNSELECTED_TABLE_COLOR = new Color(150, 150, 150);
-	
 	private static final int MINIMUM_WIDTH = 100;
 	private static final int MINIMUM_HEIGHT = 100;
 	private static final int MAXIMUM_WIDTH = 100;
@@ -34,8 +30,7 @@ public class TablesPanel extends JPanel {
 	
 	private static final float ATTRIBUTES_ALIGNMENT = Component.CENTER_ALIGNMENT;
 	
-	private ArrayList<Table> tables;		// Tables to be shown
-	private Set<String> tableNames;			// Useful for avoiding tables with the same name
+	private ArrayList<Table> tables;
 	private TablePanel selectedTablePanel;
 	
 	public TablesPanel() {
@@ -46,10 +41,19 @@ public class TablesPanel extends JPanel {
 	}
 	
 	public TablesPanel(ArrayList<Table> newTables) {
-		tables = new ArrayList<Table>(newTables);
+		tables = newTables;
 		selectedTablePanel = null;
 
 		buildTablesPanel();
+	}
+	
+	public void updateTables(ArrayList<Table> newTables) {
+		tables = newTables;
+		selectedTablePanel = null;
+		
+		buildTablesPanel();
+		revalidate();
+		repaint();
 	}
 
 	/**
@@ -113,14 +117,6 @@ public class TablesPanel extends JPanel {
 
 	public void setTables(ArrayList<Table> tables) {
 		this.tables = tables;
-	}
-
-	public Set<String> getTableNames() {
-		return tableNames;
-	}
-
-	public void setTableNames(Set<String> tableNames) {
-		this.tableNames = tableNames;
 	}
 
 	public TablePanel getSelectedTablePanel() {

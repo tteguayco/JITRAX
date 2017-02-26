@@ -2,7 +2,6 @@ package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
@@ -12,15 +11,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 
 import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Datum;
@@ -28,6 +22,8 @@ import es.ull.etsii.jitrax.adt.Row;
 import es.ull.etsii.jitrax.adt.Table;
 
 public class SelectedTablePanelViewer extends JPanel {
+	private static final long serialVersionUID = 1L;
+	
 	private static final int MINIMUM_WIDTH = 270;
 	private static final int MINIMUM_HEIGHT = 130;
 	private static final int MAXIMUM_WIDTH = 270;
@@ -35,8 +31,6 @@ public class SelectedTablePanelViewer extends JPanel {
 	private static final int ODD_ROW_R = 220;
 	private static final int ODD_ROW_G = 220;
 	private static final int ODD_ROW_B = 220;
-	private static final int TABLE_MIN_WIDTH = 400;
-	private static final int TABLE_MIN_HEIGHT = 500;
 	
 	private Table table;
 	private JTable graphicTable;
@@ -45,14 +39,24 @@ public class SelectedTablePanelViewer extends JPanel {
 	
 	public SelectedTablePanelViewer() {
 		table = null;
-		detailsButton = null;
-		graphicTable = null;
+		initializeGuiComponents();
 	}
 	
 	public SelectedTablePanelViewer(Table aTable) {
 		table = aTable;
-		detailsButton = new JButton("DETAILS");
+		
+		initializeGuiComponents();
+		initializeTableModel();
+		graphicTable.setModel(tableModel);
+	}
+	
+	private void initializeGuiComponents() {
 		graphicTable = new JTable();
+		detailsButton = new JButton("DETAILS");
+	}
+	
+	public void updateTable(Table aTable) {
+		table = aTable;
 		initializeTableModel();
 		graphicTable.setModel(tableModel);
 	}
@@ -100,13 +104,6 @@ public class SelectedTablePanelViewer extends JPanel {
 		if (defaults.get("Table.alternateRowColor") == null) {
 		    defaults.put("Table.alternateRowColor", new Color(ODD_ROW_R, ODD_ROW_G, ODD_ROW_B));
 		}
-	}
-	
-	/**
-	 * Sets a tool tip for each column in the graphic table.
-	 */
-	private void setToolTipsTableHeaders() {
-	
 	}
 	
 	/**

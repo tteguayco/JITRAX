@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -34,22 +35,19 @@ public class DatabaseViewerPanel extends JPanel {
 	private static final String PANEL_TITLE = "DB Viewer";
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
-	private ArrayList<Database> databases;
-	private int selectedDatabaseIndex;
+	private HashMap<String, Database> databases;
+	private SelectedTableExchanger selectedTableExchanger;
+	
 	private SelectedDatabasePanel selectedDatabasePanel;
 	private TablesPanel tablesPanel;
 	private SelectedTablePanelViewer selectedTablePanel;
 	
-	public DatabaseViewerPanel(Database database) {
-		databases = new ArrayList<Database>();
-		
-		// There will be at least one table for each database
-		databases.add(database);
-		ArrayList<Table> tables = database.getTables();
+	public DatabaseViewerPanel() {
+		databases = new HashMap<String, Database>();
 
 		selectedDatabasePanel = new SelectedDatabasePanel(databases);
-		tablesPanel = new TablesPanel(tables);
-		selectedTablePanel = new SelectedTablePanelViewer(tables.get(0));
+		tablesPanel = new TablesPanel();
+		selectedTablePanel = new SelectedTablePanelViewer();
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -66,35 +64,49 @@ public class DatabaseViewerPanel extends JPanel {
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
 		
 		setListeners();
+		
+		/*
+		 *  Object that shows the selected table in the quick view in the GUI
+		 */
+		selectedTableExchanger = new SelectedTableExchanger(getTablesPanel(), 
+				getSelectedTablePanel());
 	}
 	
-	public void addNewDatabase(Database newDatabase) {
+	/**
+	 * Adds a new database to be shown in the viewer.
+	 * @param database
+	 */
+	public void addDatabase(Database database) {
+		// Add database
+		databases.put(database.getName(), database);
 		
+		// Update GUI Components
+		selectedDatabasePanel.addDatabase(database.getName());
+		tablesPanel.updateTables(database.getTables());
+		selectedTablePanel.updateTable(database.getTables().get(0));
 	}
 	
 	private void setListeners() {
 		selectedDatabasePanel.getDbComboBox().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selectedDatabaseIndex = selectedDatabasePanel.getDbComboBox().getSelectedIndex();
-				tablesPanel.setTables(databases.get(selectedDatabaseIndex).getTables());
+				// CHANGE SELECTED DATABASE
+				String selectedDatabaseName = (String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
+				tablesPanel.setTables(databases.get(selectedDatabaseName).getTables());
 			}
 		});
 	}
-
-	/**
-	 * Returns the database the user is working with.
-	 * @return
-	 */
+	
 	public Database getSelectedDatabase() {
-		return getDatabases().get(getSelectedDatabaseIndex());
+		String databaseName = (String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
+		return databases.get(databaseName);
 	}
 	
-	public ArrayList<Database> getDatabases() {
+	public HashMap<String, Database> getDatabases() {
 		return databases;
 	}
 
-	public void setDatabases(ArrayList<Database> databases) {
+	public void setDatabases(HashMap<String, Database> databases) {
 		this.databases = databases;
 	}
 
@@ -120,13 +132,5 @@ public class DatabaseViewerPanel extends JPanel {
 
 	public void setSelectedTablePanel(SelectedTablePanelViewer selectedTablePanel) {
 		this.selectedTablePanel = selectedTablePanel;
-	}
-
-	public int getSelectedDatabaseIndex() {
-		return selectedDatabaseIndex;
-	}
-
-	public void setSelectedDatabaseIndex(int selectedDatabaseIndex) {
-		this.selectedDatabaseIndex = selectedDatabaseIndex;
 	}
 }

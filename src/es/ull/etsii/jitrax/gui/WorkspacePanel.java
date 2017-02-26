@@ -31,7 +31,6 @@ public class WorkspacePanel extends JPanel {
 	
 	private static final String[] FONT_STYLES = { "Plain", "Bold", "Italic" };
 	private static final int[] FONT_STYLES_CONSTANTS = { Font.PLAIN, Font.BOLD, Font.ITALIC };
-	private static final String[] DBMS_LIST = { "PostgreSQL" };
 	
 	private static final String PANEL_TITLE = "Workspace";
 	private static final String RA_SYNTAX_STYLE_ID = "text/RelationalAlgebra";
@@ -44,16 +43,15 @@ public class WorkspacePanel extends JPanel {
 	
 	private static final int DEFAULT_FONT_SIZE = 16;
 	private static final int DEFAULT_FONT_STYLE = Font.PLAIN;
-	private static final int MIN_FONT_SIZE = 12;
+	private static final int MIN_FONT_SIZE = 11;
 	private static final int MAX_FONT_SIZE = 24;
 	private static final int SPINNER_STEP = 1;
 	
 	private RSyntaxTextArea relationalAlgebraCodeEditor;
 	private RSyntaxTextArea sqlCodeEditor;
 	
-	private JComboBox raFontStyles;
-	private JComboBox sqlFontStyles;
-	//private JComboBox sgbdList;
+	private JComboBox<String> raFontStyles;
+	private JComboBox<String> sqlFontStyles;
 	private JSpinner raFontSizeSelector;
 	private JSpinner sqlFontSizeSelector;
 	private SpinnerModel raFontSizeModel;
@@ -82,6 +80,7 @@ public class WorkspacePanel extends JPanel {
 		sqlCodeEditor.setCaretColor(SQL_CARET_COLOR);
 		sqlCodeEditor.setEditable(false);
 		
+		// Enable code highlighting
 		setSyntaxHighlightingForRelationalAlgebra();
 		setSyntaxHighlightingForSQL();
 		
@@ -90,8 +89,7 @@ public class WorkspacePanel extends JPanel {
 		
 	    // RA Code Editor parameters
 	    int raCodeEditorFontSize = relationalAlgebraCodeEditor.getFont().getSize();
-	    int raCodeEditorFontStyle = relationalAlgebraCodeEditor.getFont().getStyle();
-	    raFontStyles = new JComboBox(FONT_STYLES);
+	    raFontStyles = new JComboBox<String>(FONT_STYLES);
 		raFontSizeModel = new SpinnerNumberModel(raCodeEditorFontSize, 
 				MIN_FONT_SIZE, 
 				MAX_FONT_SIZE, 
@@ -100,14 +98,12 @@ public class WorkspacePanel extends JPanel {
 	    
 		// SQL Code Editor parameters
 		int sqlCodeEditorFontSize = sqlCodeEditor.getFont().getSize();
-		int sqlCodeEditorFontStyle = sqlCodeEditor.getFont().getSize();
-		sqlFontStyles = new JComboBox(FONT_STYLES);
+		sqlFontStyles = new JComboBox<String>(FONT_STYLES);
 		sqlFontSizeModel = new SpinnerNumberModel(sqlCodeEditorFontSize, 
 				MIN_FONT_SIZE, 
 				MAX_FONT_SIZE, 
 				SPINNER_STEP); 
 		sqlFontSizeSelector = new JSpinner(sqlFontSizeModel);
-		//sgbdList = new JComboBox(DBMS_LIST);
 		
 	    // Relational Algebra Tab
 	    JPanel raPanel = new JPanel(new BorderLayout());
@@ -134,7 +130,6 @@ public class WorkspacePanel extends JPanel {
 	    sqlPanel.add(sqlControlPanel, BorderLayout.SOUTH);
 	    executionPanel.add(executeButton);
 	    executionPanel.add(saveSqlButton);
-	    //executionPanel.add(sgbdList);
 	    sqlControlPanel.add(executionPanel, BorderLayout.WEST);
 	    sqlControlPanel.add(sqlEditorElementsPanel);
 	    sqlEditorElementsPanel.add(new JLabel("Style: "));
@@ -166,6 +161,10 @@ public class WorkspacePanel extends JPanel {
 	
 	public void enableParseTreeTab() {
 		tabbedPane.setEnabledAt(2, true);
+	}
+	
+	public void enableResultTab() {
+		tabbedPane.setEnabledAt(3, true);
 	}
 	
 	/**
@@ -252,19 +251,19 @@ public class WorkspacePanel extends JPanel {
 		this.sqlCodeEditor = sqlCodeEditor;
 	}
 
-	public JComboBox getRaFontStyles() {
+	public JComboBox<String> getRaFontStyles() {
 		return raFontStyles;
 	}
 
-	public void setRaFontStyles(JComboBox raFontStyles) {
+	public void setRaFontStyles(JComboBox<String> raFontStyles) {
 		this.raFontStyles = raFontStyles;
 	}
 
-	public JComboBox getSqlFontStyles() {
+	public JComboBox<String> getSqlFontStyles() {
 		return sqlFontStyles;
 	}
 
-	public void setSqlFontStyles(JComboBox sqlFontStyles) {
+	public void setSqlFontStyles(JComboBox<String> sqlFontStyles) {
 		this.sqlFontStyles = sqlFontStyles;
 	}
 

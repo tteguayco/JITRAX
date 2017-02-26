@@ -66,7 +66,7 @@ public class MenuBar extends JMenuBar {
 		newDatabase = new JMenuItem("New Database");
 		newDatabase.setMnemonic(KeyEvent.VK_N);
 		
-		openDatabase = new JMenuItem("Open");
+		openDatabase = new JMenuItem("Open...");
 		openDatabase.setMnemonic(KeyEvent.VK_O);
 		
 		saveDatabase = new JMenuItem("Save");
@@ -81,6 +81,7 @@ public class MenuBar extends JMenuBar {
 		
 		getFileMenu().add(newDatabase);
 		getFileMenu().add(openDatabase);
+		getFileMenu().add(new JSeparator());
 		getFileMenu().add(saveDatabase);
 		getFileMenu().add(saveDatabaseAs);
 		getFileMenu().add(new JSeparator());
@@ -129,18 +130,18 @@ public class MenuBar extends JMenuBar {
 		// DEFAULT OS LOOKN' FEEL
 		getDefaultViewRadioButton().addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent event) {
 				try {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 					SwingUtilities.updateComponentTreeUI(MenuBar.this.getParent());
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
-				} catch (InstantiationException e1) {
-					e1.printStackTrace();
-				} catch (IllegalAccessException e1) {
-					e1.printStackTrace();
-				} catch (UnsupportedLookAndFeelException e1) {
-					e1.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (UnsupportedLookAndFeelException e) {
+					e.printStackTrace();
 				}
 			}
 		});
@@ -148,7 +149,7 @@ public class MenuBar extends JMenuBar {
 		// NIMBUS LOOK AND FEEL
 		getNimbusViewRadioButton().addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent event) {
 				try {
                     for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                         if ("Nimbus".equals(info.getName())) {
@@ -157,8 +158,8 @@ public class MenuBar extends JMenuBar {
                                 break;
                         }
                     }
-                 } catch (Exception exc) {
-                	 exc.printStackTrace();
+                 } catch (Exception e) {
+                	 e.printStackTrace();
                  }
 			}	
 		});

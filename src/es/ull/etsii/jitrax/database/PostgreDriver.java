@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.jdbc;
+package es.ull.etsii.jitrax.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -36,9 +36,9 @@ public class PostgreDriver {
 		connection = DriverManager.getConnection(url, username, password);
 	}
 	
-	public PostgreDriver(String aHostname, int aPort, String anUsername, String aPassword) throws SQLException {
+	public PostgreDriver(String aHostname, String aPort, String anUsername, String aPassword) throws SQLException {
 		hostname = aHostname;
-		port = String.valueOf(aPort);
+		port = aPort;
 		username = anUsername;
 		password = aPassword;
 		

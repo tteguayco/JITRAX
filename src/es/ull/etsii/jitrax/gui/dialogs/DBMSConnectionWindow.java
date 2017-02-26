@@ -10,6 +10,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,12 +19,14 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-public class DBMSConnectionDialog extends JFrame {
+public class DBMSConnectionWindow extends JDialog {
 	private static final String WINDOW_TITLE = "DBMS Connection";
 	private static final String[] DBMS_LIST = { "PostgreSQL" };
 	private static final String DEFAULT_HOSTNAME = "127.0.0.1";
 	private static final String DEFAULT_PORT = "5432";
-
+	private static final String DEFAULT_USERNAME = "postgres";
+	private static final String DEFAULT_PASSWORD = "postgres";
+	
 	private static final int WINDOW_WIDTH = 240;
 	private static final int WINDOW_HEIGHT = 240;
 	
@@ -38,7 +41,9 @@ public class DBMSConnectionDialog extends JFrame {
 	private JPasswordField password;
 	private JButton nextButton;
 	
-	public DBMSConnectionDialog() {
+	public DBMSConnectionWindow(JFrame owner) {
+		super(owner);
+		
 		dbmsList = new JComboBox<String>(DBMS_LIST);
 		hostname = new JTextField();
 		port = new JTextField();
@@ -48,6 +53,8 @@ public class DBMSConnectionDialog extends JFrame {
 		
 		hostname.setText(DEFAULT_HOSTNAME);
 		port.setText(DEFAULT_PORT);
+		username.setText(DEFAULT_USERNAME);
+		password.setText(DEFAULT_PASSWORD);
 		
 		dbmsList.setPreferredSize(new Dimension(TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT));
 		hostname.setPreferredSize(new Dimension(TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT));
@@ -80,7 +87,6 @@ public class DBMSConnectionDialog extends JFrame {
 		passwordPanel.add(password);
 		
 		JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		buttonsPanel.add(nextButton);
 		
 		mainContainer.add(dbmsPanel);
@@ -98,30 +104,56 @@ public class DBMSConnectionDialog extends JFrame {
 		setTitle(WINDOW_TITLE);
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
-		pack();
 		setResizable(false);
 	}
-	
-	public static void main(String[] args) {
-		try {
-	        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-	        setDefaultLookAndFeelDecorated(true);
-	    }
-	    catch (UnsupportedLookAndFeelException e) {
-	    	e.printStackTrace();
-	    }
-	    catch (ClassNotFoundException e) {
-	    	e.printStackTrace();
-	    }
-	    catch (InstantiationException e) {
-	    	e.printStackTrace();
-	    }
-	    catch (IllegalAccessException e) {
-	    	e.printStackTrace();
-	    }
-		
-		DBMSConnectionDialog dialog = new DBMSConnectionDialog();
+
+	public JComboBox<String> getDbmsList() {
+		return dbmsList;
+	}
+
+	public void setDbmsList(JComboBox<String> dbmsList) {
+		this.dbmsList = dbmsList;
+	}
+
+	public JTextField getHostname() {
+		return hostname;
+	}
+
+	public void setHostname(JTextField hostname) {
+		this.hostname = hostname;
+	}
+
+	public JTextField getPort() {
+		return port;
+	}
+
+	public void setPort(JTextField port) {
+		this.port = port;
+	}
+
+	public JTextField getUsername() {
+		return username;
+	}
+
+	public void setUsername(JTextField username) {
+		this.username = username;
+	}
+
+	public JPasswordField getPassword() {
+		return password;
+	}
+
+	public void setPassword(JPasswordField password) {
+		this.password = password;
+	}
+
+	public JButton getNextButton() {
+		return nextButton;
+	}
+
+	public void setNextButton(JButton nextButton) {
+		this.nextButton = nextButton;
 	}
 }

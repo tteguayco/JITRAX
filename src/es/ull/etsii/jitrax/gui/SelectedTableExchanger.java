@@ -13,7 +13,6 @@ import javax.swing.JPanel;
  * a table in the main frame.
  */
 public class SelectedTableExchanger {
-	private static final Color selectedTableColor = Color.ORANGE;
 	
 	private TablesPanel tablesPanel;
 	private SelectedTablePanelViewer selectedTablePanelViewer;
@@ -45,13 +44,5 @@ public class SelectedTableExchanger {
 				}
 			});
 		}
-	}
-	
-	private void markPanel(JPanel tablePanel) {
-		
-	}
-	
-	private void unmarkPanel(JPanel tablePanel) {
-		
 	}
 }

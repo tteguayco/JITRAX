@@ -3,6 +3,7 @@ package es.ull.etsii.jitrax.adt;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import es.ull.etsii.jitrax.database.PostgreDriver;
 import es.ull.etsii.jitrax.exceptions.DuplicateTableException;
 
 public class Database {
@@ -10,6 +11,7 @@ public class Database {
 	private String name;
 	private ArrayList<Table> tables;
 	private String uniqueID;
+	private PostgreDriver postgreDriver;
 	
 	/**
 	 * @param name name for the database.
@@ -101,5 +103,13 @@ public class Database {
 
 	public void setUniqueID(String uniqueID) {
 		this.uniqueID = uniqueID;
+	}
+
+	public PostgreDriver getPostgreDriver() {
+		return postgreDriver;
+	}
+
+	public void setPostgreDriver(PostgreDriver postgreDriver) {
+		this.postgreDriver = postgreDriver;
 	}
 }

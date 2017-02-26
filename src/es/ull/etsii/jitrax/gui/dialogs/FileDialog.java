@@ -6,8 +6,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
 import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.database.DatabaseFileLoader;
 import es.ull.etsii.jitrax.gui.Console;
-import es.ull.etsii.jitrax.gui.DatabaseFileLoader;
 
 public class FileDialog {
 

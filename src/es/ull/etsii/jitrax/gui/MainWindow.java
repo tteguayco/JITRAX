@@ -31,23 +31,20 @@ public class MainWindow extends JFrame {
 	private WorkspacePanel workspacePanel;
 	private Console console;
 	private DatabaseViewerPanel databaseViewerPanel;
+	private JPanel mainContainer;
 	
 	private SelectedTableExchanger selectedTableExchanger;
 	private RelationalAlgebraInterpreter raInterpreter;
 	
+	
 	public MainWindow() {
 		barMenu = new MenuBar();
 		
-		setJMenuBar(barMenu);
-		buildWindow();
-	}
-	
-	public void setupContent(Database database) {
 		workspacePanel = new WorkspacePanel();
 		console = new Console();
-		databaseViewerPanel = new DatabaseViewerPanel(database);
+		databaseViewerPanel = new DatabaseViewerPanel();
 		
-		JPanel mainContainer = new JPanel(new BorderLayout());
+		mainContainer = new JPanel(new BorderLayout());
 		JPanel rightPanel = new JPanel(new BorderLayout());
 		
 		// HORIZONTAL SPLITPANE
@@ -69,12 +66,15 @@ public class MainWindow extends JFrame {
 		mainContainer.add(verSplitPane, BorderLayout.CENTER);
 		add(mainContainer, BorderLayout.CENTER);
 		
-		// Object that shows the selected table in the quick view in the GUI
-		selectedTableExchanger = new SelectedTableExchanger(databaseViewerPanel.getTablesPanel(), 
-				databaseViewerPanel.getSelectedTablePanel());
+		mainContainer.setVisible(false);
 		
-		// Refresh this window
-		SwingUtilities.updateComponentTreeUI(MainWindow.this);
+		setJMenuBar(barMenu);
+		buildWindow();
+	}
+	
+	public void addDatabase(Database database) {
+		databaseViewerPanel.addDatabase(database);
+		mainContainer.setVisible(true);
 	}
 	
 	private void buildWindow() {
