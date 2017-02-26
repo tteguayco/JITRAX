@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -25,9 +24,9 @@ public class SelectedTablePanelViewer extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private static final int MINIMUM_WIDTH = 270;
-	private static final int MINIMUM_HEIGHT = 130;
+	private static final int MINIMUM_HEIGHT = 110;
 	private static final int MAXIMUM_WIDTH = 270;
-	private static final int MAXIMUM_HEIGHT = 130;
+	private static final int MAXIMUM_HEIGHT = 110;
 	private static final int ODD_ROW_R = 220;
 	private static final int ODD_ROW_G = 220;
 	private static final int ODD_ROW_B = 220;
@@ -74,7 +73,7 @@ public class SelectedTablePanelViewer extends JPanel {
 		
 		setLayout(new BorderLayout());
 		graphicTable.setEnabled(false);
-		graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		//graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		graphicTable.setMinimumSize(graphicTable.getPreferredScrollableViewportSize());
 		//graphicTable.setPreferredScrollableViewportSize(graphicTable.getPreferredSize());
 		//graphicTable.setFillsViewportHeight(true);

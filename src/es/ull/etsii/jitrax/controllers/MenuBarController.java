@@ -87,8 +87,6 @@ public class MenuBarController {
 								
 								// Add new database to the environment
 								mainWindow.addDatabase(importedDatabase);
-								mainWindow.getContentPane().validate();
-								mainWindow.getContentPane().repaint();
 							}
 							
 							else {

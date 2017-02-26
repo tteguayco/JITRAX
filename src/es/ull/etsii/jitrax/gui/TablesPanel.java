@@ -1,22 +1,12 @@
 package es.ull.etsii.jitrax.gui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.util.ArrayList;
-import java.util.Set;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 
 import es.ull.etsii.jitrax.adt.*;
 
@@ -36,8 +26,6 @@ public class TablesPanel extends JPanel {
 	public TablesPanel() {
 		tables = new ArrayList<Table>();
 		selectedTablePanel = null;
-		
-		buildTablesPanel();
 	}
 	
 	public TablesPanel(ArrayList<Table> newTables) {
@@ -51,9 +39,9 @@ public class TablesPanel extends JPanel {
 		tables = newTables;
 		selectedTablePanel = null;
 		
+		//add(new TablePanel(newTables.get(0)));
 		buildTablesPanel();
-		revalidate();
-		repaint();
+		//revalidate();
 	}
 
 	/**
@@ -62,8 +50,6 @@ public class TablesPanel extends JPanel {
 	private void buildTablesPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setAlignmentX(ATTRIBUTES_ALIGNMENT);
-		JScrollPane sp = new JScrollPane(this);
-		sp.setVisible(true);
 		printTablesOnPanel();
 		
 		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));

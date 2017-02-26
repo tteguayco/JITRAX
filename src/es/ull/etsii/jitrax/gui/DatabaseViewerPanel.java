@@ -64,12 +64,6 @@ public class DatabaseViewerPanel extends JPanel {
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
 		
 		setListeners();
-		
-		/*
-		 *  Object that shows the selected table in the quick view in the GUI
-		 */
-		selectedTableExchanger = new SelectedTableExchanger(getTablesPanel(), 
-				getSelectedTablePanel());
 	}
 	
 	/**
@@ -84,6 +78,12 @@ public class DatabaseViewerPanel extends JPanel {
 		selectedDatabasePanel.addDatabase(database.getName());
 		tablesPanel.updateTables(database.getTables());
 		selectedTablePanel.updateTable(database.getTables().get(0));
+		
+		/*
+		 *  Object that shows the selected table in the quick view in the GUI
+		 */
+		selectedTableExchanger = new SelectedTableExchanger(getTablesPanel(), 
+				getSelectedTablePanel());
 	}
 	
 	private void setListeners() {
