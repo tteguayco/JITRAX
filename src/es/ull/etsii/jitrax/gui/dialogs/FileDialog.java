@@ -123,6 +123,7 @@ public class FileDialog {
 				printWriter = new PrintWriter(filePath);
 				printWriter.print(content);
 				printWriter.close();
+				showSuccessfulExportationWarning();
 			} 
 			
 			catch (FileNotFoundException e1) {
@@ -141,5 +142,10 @@ public class FileDialog {
 		String sqlQuery = null;
 		
 		return sqlQuery;
+	}
+	
+	private void showSuccessfulExportationWarning() {
+		JOptionPane.showMessageDialog(null, "Content successfully exported.",
+				"Warning", JOptionPane.INFORMATION_MESSAGE);
 	}
 }

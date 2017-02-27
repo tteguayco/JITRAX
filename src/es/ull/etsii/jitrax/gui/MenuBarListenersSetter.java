@@ -60,7 +60,7 @@ public class MenuBarListenersSetter {
 				
 				// Empty fields are not allowed
 				if (hostname.equals("") || port.equals("") || username.equals("") || password.equals("")) {
-					showRequiredFieldsWarning();
+					showRequiredFieldsDialog();
 				}
 				
 				else {
@@ -89,8 +89,7 @@ public class MenuBarListenersSetter {
 							}
 							
 							else {
-								System.out.println("NOT IMPLEMENTED YET: DB ALREADY IN DBMS");
-								
+								showDatabaseAlreadyExistsDialog();
 								// Habría que comprobar que la existente es igual a la especificada
 								// en fichero?
 							}
@@ -106,8 +105,14 @@ public class MenuBarListenersSetter {
 		});
 	}
 	
-	private void showRequiredFieldsWarning() {
+	private void showRequiredFieldsDialog() {
 		JOptionPane.showMessageDialog(null,"All the fields are required.",
 				"Warning", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	private void showDatabaseAlreadyExistsDialog() {
+		JOptionPane.showMessageDialog(null,"A database with the specified name"
+				+ " already exists on the DBMS.",
+				"Not implemented yet", JOptionPane.INFORMATION_MESSAGE);
 	}
 }
