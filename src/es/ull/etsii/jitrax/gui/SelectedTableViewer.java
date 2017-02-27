@@ -20,7 +20,7 @@ import es.ull.etsii.jitrax.adt.Datum;
 import es.ull.etsii.jitrax.adt.Row;
 import es.ull.etsii.jitrax.adt.Table;
 
-public class SelectedTablePanelViewer extends JPanel {
+public class SelectedTableViewer extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private static final int MINIMUM_WIDTH = 290;
@@ -35,12 +35,12 @@ public class SelectedTablePanelViewer extends JPanel {
 	private JTable graphicTable;
 	private DefaultTableModel tableModel;
 	
-	public SelectedTablePanelViewer() {
+	public SelectedTableViewer() {
 		table = null;
 		initializeGuiComponents();
 	}
 	
-	public SelectedTablePanelViewer(Table aTable) {
+	public SelectedTableViewer(Table aTable) {
 		table = aTable;
 		
 		initializeGuiComponents();

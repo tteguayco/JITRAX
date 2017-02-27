@@ -14,12 +14,12 @@ import javax.swing.JPanel;
  */
 public class SelectedTableExchanger {
 	
-	private TablesPanel tablesPanel;
-	private SelectedTablePanelViewer selectedTablePanelViewer;
+	private TablesViewer tablesPanel;
+	private SelectedTableViewer selectedTablePanelViewer;
 	
 	public SelectedTableExchanger() {}
 	
-	public void update(TablesPanel aTablesPanel, SelectedTablePanelViewer aSelectedTablePanelViewer) {
+	public void update(TablesViewer aTablesPanel, SelectedTableViewer aSelectedTablePanelViewer) {
 		tablesPanel = aTablesPanel;
 		selectedTablePanelViewer = aSelectedTablePanelViewer;
 		

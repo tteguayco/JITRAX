@@ -32,7 +32,7 @@ import es.ull.etsii.jitrax.adt.Row;
 import es.ull.etsii.jitrax.adt.Table;
 import es.ull.etsii.jitrax.exceptions.DuplicatePrimaryKeyException;
 
-public class DatabaseViewerPanel extends JPanel {
+public class DatabaseViewer extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private static final int EXTRA_GAP_SIZE = 10;
 	
@@ -42,16 +42,16 @@ public class DatabaseViewerPanel extends JPanel {
 	private HashMap<String, Database> databases;
 	private SelectedTableExchanger selectedTableExchanger;
 	
-	private SelectedDatabasePanel selectedDatabasePanel;
-	private TablesPanel tablesPanel;
-	private SelectedTablePanelViewer selectedTablePanel;
+	private SelectedDatabaseViewer selectedDatabasePanel;
+	private TablesViewer tablesPanel;
+	private SelectedTableViewer selectedTablePanel;
 	
-	public DatabaseViewerPanel() {
+	public DatabaseViewer() {
 		databases = new HashMap<String, Database>();
 
-		selectedDatabasePanel = new SelectedDatabasePanel(databases);
-		tablesPanel = new TablesPanel();
-		selectedTablePanel = new SelectedTablePanelViewer();
+		selectedDatabasePanel = new SelectedDatabaseViewer(databases);
+		tablesPanel = new TablesViewer();
+		selectedTablePanel = new SelectedTableViewer();
 		selectedTableExchanger = new SelectedTableExchanger();
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -144,7 +144,7 @@ public class DatabaseViewerPanel extends JPanel {
 				}
 				
 				else {
-					JOptionPane.showMessageDialog(DatabaseViewerPanel.this.getParent(), 
+					JOptionPane.showMessageDialog(DatabaseViewer.this.getParent(), 
 							"There must be at least one database.", 
 							"Warning", 
 							JOptionPane.INFORMATION_MESSAGE);
@@ -167,27 +167,27 @@ public class DatabaseViewerPanel extends JPanel {
 		this.databases = databases;
 	}
 
-	public SelectedDatabasePanel getSelectedDatabasePanel() {
+	public SelectedDatabaseViewer getSelectedDatabasePanel() {
 		return selectedDatabasePanel;
 	}
 
-	public void setSelectedDatabasePanel(SelectedDatabasePanel selectedDatabasePanel) {
+	public void setSelectedDatabasePanel(SelectedDatabaseViewer selectedDatabasePanel) {
 		this.selectedDatabasePanel = selectedDatabasePanel;
 	}
 
-	public TablesPanel getTablesPanel() {
+	public TablesViewer getTablesPanel() {
 		return tablesPanel;
 	}
 
-	public void setTablesPanel(TablesPanel tablesPanel) {
+	public void setTablesPanel(TablesViewer tablesPanel) {
 		this.tablesPanel = tablesPanel;
 	}
 
-	public SelectedTablePanelViewer getSelectedTablePanel() {
+	public SelectedTableViewer getSelectedTablePanel() {
 		return selectedTablePanel;
 	}
 
-	public void setSelectedTablePanel(SelectedTablePanelViewer selectedTablePanel) {
+	public void setSelectedTablePanel(SelectedTableViewer selectedTablePanel) {
 		this.selectedTablePanel = selectedTablePanel;
 	}
 }

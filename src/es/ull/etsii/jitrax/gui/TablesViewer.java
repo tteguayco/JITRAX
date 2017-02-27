@@ -10,7 +10,7 @@ import javax.swing.JScrollPane;
 
 import es.ull.etsii.jitrax.adt.*;
 
-public class TablesPanel extends JPanel {
+public class TablesViewer extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private static final int MINIMUM_WIDTH = 100;
@@ -23,12 +23,12 @@ public class TablesPanel extends JPanel {
 	private ArrayList<Table> tables;
 	private TablePanel selectedTablePanel;
 	
-	public TablesPanel() {
+	public TablesViewer() {
 		tables = new ArrayList<Table>();
 		selectedTablePanel = null;
 	}
 	
-	public TablesPanel(ArrayList<Table> newTables) {
+	public TablesViewer(ArrayList<Table> newTables) {
 		tables = newTables;
 		selectedTablePanel = null;
 

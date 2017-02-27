@@ -26,7 +26,7 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-public class WorkspacePanel extends JPanel {
+public class Workspace extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String[] FONT_STYLES = { "Plain", "Bold", "Italic" };
@@ -63,7 +63,7 @@ public class WorkspacePanel extends JPanel {
 	private JButton saveRaButton;
 	private JButton saveSqlButton;
 	
-	public WorkspacePanel() {
+	public Workspace() {
 		relationalAlgebraCodeEditor = new RSyntaxTextArea();
 		sqlCodeEditor = new RSyntaxTextArea();
 		translateButton = new JButton("Translate to SQL");

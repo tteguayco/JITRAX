@@ -29,14 +29,14 @@ public class Console extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String PANEL_TITLE = "Console";
-	private static final String DEFAULT_QUERY = "PROJECT [name, age] (Students)";
-	private static final String CONSOLE_STYLE = "Courier New";
+	private static final String CONSOLE_STYLE = "monospaced";
 	
 	private static final String EXPORT_WINDOW_TITLE = "Export console";
 	private static final String EXPORTATION_EXT = ".out";
 	
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
+	private static final int FONT_SIZE = 12;
 	private static final int NROWS = 8;
 	
 	private JTextArea console;
@@ -56,7 +56,7 @@ public class Console extends JPanel {
 		buttonsPanel.add(clearButton);
 		buttonsPanel.add(exportButton);
 		
-		console.setFont(new Font(CONSOLE_STYLE, Font.PLAIN, 15));
+		console.setFont(new Font(CONSOLE_STYLE, Font.PLAIN, FONT_SIZE));
 		console.setRows(NROWS);
 		console.setEditable(false);
 		JScrollPane sp = new JScrollPane(console);

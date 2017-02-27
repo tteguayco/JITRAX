@@ -33,9 +33,9 @@ public class MainWindow extends JFrame {
 	private static final String FRAME_TITLE = "JITRAX";
 	
 	private MenuBar barMenu;
-	private WorkspacePanel workspacePanel;
+	private Workspace workspacePanel;
 	private Console console;
-	private DatabaseViewerPanel databaseViewerPanel;
+	private DatabaseViewer databaseViewerPanel;
 	private JPanel mainContainer;
 	
 	private SelectedTableExchanger selectedTableExchanger;
@@ -45,9 +45,9 @@ public class MainWindow extends JFrame {
 	public MainWindow() {
 		barMenu = new MenuBar();
 		
-		workspacePanel = new WorkspacePanel();
+		workspacePanel = new Workspace();
 		console = new Console();
-		databaseViewerPanel = new DatabaseViewerPanel();
+		databaseViewerPanel = new DatabaseViewer();
 		
 		mainContainer = new JPanel(new BorderLayout());
 		JPanel rightPanel = new JPanel(new BorderLayout());
@@ -73,7 +73,6 @@ public class MainWindow extends JFrame {
 		
 		mainContainer.setVisible(false);
 
-		setListeners();
 		setJMenuBar(barMenu);
 		buildWindow();
 		
@@ -119,21 +118,12 @@ public class MainWindow extends JFrame {
 		
 		System.out.println("> Welcome to JITRAX (v1.0)\n");
 		
-		// Initialize controllers
 		MenuBarListenersSetter menuBarController = new MenuBarListenersSetter(window);
 		
 		UIManager.put("OptionPane.cancelButtonText", "Cancel");
 	    UIManager.put("OptionPane.noButtonText", "No");
 	    UIManager.put("OptionPane.okButtonText", "OK");
 	    UIManager.put("OptionPane.yesButtonText", "Yes");
-	}
-	
-	public void setListeners() {
-		
-	}
-	
-	public void setConsoleListener() {
-		
 	}
 	
 	/**
@@ -161,11 +151,11 @@ public class MainWindow extends JFrame {
 		this.barMenu = barMenu;
 	}
 
-	public WorkspacePanel getCodeEditorPanel() {
+	public Workspace getCodeEditorPanel() {
 		return workspacePanel;
 	}
 
-	public void setCodeEditorPanel(WorkspacePanel codeEditorPanel) {
+	public void setCodeEditorPanel(Workspace codeEditorPanel) {
 		this.workspacePanel = codeEditorPanel;
 	}
 
@@ -177,11 +167,11 @@ public class MainWindow extends JFrame {
 		this.console = console;
 	}
 
-	public DatabaseViewerPanel getDatabaseViewerPanel() {
+	public DatabaseViewer getDatabaseViewerPanel() {
 		return databaseViewerPanel;
 	}
 
-	public void setDatabaseViewerPanel(DatabaseViewerPanel databaseViewerPanel) {
+	public void setDatabaseViewerPanel(DatabaseViewer databaseViewerPanel) {
 		this.databaseViewerPanel = databaseViewerPanel;
 	}
 

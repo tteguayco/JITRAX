@@ -38,6 +38,7 @@ public class ErrorsDialog extends JFrame {
 		errorsTextArea = new JTextArea();
 		
 		setLayout(new BorderLayout());
+		okButton.addActionListener(new OkButtonListener());
 		errorsTextArea.setEditable(false);
 		
 		// Showing errors
@@ -62,18 +63,7 @@ public class ErrorsDialog extends JFrame {
 		mainContainer.add(buttonsPanel, BorderLayout.SOUTH);
 		
 		add(mainContainer);
-		
-		setListeners();
 		buildWindow();
-	}
-	
-	private void setListeners() {
-		okButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ErrorsDialog.this.dispose();
-			}
-		});
 	}
 	
 	private void buildWindow() {
@@ -82,5 +72,11 @@ public class ErrorsDialog extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
+	
+	private class OkButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			ErrorsDialog.this.dispose();	
+		}
 	}
 }

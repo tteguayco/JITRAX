@@ -20,7 +20,7 @@ import javax.swing.border.EmptyBorder;
 
 import es.ull.etsii.jitrax.adt.*;
 
-public class SelectedDatabasePanel extends JPanel {
+public class SelectedDatabaseViewer extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private static final int TOP_PADDING = 5;
@@ -42,7 +42,7 @@ public class SelectedDatabasePanel extends JPanel {
 	private JButton alterButton;
 	private JButton removeButton;
 	
-	public SelectedDatabasePanel(HashMap<String, Database> databases) {
+	public SelectedDatabaseViewer(HashMap<String, Database> databases) {
 		dbComboBox = new JComboBox<String>();
 		alterButton = new JButton("ALTER");
 		removeButton = new JButton("REMOVE");
