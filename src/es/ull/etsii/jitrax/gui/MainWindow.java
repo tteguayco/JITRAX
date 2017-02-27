@@ -118,7 +118,7 @@ public class MainWindow extends JFrame {
 		
 		MainWindow window = new MainWindow();
 		
-		System.out.println("> Welcome to JITRAX (v1.0)");
+		System.out.println("> Welcome to JITRAX (v1.0)\n");
 		
 		// Initialize controllers
 		MenuBarController menuBarController = new MenuBarController(window);

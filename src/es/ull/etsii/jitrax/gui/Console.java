@@ -4,11 +4,20 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.util.Observable;
-import java.util.Observer;
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -20,6 +29,9 @@ public class Console extends JPanel {
 	private static final String PANEL_TITLE = "Console";
 	private static final String DEFAULT_QUERY = "PROJECT [name, age] (Students)";
 	private static final String CONSOLE_STYLE = "Courier New";
+	
+	private static final String EXPORT_FILECHOOSER_TITLE = "Export console";
+	private static final String EXPORTATION_EXT = ".out";
 	
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
@@ -33,6 +45,9 @@ public class Console extends JPanel {
 		console = new JTextArea();
 		clearButton = new JButton("Clear");
 		exportButton = new JButton("Export");
+		
+		clearButton.addActionListener(new ClearListener());
+		exportButton.addActionListener(new ExportListener());
 		
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -80,5 +95,75 @@ public class Console extends JPanel {
 
 	public void setExportButton(JButton exportButton) {
 		this.exportButton = exportButton;
+	}
+	
+	private class ClearListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			getConsole().setText("");
+		}
+	}
+	
+	private class ExportListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			
+			// If the console is empty, not save
+			if (getConsole().getText().equals("")) {
+				return;
+			}
+			
+			JFileChooser fileChooser = new JFileChooser();
+			PrintWriter printWriter;
+			String filePath;
+			int userSelection;
+			
+			fileChooser.setDialogTitle(EXPORT_FILECHOOSER_TITLE);
+			userSelection = fileChooser.showSaveDialog(null);
+			
+			// Export console content to file
+			if (userSelection == JFileChooser.APPROVE_OPTION) {
+				filePath = fileChooser.getSelectedFile().getAbsolutePath();
+				
+				int response;
+				BufferedReader br;
+				
+				try {
+					br = new BufferedReader(new FileReader(filePath));
+					
+					// If file is not empty
+					try {
+						if (br.readLine() != null) {
+							response = JOptionPane.showConfirmDialog(fileChooser, 
+						            "Do you want to replace the existing file?",
+						            "Confirm", JOptionPane.YES_NO_OPTION, 
+						            JOptionPane.QUESTION_MESSAGE);
+							br.close();
+							
+							// Confirm saving
+							if (response != JOptionPane.YES_OPTION) {
+								return;
+							}
+						}
+					} catch (HeadlessException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				} 
+				
+				catch (FileNotFoundException e1) {
+					new File(filePath);
+				} 
+				
+				try {
+					printWriter = new PrintWriter(filePath);
+					printWriter.print(getConsole().getText());
+					printWriter.close();
+				} 
+				
+				catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} 
+			}
+		}
 	}
 }

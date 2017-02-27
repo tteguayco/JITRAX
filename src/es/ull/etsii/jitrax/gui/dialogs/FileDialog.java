@@ -63,22 +63,10 @@ public class FileDialog {
 		
 		return raQuery;
 	}
-	
-	public void exportRAQuery() {
-		
-	} 
-	
+
 	public String importSQLQueryDialog() {
 		String sqlQuery = null;
 		
 		return sqlQuery;
-	}
-	
-	public void exportSQLQueryDialog(Console console) {
-		
-	}
-	
-	public void exportConsoleDialog() {
-		
 	}
 }
