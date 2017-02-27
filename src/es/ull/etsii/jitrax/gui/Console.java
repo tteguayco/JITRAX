@@ -23,6 +23,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
 
+import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
+
 public class Console extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
@@ -30,7 +32,7 @@ public class Console extends JPanel {
 	private static final String DEFAULT_QUERY = "PROJECT [name, age] (Students)";
 	private static final String CONSOLE_STYLE = "Courier New";
 	
-	private static final String EXPORT_FILECHOOSER_TITLE = "Export console";
+	private static final String EXPORT_WINDOW_TITLE = "Export console";
 	private static final String EXPORTATION_EXT = ".out";
 	
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
@@ -107,63 +109,13 @@ public class Console extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			
 			// If the console is empty, not save
-			if (getConsole().getText().equals("")) {
-				return;
-			}
-			
-			JFileChooser fileChooser = new JFileChooser();
-			PrintWriter printWriter;
-			String filePath;
-			int userSelection;
-			
-			fileChooser.setDialogTitle(EXPORT_FILECHOOSER_TITLE);
-			userSelection = fileChooser.showSaveDialog(null);
-			
-			// Export console content to file
-			if (userSelection == JFileChooser.APPROVE_OPTION) {
-				filePath = fileChooser.getSelectedFile().getAbsolutePath();
-				
-				int response;
-				BufferedReader br;
-				
-				try {
-					br = new BufferedReader(new FileReader(filePath));
-					
-					// If file is not empty
-					try {
-						if (br.readLine() != null) {
-							response = JOptionPane.showConfirmDialog(fileChooser, 
-						            "Do you want to replace the existing file?",
-						            "Confirm", JOptionPane.YES_NO_OPTION, 
-						            JOptionPane.QUESTION_MESSAGE);
-							br.close();
-							
-							// Confirm saving
-							if (response != JOptionPane.YES_OPTION) {
-								return;
-							}
-						}
-					} catch (HeadlessException e1) {
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				} 
-				
-				catch (FileNotFoundException e1) {
-					new File(filePath);
-				} 
-				
-				try {
-					printWriter = new PrintWriter(filePath);
-					printWriter.print(getConsole().getText());
-					printWriter.close();
-				} 
-				
-				catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-				} 
+			if (!getConsole().getText().equals("")) {
+				FileDialog fileDialog = new FileDialog();
+				fileDialog.exportFile(EXPORT_WINDOW_TITLE, 
+						getConsole().getText(), 
+						EXPORTATION_EXT);
 			}
 		}
 	}
+	
 }

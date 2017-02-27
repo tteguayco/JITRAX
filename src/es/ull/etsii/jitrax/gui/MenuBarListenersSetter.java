@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.controllers;
+package es.ull.etsii.jitrax.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,15 +11,14 @@ import org.postgresql.util.PSQLException;
 
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.database.PostgreDriver;
-import es.ull.etsii.jitrax.gui.MainWindow;
 import es.ull.etsii.jitrax.gui.dialogs.DBMSConnectionWindow;
 import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
 
-public class MenuBarController {
+public class MenuBarListenersSetter {
 
 	private MainWindow mainWindow;
 	
-	public MenuBarController(MainWindow aMainWindow) {
+	public MenuBarListenersSetter(MainWindow aMainWindow) {
 		mainWindow = aMainWindow;
 		
 		setFileMenuListeners();
@@ -61,11 +60,11 @@ public class MenuBarController {
 				
 				// Empty fields are not allowed
 				if (hostname.equals("") || port.equals("") || username.equals("") || password.equals("")) {
-					//showRequiredFieldsWarning(dbmsConnectionWindow);
+					showRequiredFieldsWarning();
 				}
 				
 				else {
-					FileDialog fileDialog = new FileDialog(mainWindow);
+					FileDialog fileDialog = new FileDialog();
 					Database importedDatabase = fileDialog.importDatabaseDialog();
 					
 					if (importedDatabase != null) {
@@ -107,8 +106,8 @@ public class MenuBarController {
 		});
 	}
 	
-	private void showRequiredFieldsWarning(JFrame parentFrame) {
-		JOptionPane.showMessageDialog(parentFrame,"All the fields are required.",
+	private void showRequiredFieldsWarning() {
+		JOptionPane.showMessageDialog(null,"All the fields are required.",
 				"Warning", JOptionPane.INFORMATION_MESSAGE);
 	}
 }

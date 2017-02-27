@@ -17,7 +17,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import es.ull.etsii.jitrax.adt.Database;
-import es.ull.etsii.jitrax.controllers.MenuBarController;
 import es.ull.etsii.jitrax.interpreters.RelationalAlgebraInterpreter;
 
 public class MainWindow extends JFrame {
@@ -121,7 +120,7 @@ public class MainWindow extends JFrame {
 		System.out.println("> Welcome to JITRAX (v1.0)\n");
 		
 		// Initialize controllers
-		MenuBarController menuBarController = new MenuBarController(window);
+		MenuBarListenersSetter menuBarController = new MenuBarListenersSetter(window);
 		
 		UIManager.put("OptionPane.cancelButtonText", "Cancel");
 	    UIManager.put("OptionPane.noButtonText", "No");
