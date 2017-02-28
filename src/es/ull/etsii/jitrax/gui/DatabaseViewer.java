@@ -43,19 +43,17 @@ public class DatabaseViewer extends JPanel {
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
 	private HashMap<String, Database> databases;
-	//private SelectedTableExchanger selectedTableExchanger;
 	
 	private SelectedDatabaseViewer selectedDatabasePanel;
 	private TablesViewer tablesPanel;
-	private SelectedTableViewer selectedTablePanel;
+	private SelectedTableViewer selectedTableViewer;
 	
 	public DatabaseViewer() {
 		databases = new HashMap<String, Database>();
 
 		selectedDatabasePanel = new SelectedDatabaseViewer(databases);
 		tablesPanel = new TablesViewer();
-		selectedTablePanel = new SelectedTableViewer();
-		//selectedTableExchanger = new SelectedTableExchanger();
+		selectedTableViewer = new SelectedTableViewer();
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -67,7 +65,7 @@ public class DatabaseViewer extends JPanel {
 		add(selectedDatabasePanel);
 		add(tablesSP);
 		add(Box.createVerticalStrut(EXTRA_GAP_SIZE));
-		add(selectedTablePanel);
+		add(selectedTableViewer);
 		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
@@ -92,7 +90,7 @@ public class DatabaseViewer extends JPanel {
 		Database newSelectedDatabase = databases.get(newSelectedDatabaseName);
 		
 		tablesPanel.updateTables(newSelectedDatabase.getTables());
-		selectedTablePanel.updateTable(newSelectedDatabase.getTables().get(0));
+		selectedTableViewer.updateTable(newSelectedDatabase.getTables().get(0));
 		updateSelectedTable(tablesPanel.getGraphicTables().get(0));
 		
 		// Listeners for graphic tables in the db viewer
@@ -103,49 +101,12 @@ public class DatabaseViewer extends JPanel {
 		// Revalidate the three panels
 		selectedDatabasePanel.revalidate();
 		tablesPanel.revalidate();
-		selectedTablePanel.revalidate();
+		selectedTableViewer.revalidate();
 	}
 	
 	private void setListeners() {
 		getSelectedDatabasePanel().getDbComboBox().addItemListener(new ComboBoxListener());
 		getSelectedDatabasePanel().getRemoveButton().addActionListener(new RemoveButtonListener());
-	}
-	
-	public Database getSelectedDatabase() {
-		String databaseName = (String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
-		return databases.get(databaseName);
-	}
-	
-	public HashMap<String, Database> getDatabases() {
-		return databases;
-	}
-
-	public void setDatabases(HashMap<String, Database> databases) {
-		this.databases = databases;
-	}
-
-	public SelectedDatabaseViewer getSelectedDatabasePanel() {
-		return selectedDatabasePanel;
-	}
-
-	public void setSelectedDatabasePanel(SelectedDatabaseViewer selectedDatabasePanel) {
-		this.selectedDatabasePanel = selectedDatabasePanel;
-	}
-
-	public TablesViewer getTablesPanel() {
-		return tablesPanel;
-	}
-
-	public void setTablesPanel(TablesViewer tablesPanel) {
-		this.tablesPanel = tablesPanel;
-	}
-
-	public SelectedTableViewer getSelectedTablePanel() {
-		return selectedTablePanel;
-	}
-
-	public void setSelectedTablePanel(SelectedTableViewer selectedTablePanel) {
-		this.selectedTablePanel = selectedTablePanel;
 	}
 	
 	private class ComboBoxListener implements ItemListener {
@@ -189,24 +150,56 @@ public class DatabaseViewer extends JPanel {
 	 * @param table
 	 */
 	private void updateSelectedTable(TablePanel tablePanel) {
-		// Get new data
-		String[] newColsNames = tablePanel.getTable().getColumnsNames();
-		String[][] newRowsData = tablePanel.getTable().getRowsData();
+		// Update tablesPanel
+		tablesPanel.changeSelectedTablePanel(tablePanel);
 		
-		// Update table's model
-		selectedTablePanel.setTable(tablePanel.getTable());
-		selectedTablePanel.getTableModel().setDataVector(newRowsData, newColsNames);
-		selectedTablePanel.getTableModel().fireTableDataChanged();
+		// Update selected table viewer
+		selectedTableViewer.updateTable(tablePanel.getTable());
 		
-		// Change title for selectedTablePanelViewer
-		selectedTablePanel.updateTitle();
+		System.out.println(">>>> " + selectedTableViewer.getTableModel().getColumnName(0));
 	}
 	
 	private class TablePanelListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent e) {
 			TablePanel targetTablePanel = ((TablePanel) e.getSource());
-			tablesPanel.changeSelectedTablePanel(targetTablePanel);
 			updateSelectedTable(targetTablePanel);
 		}
+	}
+	
+	public Database getSelectedDatabase() {
+		String databaseName = (String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
+		return databases.get(databaseName);
+	}
+	
+	public HashMap<String, Database> getDatabases() {
+		return databases;
+	}
+
+	public void setDatabases(HashMap<String, Database> databases) {
+		this.databases = databases;
+	}
+
+	public SelectedDatabaseViewer getSelectedDatabasePanel() {
+		return selectedDatabasePanel;
+	}
+
+	public void setSelectedDatabasePanel(SelectedDatabaseViewer selectedDatabasePanel) {
+		this.selectedDatabasePanel = selectedDatabasePanel;
+	}
+
+	public TablesViewer getTablesPanel() {
+		return tablesPanel;
+	}
+
+	public void setTablesPanel(TablesViewer tablesPanel) {
+		this.tablesPanel = tablesPanel;
+	}
+
+	public SelectedTableViewer getSelectedTablePanel() {
+		return selectedTableViewer;
+	}
+
+	public void setSelectedTablePanel(SelectedTableViewer selectedTablePanel) {
+		this.selectedTableViewer = selectedTablePanel;
 	}
 }

@@ -72,8 +72,6 @@ public class Workspace extends JPanel {
 		saveRaButton = new JButton("Save");
 		saveSqlButton = new JButton("Save");
 		
-		translateButton.requestFocus();
-		
 		relationalAlgebraCodeEditor.setCaretColor(RA_CARET_COLOR);
 		String currentFontName = relationalAlgebraCodeEditor.getFont().getName();
 		relationalAlgebraCodeEditor.setFont(new Font(currentFontName, 
@@ -89,7 +87,11 @@ public class Workspace extends JPanel {
 		
 		RTextScrollPane relationalAlgebraSP = new RTextScrollPane(relationalAlgebraCodeEditor);
 	    RTextScrollPane sqlSP = new RTextScrollPane(sqlCodeEditor);
-		
+	    
+	    // Show line numbers
+	    relationalAlgebraSP.setLineNumbersEnabled(true);
+	    sqlSP.setLineNumbersEnabled(true);
+	    
 	    // RA Code Editor parameters
 	    int raCodeEditorFontSize = relationalAlgebraCodeEditor.getFont().getSize();
 	    raFontStyles = new JComboBox<String>(FONT_STYLES);

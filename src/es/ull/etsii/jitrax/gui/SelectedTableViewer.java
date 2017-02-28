@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -38,34 +39,34 @@ public class SelectedTableViewer extends JPanel {
 	public SelectedTableViewer() {
 		table = null;
 		initializeGuiComponents();
+		buildGraphicTable();
 	}
 	
 	public SelectedTableViewer(Table aTable) {
 		table = aTable;
-		
 		initializeGuiComponents();
-		initializeTableModel();
-		graphicTable.setModel(tableModel);
+		buildGraphicTable();
 	}
 	
 	private void initializeGuiComponents() {
 		graphicTable = new JTable();
+		tableModel = new DefaultTableModel();
+		graphicTable.setModel(tableModel);
 	}
 	
 	public void updateTable(Table aTable) {
 		table = aTable;
-		initializeTableModel();
-		graphicTable.setModel(tableModel);
+		
+		System.out.println(Arrays.toString(aTable.getColumnsNames()));
+		updateTitle();
+		tableModel.setDataVector(aTable.getRowsData(), aTable.getColumnsNames());
+		tableModel.fireTableDataChanged();
 	}
 	
 	/**
 	 * Creates a customized JTable with the table's information.
 	 */
-	private void initializeTableModel() {
-		String[] columnNames = getColumnNames();
-		String[][] rowsData = getTableRowsData();
-		tableModel = new DefaultTableModel(rowsData, columnNames);
-		
+	private void buildGraphicTable() {
 		// Mark odd rows with a different color
 		markOddRows();
 		
@@ -76,17 +77,11 @@ public class SelectedTableViewer extends JPanel {
 		//graphicTable.setPreferredScrollableViewportSize(graphicTable.getPreferredSize());
 		//graphicTable.setFillsViewportHeight(true);
 		
-		JPanel buttonsContainer = new JPanel();
-		
 		JScrollPane tableSP = new JScrollPane(graphicTable);
 		tableSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		tableSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		add(tableSP, BorderLayout.CENTER);
-		add(buttonsContainer, BorderLayout.SOUTH);
-		
-		updateTitle();
-		
 		tableSP.setPreferredSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMaximumSize(new Dimension(MAXIMUM_WIDTH, MAXIMUM_HEIGHT));
@@ -100,40 +95,6 @@ public class SelectedTableViewer extends JPanel {
 		if (defaults.get("Table.alternateRowColor") == null) {
 		    defaults.put("Table.alternateRowColor", new Color(ODD_ROW_R, ODD_ROW_G, ODD_ROW_B));
 		}
-	}
-	
-	/**
-	 * Gets the names to be printed in the columns of the graphical table.
-	 * @return
-	 */
-	private String[] getColumnNames() {
-		ArrayList<Attribute> attributes = getTable().getAttributes();
-		String[] columnNames = new String[attributes.size()];
-		
-		for (int i = 0; i < columnNames.length; i++) {
-			columnNames[i] = attributes.get(i).getName();
-		}
-		
-		return columnNames;
-	}
-	
-	/**
-	 * Returns the rows of a table in terms of a matrix of data.
-	 * @return
-	 */
-	private String[][] getTableRowsData() {
-		ArrayList<Row> rows = getTable().getRows();
-		String[][] tableRowsData = new String[rows.size()][getTable().getNumOfColumns()];
-		ArrayList<Datum> auxData;
-		
-		for (int i = 0; i < rows.size(); i++) {
-			auxData = rows.get(i).getData();
-			for (int j = 0; j < auxData.size(); j++) {
-				tableRowsData[i][j] = auxData.get(j).getStringValue();
-			}
-		}
-		
-		return tableRowsData;
 	}
 
 	public void updateTitle() {
