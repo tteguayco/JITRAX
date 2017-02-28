@@ -1,5 +1,6 @@
 package es.ull.etsii.jitrax.gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -18,18 +19,23 @@ public class TablesViewer extends JPanel {
 	private static final int MAXIMUM_WIDTH = 100;
 	private static final int MAXIMUM_HEIGHT = 100;
 	
+	private static final Color BACKGROUND_COLOR = Color.WHITE;
+	
 	private static final float ATTRIBUTES_ALIGNMENT = Component.CENTER_ALIGNMENT;
 	
 	private ArrayList<Table> tables;
+	private ArrayList<TablePanel> graphicTables;
 	private TablePanel selectedTablePanel;
 	
 	public TablesViewer() {
 		tables = new ArrayList<Table>();
+		graphicTables = new ArrayList<TablePanel>();
 		selectedTablePanel = null;
 	}
 	
 	public TablesViewer(ArrayList<Table> newTables) {
 		tables = newTables;
+		graphicTables = new ArrayList<TablePanel>();
 		selectedTablePanel = null;
 
 		buildTablesPanel();
@@ -37,6 +43,7 @@ public class TablesViewer extends JPanel {
 	
 	public void updateTables(ArrayList<Table> newTables) {
 		tables = newTables;
+		graphicTables = new ArrayList<TablePanel>();
 		selectedTablePanel = null;
 		
 		buildTablesPanel();
@@ -52,6 +59,7 @@ public class TablesViewer extends JPanel {
 		
 		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMaximumSize(new Dimension(MAXIMUM_WIDTH, MAXIMUM_HEIGHT));
+		setBackground(BACKGROUND_COLOR);
 	}
 	
 	/**
@@ -60,6 +68,7 @@ public class TablesViewer extends JPanel {
 	private void printTablesOnPanel() {
 		// Reset content
 		removeAll();
+		setGraphicTables(new ArrayList<TablePanel>());
 		
 		for (int i = 0; i < getTables().size(); i++) {
 			// Create the new TablePanel
@@ -70,6 +79,7 @@ public class TablesViewer extends JPanel {
 				changeSelectedTablePanel(newTablePanel);
 			}
 		
+			getGraphicTables().add(newTablePanel);
 			add(newTablePanel);
 		}
 	}
@@ -95,6 +105,10 @@ public class TablesViewer extends JPanel {
 		setSelectedTablePanel(newSelectedPanel);
 	}
 	
+	public int getNumOfTables() {
+		return getTables().size();
+	}
+	
 	public ArrayList<Table> getTables() {
 		return tables;
 	}
@@ -109,5 +123,13 @@ public class TablesViewer extends JPanel {
 
 	public void setSelectedTablePanel(TablePanel selectedTablePanel) {
 		this.selectedTablePanel = selectedTablePanel;
+	}
+
+	public ArrayList<TablePanel> getGraphicTables() {
+		return graphicTables;
+	}
+
+	public void setGraphicTables(ArrayList<TablePanel> graphicTables) {
+		this.graphicTables = graphicTables;
 	}
 }

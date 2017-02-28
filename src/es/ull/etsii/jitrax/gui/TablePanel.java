@@ -16,6 +16,7 @@ import es.ull.etsii.jitrax.adt.Table;
 public class TablePanel extends JPanel {
 	private static final Color SELECTED_TABLE_COLOR = Color.BLACK;
 	private static final Color UNSELECTED_TABLE_COLOR = new Color(70, 70, 70);
+	private static final Color BACKGROUND_COLOR = Color.WHITE;
 	
 	private static final int NEW_TABLE_PANEL_TOP_PADDING = 10;
 	private static final int NEW_TABLE_PANEL_LEFT_PADDING = 10;
@@ -40,6 +41,9 @@ public class TablePanel extends JPanel {
 		
 		// Fill the panel with the attributes info
 		addAttributes();
+		
+		// Common settings
+		setBackground(BACKGROUND_COLOR);
 	}
 	
 	private void addAttributes() {

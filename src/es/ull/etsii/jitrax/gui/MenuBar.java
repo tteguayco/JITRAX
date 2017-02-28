@@ -1,18 +1,18 @@
 package es.ull.etsii.jitrax.gui;
 
-import java.awt.Dimension;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Box;
 import javax.swing.ButtonGroup;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
@@ -22,6 +22,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class MenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
+	
+	private static final String DOC_URL = "";
+	private static final String SOURCE_CODE_URL = "https://bitbucket.org/tteguayco/jitrax/src";
 	
 	private JMenu fileMenu;
 	private JMenu editMenu;
@@ -40,6 +43,10 @@ public class MenuBar extends JMenuBar {
 	private JMenuItem exportOption;
 	private JMenuItem exitOption;
 	
+	private JMenuItem onlineDocumentationOption;
+	private JMenuItem sourceCodeOption;
+	private JMenuItem aboutOption;
+	
 	private JRadioButtonMenuItem englishRadioButton;
 	
 	public MenuBar() {
@@ -56,7 +63,6 @@ public class MenuBar extends JMenuBar {
 		add(helpMenu);
 		
 		setLayout(new FlowLayout(FlowLayout.LEFT));
-		setListeners();
 	}
 	
 	private void buildFileMenu() {
@@ -97,8 +103,11 @@ public class MenuBar extends JMenuBar {
 	}
 	
 	private void buildViewMenu() {
-		setDefaultViewRadioButton(new JRadioButtonMenuItem("OS Default", true));
+		setDefaultViewRadioButton(new JRadioButtonMenuItem("OS Default", false));
 		setNimbusViewRadioButton(new JRadioButtonMenuItem("Nimbus", true));
+		
+		getDefaultViewRadioButton().addActionListener(new LAFListener());
+		getNimbusViewRadioButton().addActionListener(new LAFListener());
 		
 		ButtonGroup buttonGroup = new ButtonGroup();
 		buttonGroup.add(getDefaultViewRadioButton());
@@ -106,8 +115,45 @@ public class MenuBar extends JMenuBar {
 		
 		setViewMenu(new JMenu("View"));
 		getViewMenu().setMnemonic(KeyEvent.VK_V);
-		getViewMenu().add(getDefaultViewRadioButton());
 		getViewMenu().add(getNimbusViewRadioButton());
+		getViewMenu().add(getDefaultViewRadioButton());
+	}
+	
+	/**
+	 * Listener for Look And Feel options.
+	 */
+	private class LAFListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			String newLAF = ((JRadioButtonMenuItem) e.getSource()).getText();
+			
+			try {
+				if (newLAF.equals("Nimbus")) {
+					for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+	                    if ("Nimbus".equals(info.getName())) {
+	                            UIManager.setLookAndFeel(info.getClassName());
+	                            SwingUtilities.updateComponentTreeUI(MenuBar.this.getParent());
+	                            break;
+	                    }
+	                }
+				} 
+				
+				else if (newLAF.equals("OS Default")) {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					SwingUtilities.updateComponentTreeUI(MenuBar.this.getParent());
+				}
+			}
+			
+			catch (ClassNotFoundException ex) {
+				ex.printStackTrace();
+			} catch (InstantiationException ex) {
+				ex.printStackTrace();
+			} catch (IllegalAccessException ex) {
+				ex.printStackTrace();
+			} catch (UnsupportedLookAndFeelException ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 	
 	private void buildLanguageMenu() {
@@ -122,47 +168,43 @@ public class MenuBar extends JMenuBar {
 	}
 	
 	private void buildHelpMenu() {
+		setOnlineDocumentationOption(new JMenuItem("Documentation"));
+		setSourceCodeOption(new JMenuItem("Source Code"));
+		setAboutOption(new JMenuItem("About"));
+		
+		getOnlineDocumentationOption().addActionListener(new UrlListener());
+		getSourceCodeOption().addActionListener(new UrlListener());
+		
 		setHelpMenu(new JMenu("Help"));
 		getHelpMenu().setMnemonic(KeyEvent.VK_H);
+		
+		getHelpMenu().add(getOnlineDocumentationOption());
+		getHelpMenu().add(getSourceCodeOption());
+		getHelpMenu().add(new JSeparator());
+		getHelpMenu().add(getAboutOption());
 	}
+	
+	private class UrlListener implements ActionListener {
 
-	private void setListeners() {
-		// DEFAULT OS LOOKN' FEEL
-		getDefaultViewRadioButton().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
+		public void actionPerformed(ActionEvent e) {
+			if (Desktop.isDesktopSupported()) {
 				try {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					SwingUtilities.updateComponentTreeUI(MenuBar.this.getParent());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (UnsupportedLookAndFeelException e) {
-					e.printStackTrace();
+					if (e.getSource() == getOnlineDocumentationOption()) {
+						Desktop.getDesktop().browse(new URI(DOC_URL)); 
+					}
+					
+					else if (e.getSource() == getSourceCodeOption()) {
+						Desktop.getDesktop().browse(new URI(SOURCE_CODE_URL));
+					}
+				}
+				 
+				catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (URISyntaxException e1) {
+					e1.printStackTrace();
 				}
 			}
-		});
-		
-		// NIMBUS LOOK AND FEEL
-		getNimbusViewRadioButton().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				try {
-                    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                        if ("Nimbus".equals(info.getName())) {
-                                UIManager.setLookAndFeel(info.getClassName());
-                                SwingUtilities.updateComponentTreeUI(MenuBar.this.getParent());
-                                break;
-                        }
-                    }
-                 } catch (Exception e) {
-                	 e.printStackTrace();
-                 }
-			}	
-		});
+		}
 	}
 	
 	public JMenu getFileMenu() {
@@ -291,5 +333,29 @@ public class MenuBar extends JMenuBar {
 
 	public void setEditMenu(JMenu editMenu) {
 		this.editMenu = editMenu;
+	}
+
+	public JMenuItem getOnlineDocumentationOption() {
+		return onlineDocumentationOption;
+	}
+
+	public void setOnlineDocumentationOption(JMenuItem onlineDocumentationOption) {
+		this.onlineDocumentationOption = onlineDocumentationOption;
+	}
+
+	public JMenuItem getAboutOption() {
+		return aboutOption;
+	}
+
+	public void setAboutOption(JMenuItem aboutOption) {
+		this.aboutOption = aboutOption;
+	}
+
+	public JMenuItem getSourceCodeOption() {
+		return sourceCodeOption;
+	}
+
+	public void setSourceCodeOption(JMenuItem sourceCodeOption) {
+		this.sourceCodeOption = sourceCodeOption;
 	}
 }

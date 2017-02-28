@@ -86,6 +86,9 @@ public class MenuBarListenersSetter {
 								
 								// Add new database to the environment
 								mainWindow.addDatabase(importedDatabase);
+								
+								System.out.println("> Database '" + importedDatabase.getName() + 
+										"' was created.");
 							}
 							
 							else {

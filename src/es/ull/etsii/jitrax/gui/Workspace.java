@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -70,6 +71,8 @@ public class Workspace extends JPanel {
 		executeButton = new JButton("Execute on DBMS");
 		saveRaButton = new JButton("Save");
 		saveSqlButton = new JButton("Save");
+		
+		translateButton.requestFocus();
 		
 		relationalAlgebraCodeEditor.setCaretColor(RA_CARET_COLOR);
 		String currentFontName = relationalAlgebraCodeEditor.getFont().getName();

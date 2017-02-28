@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -40,7 +43,7 @@ public class DatabaseViewer extends JPanel {
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
 	private HashMap<String, Database> databases;
-	private SelectedTableExchanger selectedTableExchanger;
+	//private SelectedTableExchanger selectedTableExchanger;
 	
 	private SelectedDatabaseViewer selectedDatabasePanel;
 	private TablesViewer tablesPanel;
@@ -52,7 +55,7 @@ public class DatabaseViewer extends JPanel {
 		selectedDatabasePanel = new SelectedDatabaseViewer(databases);
 		tablesPanel = new TablesViewer();
 		selectedTablePanel = new SelectedTableViewer();
-		selectedTableExchanger = new SelectedTableExchanger();
+		//selectedTableExchanger = new SelectedTableExchanger();
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -77,81 +80,35 @@ public class DatabaseViewer extends JPanel {
 	 * @param database
 	 */
 	public void addDatabase(Database database) {
-		// Add database
+		// Add new database
 		databases.put(database.getName(), database);
 		
 		// Update GUI Components
 		selectedDatabasePanel.addDatabase(database.getName());
-		tablesPanel.updateTables(database.getTables());
-		selectedTablePanel.updateTable(database.getTables().get(0));
-		
-		// Update SelectedDatabaseExchanger
-		selectedTableExchanger.update(getTablesPanel(), getSelectedTablePanel());
+		updateSelectedDatabase(database.getName());
 	}
 	
 	private void updateSelectedDatabase(String newSelectedDatabaseName) {
 		Database newSelectedDatabase = databases.get(newSelectedDatabaseName);
+		
 		tablesPanel.updateTables(newSelectedDatabase.getTables());
 		selectedTablePanel.updateTable(newSelectedDatabase.getTables().get(0));
-		selectedTableExchanger.update(getTablesPanel(), getSelectedTablePanel());
-		revalidate();
+		updateSelectedTable(tablesPanel.getGraphicTables().get(0));
+		
+		// Listeners for graphic tables in the db viewer
+		for (int i = 0; i < getTablesPanel().getNumOfTables(); i++) {
+			getTablesPanel().getGraphicTables().get(i).addMouseListener(new TablePanelListener());
+		}
+		
+		// Revalidate the three panels
+		selectedDatabasePanel.revalidate();
+		tablesPanel.revalidate();
 		selectedTablePanel.revalidate();
 	}
 	
 	private void setListeners() {
-		setComboBoxListener();
-		setAlterButtonListener();
-		setRemoveButtonListener();
-	}
-	
-	private void setComboBoxListener() {
-		selectedDatabasePanel.getDbComboBox().addItemListener(new ItemListener() {
-			
-			@Override
-			public void itemStateChanged(ItemEvent event) {
-				// If the values changes
-				if (event.getStateChange() == ItemEvent.SELECTED) {
-					String selectedDatabaseName = 
-							(String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
-					updateSelectedDatabase(selectedDatabaseName);
-			    }
-			}
-		});
-	}
-	
-	private void setAlterButtonListener() {
-		selectedDatabasePanel.getAlterButton().addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				
-			}
-		});
-	}
-	
-	private void setRemoveButtonListener() {
-		selectedDatabasePanel.getRemoveButton().addActionListener(new ActionListener() {
-			JComboBox<String> databasesCombo = selectedDatabasePanel.getDbComboBox();
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// There must be at least one database
-				if (databasesCombo.getItemCount() > 1) {
-					String databaseToRemoveName = 
-							(String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
-					databases.remove(databaseToRemoveName);
-					System.out.println(databases);
-					selectedDatabasePanel.updateComboBox(databases);
-				}
-				
-				else {
-					JOptionPane.showMessageDialog(DatabaseViewer.this.getParent(), 
-							"There must be at least one database.", 
-							"Warning", 
-							JOptionPane.INFORMATION_MESSAGE);
-				}
-				
-			}
-		});
+		getSelectedDatabasePanel().getDbComboBox().addItemListener(new ComboBoxListener());
+		getSelectedDatabasePanel().getRemoveButton().addActionListener(new RemoveButtonListener());
 	}
 	
 	public Database getSelectedDatabase() {
@@ -189,5 +146,67 @@ public class DatabaseViewer extends JPanel {
 
 	public void setSelectedTablePanel(SelectedTableViewer selectedTablePanel) {
 		this.selectedTablePanel = selectedTablePanel;
+	}
+	
+	private class ComboBoxListener implements ItemListener {
+		public void itemStateChanged(ItemEvent e) {
+			
+			// If the values changes
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				String selectedDatabaseName = 
+						(String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
+				updateSelectedDatabase(selectedDatabaseName);
+		    }
+		}
+	}
+	
+	private class RemoveButtonListener implements ActionListener {
+		JComboBox<String> databasesCombo = selectedDatabasePanel.getDbComboBox();
+		
+		public void actionPerformed(ActionEvent e) {
+			// There must be at least one database
+			if (databasesCombo.getItemCount() > 1) {
+				String databaseToRemoveName = 
+						(String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
+				databases.remove(databaseToRemoveName);
+				System.out.println(databases);
+				selectedDatabasePanel.updateComboBox(databases);
+			}
+			
+			else {
+				JOptionPane.showMessageDialog(DatabaseViewer.this.getParent(), 
+						"There must be at least one database.", 
+						"Warning", 
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+	}
+	
+	/**
+	 * Updates the graphic table in order to display
+	 * the new target table in the DB Viewer.
+	 * 
+	 * @param table
+	 */
+	private void updateSelectedTable(TablePanel tablePanel) {
+		// Get new data
+		String[] newColsNames = tablePanel.getTable().getColumnsNames();
+		String[][] newRowsData = tablePanel.getTable().getRowsData();
+		
+		// Update table's model
+		selectedTablePanel.setTable(tablePanel.getTable());
+		selectedTablePanel.getTableModel().setDataVector(newRowsData, newColsNames);
+		selectedTablePanel.getTableModel().fireTableDataChanged();
+		
+		// Change title for selectedTablePanelViewer
+		selectedTablePanel.updateTitle();
+	}
+	
+	private class TablePanelListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent e) {
+			TablePanel targetTablePanel = ((TablePanel) e.getSource());
+			tablesPanel.changeSelectedTablePanel(targetTablePanel);
+			updateSelectedTable(targetTablePanel);
+		}
 	}
 }

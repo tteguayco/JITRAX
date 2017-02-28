@@ -74,21 +74,11 @@ public class SelectedDatabaseViewer extends JPanel {
 		
 		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMaximumSize(new Dimension(MAXIMUM_WIDTH, MAXIMUM_HEIGHT));
-		
-		setListeners();
 	}
 	
 	public void addDatabase(String databaseName) {
 		getDbComboBox().addItem(databaseName);
-	}
-	
-	public void setListeners() {
-		alterButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
+		getDbComboBox().setSelectedItem(databaseName);
 	}
 	
 	/**

@@ -8,12 +8,14 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EmptyBorder;
 
 import es.ull.etsii.jitrax.adt.Database;
@@ -33,19 +35,18 @@ public class MainWindow extends JFrame {
 	private static final String FRAME_TITLE = "JITRAX";
 	
 	private MenuBar barMenu;
-	private Workspace workspacePanel;
+	private Workspace workspace;
 	private Console console;
 	private DatabaseViewer databaseViewerPanel;
 	private JPanel mainContainer;
 	
-	private SelectedTableExchanger selectedTableExchanger;
 	private RelationalAlgebraInterpreter raInterpreter;
 	
 	
 	public MainWindow() {
 		barMenu = new MenuBar();
 		
-		workspacePanel = new Workspace();
+		workspace = new Workspace();
 		console = new Console();
 		databaseViewerPanel = new DatabaseViewer();
 		
@@ -54,7 +55,7 @@ public class MainWindow extends JFrame {
 		
 		// HORIZONTAL SPLITPANE
 		JSplitPane horSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true,
-				workspacePanel, console);
+				workspace, console);
 		horSplitPane.setResizeWeight(HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT);
 		horSplitPane.setOneTouchExpandable(true);
 		
@@ -77,6 +78,11 @@ public class MainWindow extends JFrame {
 		buildWindow();
 		
 		/**
+		 * Mark translateButton.
+		 */
+		getRootPane().setDefaultButton(workspace.getTranslateButton());
+		
+		/**
 		 * Redirect System.out to the console in the GUI.
 		 */
 		redirectOutputToConsole();
@@ -97,26 +103,27 @@ public class MainWindow extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		try {
-	        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-	        setDefaultLookAndFeelDecorated(true);
-	    }
-	    catch (UnsupportedLookAndFeelException e) {
-	    	e.printStackTrace();
-	    }
-	    catch (ClassNotFoundException e) {
-	    	e.printStackTrace();
-	    }
-	    catch (InstantiationException e) {
-	    	e.printStackTrace();
-	    }
-	    catch (IllegalAccessException e) {
-	    	e.printStackTrace();
-	    }
+		for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                try {
+					UIManager.setLookAndFeel(info.getClassName());
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (UnsupportedLookAndFeelException e) {
+					e.printStackTrace();
+				}
+                break;
+            }
+        }
 		
 		MainWindow window = new MainWindow();
 		
-		System.out.println("> Welcome to JITRAX (v1.0)\n");
+		System.out.println("> Welcome to JITRAX (v1.0)");
+		System.out.println();
 		
 		MenuBarListenersSetter menuBarController = new MenuBarListenersSetter(window);
 		
@@ -129,13 +136,13 @@ public class MainWindow extends JFrame {
 	/**
 	 * Everything written through System.out will be displayed in the console.
 	 */
-	public void redirectOutputToConsole() {
+	private void redirectOutputToConsole() {
 		
 		class ConsoleOutputStream extends ByteArrayOutputStream {
 			@Override
 			public void write(byte[] bytes, int off, int len) {
 				String message = new String(bytes, off, len, StandardCharsets.UTF_8);
-				console.appendMessage(message);
+				getConsole().appendMessage(message);
 			}
 		}
 		
@@ -151,12 +158,12 @@ public class MainWindow extends JFrame {
 		this.barMenu = barMenu;
 	}
 
-	public Workspace getCodeEditorPanel() {
-		return workspacePanel;
+	public Workspace getWorspace() {
+		return workspace;
 	}
 
-	public void setCodeEditorPanel(Workspace codeEditorPanel) {
-		this.workspacePanel = codeEditorPanel;
+	public void setWorkspace(Workspace codeEditorPanel) {
+		this.workspace = codeEditorPanel;
 	}
 
 	public Console getConsole() {
@@ -173,14 +180,6 @@ public class MainWindow extends JFrame {
 
 	public void setDatabaseViewerPanel(DatabaseViewer databaseViewerPanel) {
 		this.databaseViewerPanel = databaseViewerPanel;
-	}
-
-	public SelectedTableExchanger getSelectedTableExchanger() {
-		return selectedTableExchanger;
-	}
-
-	public void setSelectedTableExchanger(SelectedTableExchanger selectedTableExchanger) {
-		this.selectedTableExchanger = selectedTableExchanger;
 	}
 
 	public RelationalAlgebraInterpreter getRaInterpreter() {
