@@ -2,6 +2,10 @@ package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -41,7 +45,6 @@ public class MainWindow extends JFrame {
 	private JPanel mainContainer;
 	
 	private RelationalAlgebraInterpreter raInterpreter;
-	
 	
 	public MainWindow() {
 		barMenu = new MenuBar();
@@ -126,11 +129,6 @@ public class MainWindow extends JFrame {
 		System.out.println();
 		
 		MenuBarListenersSetter menuBarController = new MenuBarListenersSetter(window);
-		
-		UIManager.put("OptionPane.cancelButtonText", "Cancel");
-	    UIManager.put("OptionPane.noButtonText", "No");
-	    UIManager.put("OptionPane.okButtonText", "OK");
-	    UIManager.put("OptionPane.yesButtonText", "Yes");
 	}
 	
 	/**

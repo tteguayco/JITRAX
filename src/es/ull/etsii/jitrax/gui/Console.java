@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
+import javax.swing.text.DefaultCaret;
 
 import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
 
@@ -62,11 +63,15 @@ public class Console extends JPanel {
 		JScrollPane sp = new JScrollPane(console);
 		console.setSelectedTextColor(Color.GRAY);
 		
+		// Automatic down scrolling
+		DefaultCaret caret = (DefaultCaret) getConsole().getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		
 		setLayout(new BorderLayout());
 		
 		add(buttonsPanel, BorderLayout.SOUTH);
 		add(sp);
-		
+		 
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
 	}

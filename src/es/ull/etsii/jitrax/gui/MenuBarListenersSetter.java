@@ -17,95 +17,107 @@ import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
 public class MenuBarListenersSetter {
 
 	private MainWindow mainWindow;
+	private String lastSavingLocation;
 	
 	public MenuBarListenersSetter(MainWindow aMainWindow) {
 		mainWindow = aMainWindow;
-		
+		lastSavingLocation = "";
 		setFileMenuListeners();
 	}
 	
 	private void setFileMenuListeners() {
-		
-		mainWindow.getBarMenu().getOpenDatabase().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				openDatabase();
-			}
-		});
-	
-		mainWindow.getBarMenu().getNewDatabase().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
+		getMainWindow().getBarMenu().getOpenDatabase().addActionListener(new OpenListener());
+		getMainWindow().getBarMenu().getNewDatabase().addActionListener(new NewListener());
+		getMainWindow().getBarMenu().getSaveDatabase().addActionListener(new SaveListener());
+		getMainWindow().getBarMenu().getSaveDatabaseAs().addActionListener(new SaveAsListener());
 	}
 	
-	/**
-	 * Creates a DB in the DBMS from a file, and loads it in the MainWindow.
-	 */
-	private void openDatabase() {
-		DBMSConnectionWindow dbmsConnectionWindow = new DBMSConnectionWindow(mainWindow);
-		
-		dbmsConnectionWindow.getNextButton().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				dbmsConnectionWindow.dispose();
-				
-				// GET DBMS PARAMETERS
-				String hostname = dbmsConnectionWindow.getHostname().getText();
-				String port = dbmsConnectionWindow.getPort().getText();
-				String username = dbmsConnectionWindow.getUsername().getText();
-				String password = new String(dbmsConnectionWindow.getPassword().getPassword());
-				
-				// Empty fields are not allowed
-				if (hostname.equals("") || port.equals("") || username.equals("") || password.equals("")) {
-					showRequiredFieldsDialog();
-				}
-				
-				else {
-					FileDialog fileDialog = new FileDialog();
-					Database importedDatabase = fileDialog.importDatabaseDialog();
-					
-					if (importedDatabase != null) {
-						try {
-							// Establish a connection and create the database
-							PostgreDriver postgreDriver = new PostgreDriver(hostname, 
-																			port, 
-																			username, 
-																			password);
-							
-							// Assign a PostgreDriver to the new database
-							importedDatabase.setPostgreDriver(postgreDriver);
-							
-							// If it does not exist, create, switch and set it up
-							if (!postgreDriver.databaseAlreadyExists(importedDatabase.getName())) {
-								postgreDriver.createDatabase(importedDatabase.getName());
-								postgreDriver.switchDatabase(importedDatabase.getName());
-								postgreDriver.setUpDatabase(importedDatabase);
-								
-								// Add new database to the environment
-								mainWindow.addDatabase(importedDatabase);
-								
-								System.out.println("> Database '" + importedDatabase.getName() + 
-										"' was created.");
-							}
-							
-							else {
-								showDatabaseAlreadyExistsDialog();
-								// Habría que comprobar que la existente es igual a la especificada
-								// en fichero?
-							}
+	private class NewListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
 			
-						} catch (PSQLException e) {
-							e.printStackTrace();
-						} catch (SQLException e) {
-							e.printStackTrace();
+		}
+	}
+	
+	private class OpenListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent arg0) {
+			DBMSConnectionWindow dbmsConnectionWindow = new DBMSConnectionWindow(mainWindow);
+			
+			dbmsConnectionWindow.getNextButton().addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent event) {
+					dbmsConnectionWindow.dispose();
+					
+					// GET DBMS PARAMETERS
+					String hostname = dbmsConnectionWindow.getHostname().getText();
+					String port = dbmsConnectionWindow.getPort().getText();
+					String username = dbmsConnectionWindow.getUsername().getText();
+					String password = new String(dbmsConnectionWindow.getPassword().getPassword());
+					
+					// Empty fields are not allowed
+					if (hostname.equals("") || port.equals("") || username.equals("") || password.equals("")) {
+						showRequiredFieldsDialog();
+					}
+					
+					else {
+						FileDialog fileDialog = new FileDialog();
+						Database importedDatabase = fileDialog.importDatabaseDialog();
+						
+						if (importedDatabase != null) {
+							try {
+								// Establish a connection and create the database
+								PostgreDriver postgreDriver = new PostgreDriver(hostname, 
+																				port, 
+																				username, 
+																				password);
+								
+								// Assign a PostgreDriver to the new database
+								importedDatabase.setPostgreDriver(postgreDriver);
+								
+								// If it does not exist, create, switch and set it up
+								if (!postgreDriver.databaseAlreadyExists(importedDatabase.getName())) {
+									postgreDriver.createDatabase(importedDatabase.getName());
+									postgreDriver.switchDatabase(importedDatabase.getName());
+									postgreDriver.setUpDatabase(importedDatabase);
+									
+									// Add new database to the environment
+									mainWindow.addDatabase(importedDatabase);
+									
+									System.out.println("> Database '" + importedDatabase.getName() + 
+											"' was created.");
+								}
+								
+								else {
+									showDatabaseAlreadyExistsDialog();
+									// Habría que comprobar que la existente es igual a la especificada
+									// en fichero?
+								}
+				
+							} catch (PSQLException e) {
+								e.printStackTrace();
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
-			}
-		});
+			});
+		}
+	}
+	
+	private class SaveListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			
+		}
+	}
+	
+	private class SaveAsListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			
+		}
 	}
 	
 	private void showRequiredFieldsDialog() {
@@ -117,5 +129,21 @@ public class MenuBarListenersSetter {
 		JOptionPane.showMessageDialog(null,"A database with the specified name"
 				+ " already exists on the DBMS.",
 				"Not implemented yet", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	public MainWindow getMainWindow() {
+		return mainWindow;
+	}
+
+	public void setMainWindow(MainWindow mainWindow) {
+		this.mainWindow = mainWindow;
+	}
+
+	public String getLastSavingLocation() {
+		return lastSavingLocation;
+	}
+
+	public void setLastSavingLocation(String lastSavingLocation) {
+		this.lastSavingLocation = lastSavingLocation;
 	}
 }
