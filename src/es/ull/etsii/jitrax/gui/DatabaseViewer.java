@@ -44,25 +44,25 @@ public class DatabaseViewer extends JPanel {
 	
 	private HashMap<String, Database> databases;
 	
-	private SelectedDatabaseViewer selectedDatabasePanel;
-	private TablesViewer tablesPanel;
+	private SelectedDatabaseViewer selectedDatabaseViewer;
+	private TablesViewer tablesViewer;
 	private SelectedTableViewer selectedTableViewer;
 	
 	public DatabaseViewer() {
 		databases = new HashMap<String, Database>();
 
-		selectedDatabasePanel = new SelectedDatabaseViewer(databases);
-		tablesPanel = new TablesViewer();
+		selectedDatabaseViewer = new SelectedDatabaseViewer(databases);
+		tablesViewer = new TablesViewer();
 		selectedTableViewer = new SelectedTableViewer();
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		JScrollPane tablesSP = new JScrollPane(tablesPanel);
+		JScrollPane tablesSP = new JScrollPane(tablesViewer);
 		tablesSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		tablesSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		add(Box.createVerticalStrut(EXTRA_GAP_SIZE));
-		add(selectedDatabasePanel);
+		add(selectedDatabaseViewer);
 		add(tablesSP);
 		add(Box.createVerticalStrut(EXTRA_GAP_SIZE));
 		add(selectedTableViewer);
@@ -79,34 +79,34 @@ public class DatabaseViewer extends JPanel {
 	 */
 	public void addDatabase(Database database) {
 		// Add new database
-		databases.put(database.getName(), database);
+		getDatabases().put(database.getName(), database);
 		
 		// Update GUI Components
-		selectedDatabasePanel.addDatabase(database.getName());
+		getSelectedDatabaseViewer().addDatabase(database.getName());
 		updateSelectedDatabase(database.getName());
 	}
 	
 	private void updateSelectedDatabase(String newSelectedDatabaseName) {
-		Database newSelectedDatabase = databases.get(newSelectedDatabaseName);
+		Database newSelectedDatabase = getDatabases().get(newSelectedDatabaseName);
 		
-		tablesPanel.updateTables(newSelectedDatabase.getTables());
-		selectedTableViewer.updateTable(newSelectedDatabase.getTables().get(0));
-		updateSelectedTable(tablesPanel.getGraphicTables().get(0));
+		getTablesViewer().updateTables(newSelectedDatabase.getTables());
+		getSelectedTableViewer().updateTable(newSelectedDatabase.getTables().get(0));
+		updateSelectedTable(getTablesViewer().getGraphicTables().get(0));
 		
 		// Listeners for graphic tables in the db viewer
-		for (int i = 0; i < getTablesPanel().getNumOfTables(); i++) {
-			getTablesPanel().getGraphicTables().get(i).addMouseListener(new TablePanelListener());
+		for (int i = 0; i < getTablesViewer().getNumOfTables(); i++) {
+			getTablesViewer().getGraphicTables().get(i).addMouseListener(new TablePanelListener());
 		}
 		
-		// Revalidate the three panels
-		selectedDatabasePanel.revalidate();
-		tablesPanel.revalidate();
-		selectedTableViewer.revalidate();
+		// Update the three panels
+		getSelectedDatabaseViewer().revalidate();
+		getTablesViewer().revalidate();
+		getSelectedTableViewer().revalidate();
 	}
 	
 	private void setListeners() {
-		getSelectedDatabasePanel().getDbComboBox().addItemListener(new ComboBoxListener());
-		getSelectedDatabasePanel().getRemoveButton().addActionListener(new RemoveButtonListener());
+		getSelectedDatabaseViewer().getCombo().addItemListener(new ComboBoxListener());
+		getSelectedDatabaseViewer().getRemoveButton().addActionListener(new RemoveButtonListener());
 	}
 	
 	private class ComboBoxListener implements ItemListener {
@@ -115,23 +115,22 @@ public class DatabaseViewer extends JPanel {
 			// If the values changes
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				String selectedDatabaseName = 
-						(String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
+						(String) getSelectedDatabaseViewer().getCombo().getSelectedItem();
 				updateSelectedDatabase(selectedDatabaseName);
 		    }
 		}
 	}
 	
 	private class RemoveButtonListener implements ActionListener {
-		JComboBox<String> databasesCombo = selectedDatabasePanel.getDbComboBox();
 		
 		public void actionPerformed(ActionEvent e) {
+			JComboBox<String> databasesCombo = getSelectedDatabaseViewer().getCombo();
 			// There must be at least one database
 			if (databasesCombo.getItemCount() > 1) {
 				String databaseToRemoveName = 
-						(String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
-				databases.remove(databaseToRemoveName);
-				System.out.println(databases);
-				selectedDatabasePanel.updateComboBox(databases);
+						(String) getSelectedDatabaseViewer().getCombo().getSelectedItem();
+				getDatabases().remove(databaseToRemoveName);
+				getSelectedDatabaseViewer().updateComboBox(getDatabases());
 			}
 			
 			else {
@@ -151,12 +150,10 @@ public class DatabaseViewer extends JPanel {
 	 */
 	private void updateSelectedTable(TablePanel tablePanel) {
 		// Update tablesPanel
-		tablesPanel.changeSelectedTablePanel(tablePanel);
+		getTablesViewer().changeSelectedTablePanel(tablePanel);
 		
 		// Update selected table viewer
-		selectedTableViewer.updateTable(tablePanel.getTable());
-		
-		System.out.println(">>>> " + selectedTableViewer.getTableModel().getColumnName(0));
+		getSelectedTableViewer().updateTable(tablePanel.getTable());
 	}
 	
 	private class TablePanelListener extends MouseAdapter {
@@ -167,7 +164,7 @@ public class DatabaseViewer extends JPanel {
 	}
 	
 	public Database getSelectedDatabase() {
-		String databaseName = (String) selectedDatabasePanel.getDbComboBox().getSelectedItem();
+		String databaseName = (String) selectedDatabaseViewer.getCombo().getSelectedItem();
 		return databases.get(databaseName);
 	}
 	
@@ -179,27 +176,27 @@ public class DatabaseViewer extends JPanel {
 		this.databases = databases;
 	}
 
-	public SelectedDatabaseViewer getSelectedDatabasePanel() {
-		return selectedDatabasePanel;
+	public SelectedDatabaseViewer getSelectedDatabaseViewer() {
+		return selectedDatabaseViewer;
 	}
 
-	public void setSelectedDatabasePanel(SelectedDatabaseViewer selectedDatabasePanel) {
-		this.selectedDatabasePanel = selectedDatabasePanel;
+	public void setSelectedDatabaseViewer(SelectedDatabaseViewer selectedDatabasePanel) {
+		this.selectedDatabaseViewer = selectedDatabasePanel;
 	}
 
-	public TablesViewer getTablesPanel() {
-		return tablesPanel;
+	public TablesViewer getTablesViewer() {
+		return tablesViewer;
 	}
 
-	public void setTablesPanel(TablesViewer tablesPanel) {
-		this.tablesPanel = tablesPanel;
+	public void setTablesViewer(TablesViewer tablesPanel) {
+		this.tablesViewer = tablesPanel;
 	}
 
-	public SelectedTableViewer getSelectedTablePanel() {
+	public SelectedTableViewer getSelectedTableViewer() {
 		return selectedTableViewer;
 	}
 
-	public void setSelectedTablePanel(SelectedTableViewer selectedTablePanel) {
+	public void setSelectedTableViewer(SelectedTableViewer selectedTablePanel) {
 		this.selectedTableViewer = selectedTablePanel;
 	}
 }

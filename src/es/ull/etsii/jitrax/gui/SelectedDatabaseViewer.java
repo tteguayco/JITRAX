@@ -77,8 +77,8 @@ public class SelectedDatabaseViewer extends JPanel {
 	}
 	
 	public void addDatabase(String databaseName) {
-		getDbComboBox().addItem(databaseName);
-		getDbComboBox().setSelectedItem(databaseName);
+		getCombo().addItem(databaseName);
+		getCombo().setSelectedItem(databaseName);
 	}
 	
 	/**
@@ -90,16 +90,16 @@ public class SelectedDatabaseViewer extends JPanel {
 	    
 		while (it.hasNext()) {
 	        Map.Entry pair = (Map.Entry)it.next();
-	        getDbComboBox().addItem(databases.get(pair.getKey()).getName());
+	        getCombo().addItem(databases.get(pair.getKey()).getName());
 	        it.remove();
 	    }
 	}
 
-	public JComboBox<String> getDbComboBox() {
+	public JComboBox<String> getCombo() {
 		return dbComboBox;
 	}
 
-	public void setDbComboBox(JComboBox<String> dbComboBox) {
+	public void setCombo(JComboBox<String> dbComboBox) {
 		this.dbComboBox = dbComboBox;
 	}
 

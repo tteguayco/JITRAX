@@ -54,15 +54,6 @@ public class SelectedTableViewer extends JPanel {
 		graphicTable.setModel(tableModel);
 	}
 	
-	public void updateTable(Table aTable) {
-		table = aTable;
-		
-		System.out.println(Arrays.toString(aTable.getColumnsNames()));
-		updateTitle();
-		tableModel.setDataVector(aTable.getRowsData(), aTable.getColumnsNames());
-		tableModel.fireTableDataChanged();
-	}
-	
 	/**
 	 * Creates a customized JTable with the table's information.
 	 */
@@ -85,6 +76,13 @@ public class SelectedTableViewer extends JPanel {
 		tableSP.setPreferredSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMaximumSize(new Dimension(MAXIMUM_WIDTH, MAXIMUM_HEIGHT));
+	}
+	
+	public void updateTable(Table aTable) {
+		table = aTable;
+		tableModel.setDataVector(aTable.getRowsData(), aTable.getColumnsNames());
+		tableModel.fireTableDataChanged();
+		updateTitle();
 	}
 	
 	/**
