@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 import javax.swing.JComponent;
@@ -29,6 +31,7 @@ import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.database.PostgreDriver;
 import es.ull.etsii.jitrax.interpreters.RelationalAlgebraInterpreter;
 
 public class MainWindow extends JFrame {
@@ -153,6 +156,7 @@ public class MainWindow extends JFrame {
 	
 	private void setListeners() {
 		getWorkspace().getTranslateButton().addActionListener(new TranslationListener());
+		getWorkspace().getExecuteButton().addActionListener(new ExecutionListener());
 	}
 	
 	private class TranslationListener implements ActionListener {
@@ -184,6 +188,24 @@ public class MainWindow extends JFrame {
 				getWorkspace().switchToSqlTab();
 		        
 				System.out.println("> Query successfully translated.");
+			}
+		}
+	}
+	
+	private class ExecutionListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			Database currentDatabase = getDatabaseViewerPanel().getSelectedDatabase();
+			PostgreDriver postgreDriver = currentDatabase.getPostgreDriver();
+			String sqlQuery = getWorkspace().getSqlCodeEditor().getText();
+			ResultSet resultSet;
+			
+			try {
+				postgreDriver.executeQuery(sqlQuery);
+				resultSet = postgreDriver.getQueryResultSet();
+				getWorkspace().updateQueryResultViewer(resultSet);
+			} catch (SQLException e1) {
+				System.out.println("> An error occurred executing the query...");
 			}
 		}
 	}

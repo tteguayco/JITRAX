@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -84,7 +86,7 @@ public class Workspace extends JPanel {
 	private JButton translateButton;
 	private JButton executeButton;
 	private JPanel parseTreePanel;
-	private JPanel queryResultPanel;
+	private QueryResultViewer queryResultViewer;
 	
 	public Workspace() {
 		relationalAlgebraCodeEditor = new RSyntaxTextArea();
@@ -92,7 +94,7 @@ public class Workspace extends JPanel {
 		translateButton = new JButton("Translate to SQL");
 		executeButton = new JButton("Execute on DBMS");
 		parseTreePanel = new JPanel(new BorderLayout());
-		queryResultPanel = new JPanel();
+		queryResultViewer = new QueryResultViewer();
 		
 		relationalAlgebraCodeEditor.setCaretColor(RA_CARET_COLOR);
 		String raCurrentFontName = relationalAlgebraCodeEditor.getFont().getName();
@@ -184,7 +186,7 @@ public class Workspace extends JPanel {
 		tabbedPane.add("Relational Algebra", raPanel);
 		tabbedPane.addTab("SQL", sqlPanel);
 		tabbedPane.addTab("Parse Tree", parseTreePanel);
-		tabbedPane.addTab("Query Result", queryResultPanel);
+		tabbedPane.addTab("Query Result", queryResultViewer);
 		tabbedPane.setFocusable(false);
 		tabbedPane.setEnabledAt(SQL_TAB_INDEX, false);
 		tabbedPane.setEnabledAt(PARSE_TREE_TAB_INDEX, false);
@@ -245,6 +247,18 @@ public class Workspace extends JPanel {
 				parseTree.setScale(scaleValue);
 			}
 		});
+	}
+	
+	public void updateQueryResultViewer(ResultSet resultSet) throws SQLException {
+		System.out.println("provisional");
+		
+		while (resultSet.next()) {
+			int numColumns = resultSet.getMetaData().getColumnCount();
+	        System.out.println();
+			for (int i = 1 ; i <= numColumns ; i++) {
+	           System.out.print(resultSet.getObject(i) + " || ");
+	        }
+		}
 	}
 	
 	/**
@@ -417,13 +431,5 @@ public class Workspace extends JPanel {
 
 	public void setParseTreePanel(JPanel parseTreePanel) {
 		this.parseTreePanel = parseTreePanel;
-	}
-
-	public JPanel getQueryResultPanel() {
-		return queryResultPanel;
-	}
-
-	public void setQueryResultPanel(JPanel queryResultPanel) {
-		this.queryResultPanel = queryResultPanel;
 	}
 }
