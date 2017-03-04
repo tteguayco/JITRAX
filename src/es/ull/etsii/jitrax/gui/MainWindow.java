@@ -88,11 +88,6 @@ public class MainWindow extends JFrame {
 		buildWindow();
 		
 		/**
-		 * Mark translateButton.
-		 */
-		getRootPane().setDefaultButton(workspace.getTranslateButton());
-		
-		/**
 		 * Redirect System.out to the console in the GUI.
 		 */
 		redirectOutputToConsole();
@@ -182,14 +177,13 @@ public class MainWindow extends JFrame {
 				Parser parser = interpreter.getParser();
 				ParseTree tree = interpreter.getTree();
 				TreeViewer treeViewer = new TreeViewer(Arrays.asList(parser.getRuleNames()),tree);
-		        treeViewer.setScale(1.5);
 		        getWorkspace().setParseTreeViewer(treeViewer);
 				
 		        getWorkspace().enableSqlTab();
 		        getWorkspace().enableParseTreeTab();
 				getWorkspace().switchToSqlTab();
 		        
-				System.out.println("> Query executed.\n");
+				System.out.println("> Query successfully translated.");
 			}
 		}
 	}

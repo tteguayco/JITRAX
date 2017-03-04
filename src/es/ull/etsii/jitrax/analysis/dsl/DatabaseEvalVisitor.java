@@ -14,7 +14,6 @@ import java.util.ArrayList;
 /**
  * This class allows to analyze semantically a expression which describes
  * a database specification (using a DSL). It has to be syntactically correct.
- * @author teguayco
  */
 public class DatabaseEvalVisitor extends DatabaseBaseVisitor<Object> {
 

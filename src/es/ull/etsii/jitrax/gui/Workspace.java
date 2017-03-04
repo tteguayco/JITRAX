@@ -14,6 +14,8 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.SpinnerModel;
@@ -44,6 +46,8 @@ public class Workspace extends JPanel {
 	private static final Color SQL_CARET_COLOR = Color.BLACK;
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
+	private static final Color PARSE_TREE_BACKGROUND_COLOR = Color.WHITE;
+	
 	private static final int DEFAULT_RA_FONT_SIZE = 16;
 	private static final int DEFAULT_RA_FONT_STYLE = Font.PLAIN;
 	private static final int DEFAULT_SQL_FONT_SIZE = 16;
@@ -60,6 +64,11 @@ public class Workspace extends JPanel {
 	private static final int SQL_TAB_INDEX = 1;
 	private static final int PARSE_TREE_TAB_INDEX = 2;
 	private static final int QUERY_RESULT_TAB_INDEX = 3;
+	
+	private static final double PARSE_TREE_DEFAULT_SCALE = 1.5;
+	private static final double PARSE_TREE_SLIDER_FACTOR = 0.1;
+	private static final int PARSE_TREE_MIN_VAL = 10;
+	private static final int PARSE_TREE_MAX_VAL = 30;
 	
 	private RSyntaxTextArea relationalAlgebraCodeEditor;
 	private RSyntaxTextArea sqlCodeEditor;
@@ -82,7 +91,7 @@ public class Workspace extends JPanel {
 		sqlCodeEditor = new RSyntaxTextArea();
 		translateButton = new JButton("Translate to SQL");
 		executeButton = new JButton("Execute on DBMS");
-		parseTreePanel = new JPanel();
+		parseTreePanel = new JPanel(new BorderLayout());
 		queryResultPanel = new JPanel();
 		
 		relationalAlgebraCodeEditor.setCaretColor(RA_CARET_COLOR);
@@ -167,6 +176,9 @@ public class Workspace extends JPanel {
 	    sqlEditorElementsPanel.add(new JLabel("Size: "));
 	    sqlEditorElementsPanel.add(sqlFontSizeSelector);
 	    
+	    // ParseTree Tab
+	    parseTreePanel.setBackground(PARSE_TREE_BACKGROUND_COLOR);
+	    
 		setLayout(new BorderLayout());
 		tabbedPane = new JTabbedPane();
 		tabbedPane.add("Relational Algebra", raPanel);
@@ -210,8 +222,29 @@ public class Workspace extends JPanel {
 	}
 	
 	public void setParseTreeViewer(TreeViewer parseTree) {
+		JSlider scaleSlider = new JSlider();
+		scaleSlider.setMinimum(PARSE_TREE_MIN_VAL);
+		scaleSlider.setMaximum(PARSE_TREE_MAX_VAL);
+		
+		// JSlider only has integer values
+		scaleSlider.setValue((int) (PARSE_TREE_DEFAULT_SCALE / PARSE_TREE_SLIDER_FACTOR)); 
+		parseTree.setScale(PARSE_TREE_DEFAULT_SCALE);
+		
+		JScrollPane parseTreeSP = new JScrollPane(parseTree);
+		parseTreeSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		parseTreeSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		
 		getParseTreePanel().removeAll();
-		getParseTreePanel().add(parseTree);
+		getParseTreePanel().add(parseTreeSP, BorderLayout.CENTER);
+		getParseTreePanel().add(scaleSlider, BorderLayout.SOUTH);
+		
+		scaleSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				double scaleValue = 
+						((double) scaleSlider.getValue()) * PARSE_TREE_SLIDER_FACTOR;
+				parseTree.setScale(scaleValue);
+			}
+		});
 	}
 	
 	/**
