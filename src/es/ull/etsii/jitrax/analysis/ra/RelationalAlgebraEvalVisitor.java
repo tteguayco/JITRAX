@@ -28,11 +28,10 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		
 		// EXPRESSION
 		sqlTranslation += visit(ctx.expr()) + ";";
-		System.out.println(sqlTranslation);
 		return sqlTranslation;
 	}
 
-	@Override 
+	@Override
 	public String visitViewAssignment(RelationalAlgebraParser.ViewAssignmentContext ctx) {
 		return "CREATE VIEW [" + ctx.IDENTIFIER().getText() + "] AS\n" +
 				visit(ctx.expr()) + ";";

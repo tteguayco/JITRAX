@@ -65,4 +65,68 @@ public class RelationalAlgebraInterpreter {
 		eval = new RelationalAlgebraEvalVisitor(database);
 		sqlTranslation = eval.visit(tree);
 	}
+
+	public ANTLRInputStream getInput() {
+		return input;
+	}
+
+	public void setInput(ANTLRInputStream input) {
+		this.input = input;
+	}
+
+	public ParseTree getTree() {
+		return tree;
+	}
+
+	public void setTree(ParseTree tree) {
+		this.tree = tree;
+	}
+
+	public RelationalAlgebraLexer getLexer() {
+		return lexer;
+	}
+
+	public void setLexer(RelationalAlgebraLexer lexer) {
+		this.lexer = lexer;
+	}
+
+	public CommonTokenStream getTokens() {
+		return tokens;
+	}
+
+	public void setTokens(CommonTokenStream tokens) {
+		this.tokens = tokens;
+	}
+
+	public RelationalAlgebraParser getParser() {
+		return parser;
+	}
+
+	public void setParser(RelationalAlgebraParser parser) {
+		this.parser = parser;
+	}
+
+	public RelationalAlgebraEvalVisitor getEval() {
+		return eval;
+	}
+
+	public void setEval(RelationalAlgebraEvalVisitor eval) {
+		this.eval = eval;
+	}
+
+	public Database getDatabase() {
+		return database;
+	}
+
+	public void setDatabase(Database database) {
+		this.database = database;
+	}
+
+	public String getSqlTranslation() {
+		return sqlTranslation;
+	}
+
+	public void setSqlTranslation(String sqlTranslation) {
+		this.sqlTranslation = sqlTranslation;
+	}
 }

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -21,6 +22,11 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EmptyBorder;
+
+import org.antlr.runtime.tree.TreeParser;
+import org.antlr.v4.gui.TreeViewer;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.interpreters.RelationalAlgebraInterpreter;
@@ -171,8 +177,19 @@ public class MainWindow extends JFrame {
 			// Successful translation
 			if (sqlTranslation != null) {
 				getWorkspace().getSQLCodeEditor().setText(sqlTranslation);
-				getWorkspace().enableSqlTab();
+				
+				// Show ParseTree
+				Parser parser = interpreter.getParser();
+				ParseTree tree = interpreter.getTree();
+				TreeViewer treeViewer = new TreeViewer(Arrays.asList(parser.getRuleNames()),tree);
+		        treeViewer.setScale(1.5);
+		        getWorkspace().setParseTreeViewer(treeViewer);
+				
+		        getWorkspace().enableSqlTab();
+		        getWorkspace().enableParseTreeTab();
 				getWorkspace().switchToSqlTab();
+		        
+				System.out.println("> Query executed.\n");
 			}
 		}
 	}

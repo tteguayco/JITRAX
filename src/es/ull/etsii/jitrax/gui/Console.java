@@ -37,8 +37,8 @@ public class Console extends JPanel {
 	
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
-	private static final int FONT_SIZE = 12;
-	private static final int NROWS = 8;
+	private static final int FONT_SIZE = 14;
+	private static final int NROWS = 12;
 	
 	private JTextArea console;
 	private JButton clearButton;

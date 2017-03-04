@@ -22,6 +22,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.antlr.v4.gui.TreeViewer;
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -73,12 +74,16 @@ public class Workspace extends JPanel {
 	private JTabbedPane tabbedPane = new JTabbedPane();
 	private JButton translateButton;
 	private JButton executeButton;
+	private JPanel parseTreePanel;
+	private JPanel queryResultPanel;
 	
 	public Workspace() {
 		relationalAlgebraCodeEditor = new RSyntaxTextArea();
 		sqlCodeEditor = new RSyntaxTextArea();
 		translateButton = new JButton("Translate to SQL");
 		executeButton = new JButton("Execute on DBMS");
+		parseTreePanel = new JPanel();
+		queryResultPanel = new JPanel();
 		
 		relationalAlgebraCodeEditor.setCaretColor(RA_CARET_COLOR);
 		String raCurrentFontName = relationalAlgebraCodeEditor.getFont().getName();
@@ -166,8 +171,8 @@ public class Workspace extends JPanel {
 		tabbedPane = new JTabbedPane();
 		tabbedPane.add("Relational Algebra", raPanel);
 		tabbedPane.addTab("SQL", sqlPanel);
-		tabbedPane.addTab("Parse Tree", new JPanel());
-		tabbedPane.addTab("Query Result", new JPanel());
+		tabbedPane.addTab("Parse Tree", parseTreePanel);
+		tabbedPane.addTab("Query Result", queryResultPanel);
 		tabbedPane.setFocusable(false);
 		tabbedPane.setEnabledAt(SQL_TAB_INDEX, false);
 		tabbedPane.setEnabledAt(PARSE_TREE_TAB_INDEX, false);
@@ -181,27 +186,32 @@ public class Workspace extends JPanel {
 	}
 	
 	public void enableSqlTab() {
-		tabbedPane.setEnabledAt(SQL_TAB_INDEX, true);
+		getTabbedPane().setEnabledAt(SQL_TAB_INDEX, true);
 	}
 	
 	public void enableParseTreeTab() {
-		tabbedPane.setEnabledAt(PARSE_TREE_TAB_INDEX, true);
+		getTabbedPane().setEnabledAt(PARSE_TREE_TAB_INDEX, true);
 	}
 	
 	public void enableResultTab() {
-		tabbedPane.setEnabledAt(QUERY_RESULT_TAB_INDEX, true);
+		getTabbedPane().setEnabledAt(QUERY_RESULT_TAB_INDEX, true);
 	}
 	
 	public void switchToSqlTab() {
-		tabbedPane.setSelectedIndex(SQL_TAB_INDEX);
+		getTabbedPane().setSelectedIndex(SQL_TAB_INDEX);
 	}
 	
 	public void switchToParseTreeTab() {
-		tabbedPane.setSelectedIndex(PARSE_TREE_TAB_INDEX);
+		getTabbedPane().setSelectedIndex(PARSE_TREE_TAB_INDEX);
 	}
 	
 	public void switchToQueryResultTab() {
-		tabbedPane.setSelectedIndex(QUERY_RESULT_TAB_INDEX);
+		getTabbedPane().setSelectedIndex(QUERY_RESULT_TAB_INDEX);
+	}
+	
+	public void setParseTreeViewer(TreeViewer parseTree) {
+		getParseTreePanel().removeAll();
+		getParseTreePanel().add(parseTree);
 	}
 	
 	/**
@@ -366,5 +376,21 @@ public class Workspace extends JPanel {
 
 	public static int[] getFontStylesConstants() {
 		return FONT_STYLES_CONSTANTS;
+	}
+
+	public JPanel getParseTreePanel() {
+		return parseTreePanel;
+	}
+
+	public void setParseTreePanel(JPanel parseTreePanel) {
+		this.parseTreePanel = parseTreePanel;
+	}
+
+	public JPanel getQueryResultPanel() {
+		return queryResultPanel;
+	}
+
+	public void setQueryResultPanel(JPanel queryResultPanel) {
+		this.queryResultPanel = queryResultPanel;
 	}
 }
