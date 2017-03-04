@@ -80,6 +80,9 @@ public class MenuBar extends JMenuBar {
 		
 		saveDatabaseAs = new JMenuItem("Save As...");
 		
+		saveDatabase.setEnabled(false);
+		saveDatabaseAs.setEnabled(false);
+		
 		importOption = new JMenuItem("Import");
 		exportOption = new JMenuItem("Export");
 		
@@ -205,6 +208,11 @@ public class MenuBar extends JMenuBar {
 				}
 			}
 		}
+	}
+	
+	public void enableSavingOptions() {
+		getSaveDatabase().setEnabled(true);
+		getSaveDatabaseAs().setEnabled(true);
 	}
 	
 	public JMenu getFileMenu() {

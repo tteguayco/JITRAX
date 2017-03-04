@@ -2,6 +2,8 @@ package es.ull.etsii.jitrax.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.swing.JFrame;
@@ -109,14 +111,37 @@ public class MenuBarListenersSetter {
 	private class SaveListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
+			Database currentDatabase = getMainWindow().getDatabaseViewerPanel().getSelectedDatabase();
+			String currentDatabaseString = currentDatabase.toString();
 			
+			// Save As if there is not a lastSavingLocation
+			if (getLastSavingLocation().equals("")) {
+				getMainWindow().getBarMenu().getSaveDatabaseAs().doClick();
+			} 
+			
+			// Save in last location
+			else {
+				PrintWriter printWriter;
+				try {
+					printWriter = new PrintWriter(getLastSavingLocation());
+					printWriter.print(currentDatabaseString);
+					printWriter.close();
+				} 
+				catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
 	}
 	
 	private class SaveAsListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			
+			FileDialog fileDialog = new FileDialog();
+			Database currentDatabase = getMainWindow().getDatabaseViewerPanel().getSelectedDatabase();
+			String currentDatabaseString = currentDatabase.toString();
+			fileDialog.exportFile("Save Database", currentDatabaseString, ".db");
+			setLastSavingLocation(fileDialog.getLastSavingLocation());
 		}
 	}
 	

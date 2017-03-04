@@ -94,6 +94,7 @@ public class MainWindow extends JFrame {
 	public void addDatabase(Database database) {
 		databaseViewerPanel.addDatabase(database);
 		mainContainer.setVisible(true);
+		barMenu.enableSavingOptions();
 	}
 	
 	private void buildWindow() {

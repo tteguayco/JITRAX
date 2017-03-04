@@ -19,7 +19,10 @@ import es.ull.etsii.jitrax.gui.Console;
 
 public class FileDialog {
 	
+	private String lastSavingLocation;
+	
 	public FileDialog() {
+		lastSavingLocation = "";
 	}
 	
 	/**
@@ -56,14 +59,6 @@ public class FileDialog {
 	}
 	
 	/**
-	 * Asks for a file which will be used for saving the specified database.
-	 * @param database
-	 */
-	public void exportDatabaseDialog(Database database) {
-		
-	}
-	
-	/**
 	 * Exports the specified content to the specified file.
 	 * 
 	 * If the file already exists, the user has to confirm whether he wants
@@ -84,7 +79,6 @@ public class FileDialog {
 		fileChooser.setDialogTitle(dialogTitle);
 		userSelection = fileChooser.showSaveDialog(null);
 		
-		// Export console content to file
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 			filePath = fileChooser.getSelectedFile().getAbsolutePath();
 			
@@ -93,6 +87,7 @@ public class FileDialog {
 			
 			try {
 				br = new BufferedReader(new FileReader(filePath));
+				setLastSavingLocation(filePath);
 				
 				// If file is not empty
 				try {
@@ -103,7 +98,6 @@ public class FileDialog {
 					            JOptionPane.QUESTION_MESSAGE);
 						br.close();
 						
-						// Confirm saving
 						if (response != JOptionPane.YES_OPTION) {
 							return;
 						}
@@ -116,7 +110,9 @@ public class FileDialog {
 			} 
 			
 			catch (FileNotFoundException e1) {
-				new File(filePath + extension);
+				String newFilePath = filePath + extension;
+				new File(newFilePath);
+				setLastSavingLocation(newFilePath);
 			}
 			
 			try {
@@ -147,5 +143,13 @@ public class FileDialog {
 	private void showSuccessfulExportationWarning() {
 		JOptionPane.showMessageDialog(null, "Content successfully exported.",
 				"Warning", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	public String getLastSavingLocation() {
+		return lastSavingLocation;
+	}
+
+	public void setLastSavingLocation(String lastSavingLocation) {
+		this.lastSavingLocation = lastSavingLocation;
 	}
 }

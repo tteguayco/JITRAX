@@ -10,7 +10,6 @@ public class Database {
 
 	private String name;
 	private ArrayList<Table> tables;
-	private String uniqueID;
 	private PostgreDriver postgreDriver;
 	
 	/**
@@ -19,13 +18,11 @@ public class Database {
 	public Database(String aName) {
 		name = aName;
 		tables = new ArrayList<Table>();
-		uniqueID = UUID.randomUUID().toString();
 	}
 	
 	public Database(String aName, ArrayList<Table> tableList) {
 		name = aName;
 		tables = tableList;
-		uniqueID = UUID.randomUUID().toString();
 	}
 	
 	public void addTable(Table newTable) throws DuplicateTableException {
@@ -45,29 +42,48 @@ public class Database {
 	public String toString() {
 		String toString = "";
 		
-		toString += "DATABASE " + getName() + "\n";
-		toString += "UniqueIDE " + getUniqueID() + "\n\n";
+		toString += "DATABASE " + getName() + ";\n";
 		
 		for (int i = 0; i < getTables().size(); i++) {
-			toString += getTables().get(i).getName() + " (";
+			toString += "\nTABLE " + getTables().get(i).getName() + " (";
 			
 			// Attributes with domains
 			for (int j = 0; j < getTables().get(i).getAttributes().size(); j++) {
 				toString += getTables().get(i).getAttributes().get(j).getName() + ": " +
-						getTables().get(i).getAttributes().get(j).getDataType() + ", ";
-			}
-			
-			toString += ")\n => \n";
-			
-			// Rows
-			toString += "(";
-			for (int j = 0; j < getTables().get(i).getRows().size(); j++) {
-				for (int k = 0; k < getTables().get(i).getRows().get(j).size(); k++) {
-					toString += getTables().get(i).getRows().get(j).getData().get(k).getStringValue() + ", ";
+						getTables().get(i).getAttributes().get(j).getDataType();
+				
+				// Add PK label
+				if (getTables().get(i).getAttributes().get(j).isPrimaryKey()) {
+					toString += ", PK";
+				}
+				
+				// Add semicolon
+				if (j < getTables().get(i).getAttributes().size() - 1) {
+					toString += ";\n";
+				} 
+				
+				else {
+					toString += ")\n";
 				}
 			}
 			
-			toString += ")\n\n";
+			toString += "=>\n";
+			
+			// Rows
+			for (int j = 0; j < getTables().get(i).getRows().size(); j++) {
+				toString += "(";
+				for (int k = 0; k < getTables().get(i).getRows().get(j).size(); k++) {
+					toString += getTables().get(i).getRows().get(j).getData().get(k).getStringValue();
+					
+					if (k < getTables().get(i).getRows().get(j).size() - 1) {
+						toString += ",";
+					}
+					
+					else {
+						toString += ");\n";
+					}
+				}
+			}
 		}
 		
 		return toString;
@@ -95,14 +111,6 @@ public class Database {
 
 	public void setTables(ArrayList<Table> tables) {
 		this.tables = tables;
-	}
-
-	public String getUniqueID() {
-		return uniqueID;
-	}
-
-	public void setUniqueID(String uniqueID) {
-		this.uniqueID = uniqueID;
 	}
 
 	public PostgreDriver getPostgreDriver() {
