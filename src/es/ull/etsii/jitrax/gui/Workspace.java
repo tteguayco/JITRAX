@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -42,11 +43,22 @@ public class Workspace extends JPanel {
 	private static final Color SQL_CARET_COLOR = Color.BLACK;
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
-	private static final int DEFAULT_FONT_SIZE = 16;
-	private static final int DEFAULT_FONT_STYLE = Font.PLAIN;
+	private static final int DEFAULT_RA_FONT_SIZE = 16;
+	private static final int DEFAULT_RA_FONT_STYLE = Font.PLAIN;
+	private static final int DEFAULT_SQL_FONT_SIZE = 16;
+	private static final int DEFAULT_SQL_FONT_STYLE = Font.PLAIN;
 	private static final int MIN_FONT_SIZE = 11;
 	private static final int MAX_FONT_SIZE = 24;
 	private static final int SPINNER_STEP = 1;
+	
+	private static final int BUTTON_MARGIN_TOP = 2;
+	private static final int BUTTON_MARGIN_LEFT = 4;
+	private static final int BUTTON_MARGIN_BOTTOM = 2;
+	private static final int BUTTON_MARGIN_RIGHT = 4;
+	
+	private static final int SQL_TAB_INDEX = 1;
+	private static final int PARSE_TREE_TAB_INDEX = 2;
+	private static final int QUERY_RESULT_TAB_INDEX = 3;
 	
 	private RSyntaxTextArea relationalAlgebraCodeEditor;
 	private RSyntaxTextArea sqlCodeEditor;
@@ -61,25 +73,35 @@ public class Workspace extends JPanel {
 	private JTabbedPane tabbedPane = new JTabbedPane();
 	private JButton translateButton;
 	private JButton executeButton;
-	private JButton saveRaButton;
-	private JButton saveSqlButton;
 	
 	public Workspace() {
 		relationalAlgebraCodeEditor = new RSyntaxTextArea();
 		sqlCodeEditor = new RSyntaxTextArea();
 		translateButton = new JButton("Translate to SQL");
 		executeButton = new JButton("Execute on DBMS");
-		saveRaButton = new JButton("Save");
-		saveSqlButton = new JButton("Save");
 		
 		relationalAlgebraCodeEditor.setCaretColor(RA_CARET_COLOR);
-		String currentFontName = relationalAlgebraCodeEditor.getFont().getName();
-		relationalAlgebraCodeEditor.setFont(new Font(currentFontName, 
-													DEFAULT_FONT_STYLE, 
-													DEFAULT_FONT_SIZE));
+		String raCurrentFontName = relationalAlgebraCodeEditor.getFont().getName();
+		relationalAlgebraCodeEditor.setFont(new Font(raCurrentFontName, 
+													DEFAULT_RA_FONT_STYLE, 
+													DEFAULT_RA_FONT_SIZE));
 		
+		String sqlCurrentFontName = sqlCodeEditor.getFont().getName();
+		sqlCodeEditor.setFont(new Font(sqlCurrentFontName, 
+				DEFAULT_RA_FONT_STYLE, 
+				DEFAULT_RA_FONT_SIZE));
 		sqlCodeEditor.setCaretColor(SQL_CARET_COLOR);
 		sqlCodeEditor.setEditable(false);
+		
+		// Buttons
+		translateButton.setMargin(new Insets(BUTTON_MARGIN_TOP, 
+				BUTTON_MARGIN_LEFT, 
+				BUTTON_MARGIN_BOTTOM, 
+				BUTTON_MARGIN_RIGHT));
+		executeButton.setMargin(new Insets(BUTTON_MARGIN_TOP, 
+				BUTTON_MARGIN_LEFT, 
+				BUTTON_MARGIN_BOTTOM, 
+				BUTTON_MARGIN_RIGHT));
 		
 		// Enable code highlighting
 		setSyntaxHighlightingForRelationalAlgebra();
@@ -118,9 +140,8 @@ public class Workspace extends JPanel {
 	    raPanel.add(relationalAlgebraSP, BorderLayout.CENTER);
 	    raPanel.add(raControlPanel, BorderLayout.SOUTH);
 	    translationPanel.add(translateButton);
-	    translationPanel.add(saveRaButton);
 	    raControlPanel.add(translationPanel, BorderLayout.WEST);
-	    raControlPanel.add(raEditorElementsPanel);
+	    raControlPanel.add(raEditorElementsPanel, BorderLayout.EAST);
 	    raEditorElementsPanel.add(new JLabel("Style: "));
 	    raEditorElementsPanel.add(raFontStyles);
 	    raEditorElementsPanel.add(new JLabel("Size: "));
@@ -134,7 +155,6 @@ public class Workspace extends JPanel {
 	    sqlPanel.add(sqlSP, BorderLayout.CENTER);
 	    sqlPanel.add(sqlControlPanel, BorderLayout.SOUTH);
 	    executionPanel.add(executeButton);
-	    executionPanel.add(saveSqlButton);
 	    sqlControlPanel.add(executionPanel, BorderLayout.WEST);
 	    sqlControlPanel.add(sqlEditorElementsPanel);
 	    sqlEditorElementsPanel.add(new JLabel("Style: "));
@@ -149,9 +169,9 @@ public class Workspace extends JPanel {
 		tabbedPane.addTab("Parse Tree", new JPanel());
 		tabbedPane.addTab("Query Result", new JPanel());
 		tabbedPane.setFocusable(false);
-		tabbedPane.setEnabledAt(1, false);
-		tabbedPane.setEnabledAt(2, false);
-		tabbedPane.setEnabledAt(3, false);
+		tabbedPane.setEnabledAt(SQL_TAB_INDEX, false);
+		tabbedPane.setEnabledAt(PARSE_TREE_TAB_INDEX, false);
+		tabbedPane.setEnabledAt(QUERY_RESULT_TAB_INDEX, false);
 		add(tabbedPane, BorderLayout.CENTER);
 		
 		setListeners();
@@ -161,15 +181,27 @@ public class Workspace extends JPanel {
 	}
 	
 	public void enableSqlTab() {
-		tabbedPane.setEnabledAt(1, true);
+		tabbedPane.setEnabledAt(SQL_TAB_INDEX, true);
 	}
 	
 	public void enableParseTreeTab() {
-		tabbedPane.setEnabledAt(2, true);
+		tabbedPane.setEnabledAt(PARSE_TREE_TAB_INDEX, true);
 	}
 	
 	public void enableResultTab() {
-		tabbedPane.setEnabledAt(3, true);
+		tabbedPane.setEnabledAt(QUERY_RESULT_TAB_INDEX, true);
+	}
+	
+	public void switchToSqlTab() {
+		tabbedPane.setSelectedIndex(SQL_TAB_INDEX);
+	}
+	
+	public void switchToParseTreeTab() {
+		tabbedPane.setSelectedIndex(PARSE_TREE_TAB_INDEX);
+	}
+	
+	public void switchToQueryResultTab() {
+		tabbedPane.setSelectedIndex(QUERY_RESULT_TAB_INDEX);
 	}
 	
 	/**

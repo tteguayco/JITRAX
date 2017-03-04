@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.analysisDSL;
+package es.ull.etsii.jitrax.analysis.dsl;
 
 // Generated from Database.g4 by ANTLR 4.6
 import org.antlr.v4.runtime.atn.*;

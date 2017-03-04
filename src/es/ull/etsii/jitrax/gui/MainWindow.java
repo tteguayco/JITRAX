@@ -78,6 +78,7 @@ public class MainWindow extends JFrame {
 		mainContainer.setVisible(false);
 
 		setJMenuBar(barMenu);
+		setListeners();
 		buildWindow();
 		
 		/**
@@ -149,6 +150,33 @@ public class MainWindow extends JFrame {
 		System.setOut(ps);
 	}
 	
+	private void setListeners() {
+		getWorkspace().getTranslateButton().addActionListener(new TranslationListener());
+	}
+	
+	private class TranslationListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			if (getWorkspace().getRelationalAlgebraCodeEditor().getText().equals("")) {
+				return;
+			}
+			
+			String sqlTranslation;
+			Database currentDatabase = getDatabaseViewerPanel().getSelectedDatabase();
+			String raInput = getWorkspace().getRelationalAlgebraCodeEditor().getText();
+			RelationalAlgebraInterpreter interpreter = new RelationalAlgebraInterpreter(currentDatabase);
+			
+			sqlTranslation = interpreter.translate(raInput);
+			
+			// Successful translation
+			if (sqlTranslation != null) {
+				getWorkspace().getSQLCodeEditor().setText(sqlTranslation);
+				getWorkspace().enableSqlTab();
+				getWorkspace().switchToSqlTab();
+			}
+		}
+	}
+	
 	public MenuBar getBarMenu() {
 		return barMenu;
 	}
@@ -157,7 +185,7 @@ public class MainWindow extends JFrame {
 		this.barMenu = barMenu;
 	}
 
-	public Workspace getWorspace() {
+	public Workspace getWorkspace() {
 		return workspace;
 	}
 

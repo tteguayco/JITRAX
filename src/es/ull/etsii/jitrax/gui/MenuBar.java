@@ -32,9 +32,6 @@ public class MenuBar extends JMenuBar {
 	private JMenu languageMenu;
 	private JMenu helpMenu;
 	
-	private JRadioButtonMenuItem defaultViewRadioButton;
-	private JRadioButtonMenuItem nimbusViewRadioButton;
-	
 	private JMenuItem openDatabase;
 	private JMenuItem newDatabase;
 	private JMenuItem saveDatabase;
@@ -106,57 +103,11 @@ public class MenuBar extends JMenuBar {
 	}
 	
 	private void buildViewMenu() {
-		setDefaultViewRadioButton(new JRadioButtonMenuItem("OS Default", false));
-		setNimbusViewRadioButton(new JRadioButtonMenuItem("Nimbus", true));
-		
-		getDefaultViewRadioButton().addActionListener(new LAFListener());
-		getNimbusViewRadioButton().addActionListener(new LAFListener());
 		
 		ButtonGroup buttonGroup = new ButtonGroup();
-		buttonGroup.add(getDefaultViewRadioButton());
-		buttonGroup.add(getNimbusViewRadioButton());
 		
 		setViewMenu(new JMenu("View"));
 		getViewMenu().setMnemonic(KeyEvent.VK_V);
-		getViewMenu().add(getNimbusViewRadioButton());
-		getViewMenu().add(getDefaultViewRadioButton());
-	}
-	
-	/**
-	 * Listener for Look And Feel options.
-	 */
-	private class LAFListener implements ActionListener {
-
-		public void actionPerformed(ActionEvent e) {
-			String newLAF = ((JRadioButtonMenuItem) e.getSource()).getText();
-			
-			try {
-				if (newLAF.equals("Nimbus")) {
-					for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-	                    if ("Nimbus".equals(info.getName())) {
-	                            UIManager.setLookAndFeel(info.getClassName());
-	                            SwingUtilities.updateComponentTreeUI(MenuBar.this.getParent());
-	                            break;
-	                    }
-	                }
-				} 
-				
-				else if (newLAF.equals("OS Default")) {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					SwingUtilities.updateComponentTreeUI(MenuBar.this.getParent());
-				}
-			}
-			
-			catch (ClassNotFoundException ex) {
-				ex.printStackTrace();
-			} catch (InstantiationException ex) {
-				ex.printStackTrace();
-			} catch (IllegalAccessException ex) {
-				ex.printStackTrace();
-			} catch (UnsupportedLookAndFeelException ex) {
-				ex.printStackTrace();
-			}
-		}
 	}
 	
 	private void buildLanguageMenu() {
@@ -245,22 +196,6 @@ public class MenuBar extends JMenuBar {
 
 	public void setHelpMenu(JMenu helpMenu) {
 		this.helpMenu = helpMenu;
-	}
-
-	public JRadioButtonMenuItem getDefaultViewRadioButton() {
-		return defaultViewRadioButton;
-	}
-
-	public void setDefaultViewRadioButton(JRadioButtonMenuItem defaultViewRadioButton) {
-		this.defaultViewRadioButton = defaultViewRadioButton;
-	}
-
-	public JRadioButtonMenuItem getNimbusViewRadioButton() {
-		return nimbusViewRadioButton;
-	}
-
-	public void setNimbusViewRadioButton(JRadioButtonMenuItem nimbusViewRadioButton) {
-		this.nimbusViewRadioButton = nimbusViewRadioButton;
 	}
 
 	public JRadioButtonMenuItem getEnglishRadioButton() {

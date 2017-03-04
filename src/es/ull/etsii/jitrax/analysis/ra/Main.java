@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.analysisRA;
+package es.ull.etsii.jitrax.analysis.ra;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
@@ -24,7 +24,7 @@ public class Main {
 
 		    System.out.println();
 		    
-			RelationalAlgebraTranslator eval = new RelationalAlgebraTranslator();
+			RelationalAlgebraEvalVisitor eval = new RelationalAlgebraEvalVisitor(null);
 			eval.visit(tree);
 		}
 		catch (Exception e){

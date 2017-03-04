@@ -1,30 +1,22 @@
-package es.ull.etsii.jitrax.analysisRA;
+package es.ull.etsii.jitrax.analysis.ra;
 
 import java.util.HashMap;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import es.ull.etsii.jitrax.analysisRA.RelationalAlgebraParser.StartContext;
+import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.StartContext;
 
-public class RelationalAlgebraTranslator extends RelationalAlgebraBaseVisitor<String> {
+public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<String> {
 	HashMap<String, String> views;
 	String sqlTranslation;
-	
-	public RelationalAlgebraTranslator() {
+	Database database;
+
+	public RelationalAlgebraEvalVisitor(Database aDatabase) {
 		 views = new HashMap<String, String>();
 		 sqlTranslation = "";
-	}	
-
-	/**
-	 * Appends the prefix 'SELECT * FROM' to the sqlTranslation.
-	 */
-	private void appendSelectStar() {
-		
-	}
-	
-	private void formatTranslationResult() {
-		
+		 database = aDatabase;
 	}
 	
 	@Override 

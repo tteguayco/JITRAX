@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.analysisRA;
+package es.ull.etsii.jitrax.analysis.ra;
 
 public class RelationalAlgebraOptimizer extends RelationalAlgebraBaseVisitor {
 	private String optimizedExpression;

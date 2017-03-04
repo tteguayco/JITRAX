@@ -9,11 +9,11 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import es.ull.etsii.jitrax.adt.Database;
-import es.ull.etsii.jitrax.analysisDSL.DatabaseLexer;
-import es.ull.etsii.jitrax.analysisDSL.DatabaseParser;
-import es.ull.etsii.jitrax.analysisDSL.DescriptiveErrorListenerDSL;
+import es.ull.etsii.jitrax.analysis.CustomErrorListener;
+import es.ull.etsii.jitrax.analysis.dsl.DatabaseEvalVisitor;
+import es.ull.etsii.jitrax.analysis.dsl.DatabaseLexer;
+import es.ull.etsii.jitrax.analysis.dsl.DatabaseParser;
 import es.ull.etsii.jitrax.gui.dialogs.ErrorsDialog;
-import es.ull.etsii.jitrax.analysisDSL.DatabaseEvalVisitor;
 
 public class DatabaseFileLoader {
 
@@ -39,7 +39,7 @@ public class DatabaseFileLoader {
 		try {
 			String inputString = readFile();
 			
-			DescriptiveErrorListenerDSL errorListener = new DescriptiveErrorListenerDSL();
+			CustomErrorListener errorListener = new CustomErrorListener();
 			ANTLRInputStream input = new ANTLRInputStream(inputString);
 		    
 			// Lexer
@@ -61,7 +61,7 @@ public class DatabaseFileLoader {
 		    	DatabaseEvalVisitor eval = new DatabaseEvalVisitor();
 				database = (Database) eval.visit(tree);
 				return true;
-		    } 
+		    }
 		    
 		    else {
 		    	// Window showing the errors for the user

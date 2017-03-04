@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.analysisDSL;
+package es.ull.etsii.jitrax.analysis.dsl;
 
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.adt.Datum;

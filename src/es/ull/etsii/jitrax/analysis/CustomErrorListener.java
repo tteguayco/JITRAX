@@ -1,4 +1,4 @@
-package es.ull.etsii.jitrax.analysisDSL;
+package es.ull.etsii.jitrax.analysis;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.Parser;
@@ -7,11 +7,10 @@ import org.antlr.v4.runtime.atn.ATNConfigSet;
 import java.util.ArrayList;
 import java.util.BitSet;
 
-
-public class DescriptiveErrorListenerDSL implements ANTLRErrorListener {
+public class CustomErrorListener implements ANTLRErrorListener {
 	private ArrayList<String> syntaxErrorsList;
 	
-	public DescriptiveErrorListenerDSL() {
+	public CustomErrorListener() {
 		syntaxErrorsList = new ArrayList<String>();
 	}
 	
@@ -40,7 +39,6 @@ public class DescriptiveErrorListenerDSL implements ANTLRErrorListener {
 		
 	}
 
-
 	@Override
 	public void syntaxError(org.antlr.v4.runtime.Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String message,
 			org.antlr.v4.runtime.RecognitionException arg5) {
@@ -50,5 +48,12 @@ public class DescriptiveErrorListenerDSL implements ANTLRErrorListener {
 
 	public ArrayList<String> getSyntaxErrorsList() {
 		return syntaxErrorsList;
+	}
+	
+	public void printErrors() {
+		for (int i = 0; i < getSyntaxErrorsList().size(); i++) {
+			System.out.println("- " + getSyntaxErrorsList().get(i));
+		}
+		System.out.println("Total: " + getSyntaxErrorsList().size() + " errors");
 	}
 }
