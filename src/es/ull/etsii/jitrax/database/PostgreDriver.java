@@ -100,11 +100,10 @@ public class PostgreDriver {
 	 */
 	public void setUpDatabase(Database database) throws SQLException {
 		Table auxTable;
-		Row auxRow;
 		
 		// CREATE TABLES
 		for (int i = 0; i < database.getNumOfTables(); i++) {
-			auxTable = database.getTables().get(i);
+			auxTable = database.getTablesAsList().get(i);
 			createTable(auxTable);
 			
 			// INSERT ROWS

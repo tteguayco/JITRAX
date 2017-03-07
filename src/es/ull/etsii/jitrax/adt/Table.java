@@ -2,19 +2,20 @@ package es.ull.etsii.jitrax.adt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import es.ull.etsii.jitrax.exceptions.DuplicatePrimaryKeyException;
 
 public class Table {
 	private String name;
 	private ArrayList<Attribute> attributes;
-	private HashMap<String, Integer> attributesNames;
+	private LinkedHashMap<String, Integer> attributesNames;
 	private ArrayList<Row> rows;
 	
 	public Table(String aName, ArrayList<Attribute> attrList) {
 		name = aName;
 		attributes = attrList;
-		attributesNames = new HashMap<String, Integer>();
+		attributesNames = new LinkedHashMap<String, Integer>();
 		rows = new ArrayList<Row>();
 	}
 
@@ -149,7 +150,7 @@ public class Table {
 		return attributesNames;
 	}
 
-	public void setAttributesNames(HashMap<String, Integer> attributesNames) {
+	public void setAttributesNames(LinkedHashMap<String, Integer> attributesNames) {
 		this.attributesNames = attributesNames;
 	}
 

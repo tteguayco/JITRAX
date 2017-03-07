@@ -228,6 +228,12 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	@Override
 	public String visitRelationIdentifier(RelationalAlgebraParser.RelationIdentifierContext ctx) { 
+		/**
+		 *  TODO 
+		 *  
+		 *  Check whether this relation exists in the database
+		 */
+		
 		return ctx.IDENTIFIER().getText();
 	}
 	

@@ -1,6 +1,8 @@
 package es.ull.etsii.jitrax.adt;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 
 import es.ull.etsii.jitrax.database.PostgreDriver;
@@ -9,7 +11,11 @@ import es.ull.etsii.jitrax.exceptions.DuplicateTableException;
 public class Database {
 
 	private String name;
-	private ArrayList<Table> tables;
+	
+	/**
+	 * LinkedHashMap to preserve order insertion.
+	 */
+	private LinkedHashMap<String, Table> tables;
 	private PostgreDriver postgreDriver;
 	
 	/**
@@ -17,16 +23,22 @@ public class Database {
 	 */
 	public Database(String aName) {
 		name = aName;
-		tables = new ArrayList<Table>();
+		tables = new LinkedHashMap<String, Table>();
 	}
 	
-	public Database(String aName, ArrayList<Table> tableList) {
+	public Database(String aName, LinkedHashMap<String, Table> tableList) {
 		name = aName;
 		tables = tableList;
 	}
 	
 	public void addTable(Table newTable) throws DuplicateTableException {
-		getTables().add(newTable);
+		if (getTables().get(newTable.getName()) != null) {
+			throw new DuplicateTableException();
+		}
+		
+		else {
+			getTables().put(newTable.getName(), newTable);
+		}
 	}
 	
 	public String[] getTablesNames() {
@@ -89,6 +101,10 @@ public class Database {
 		return toString;
 	}
 	
+	public ArrayList<Table> getTablesAsList() {
+		return new ArrayList<Table>(getTables().values());
+	}
+	
 	/**
 	 * Returns the number of tables the DB has.
 	 * @return
@@ -105,19 +121,19 @@ public class Database {
 		this.name = name;
 	}
 
-	public ArrayList<Table> getTables() {
-		return tables;
-	}
-
-	public void setTables(ArrayList<Table> tables) {
-		this.tables = tables;
-	}
-
 	public PostgreDriver getPostgreDriver() {
 		return postgreDriver;
 	}
 
 	public void setPostgreDriver(PostgreDriver postgreDriver) {
 		this.postgreDriver = postgreDriver;
+	}
+
+	public HashMap<String, Table> getTables() {
+		return tables;
+	}
+
+	public void setTables(LinkedHashMap<String, Table> tables) {
+		this.tables = tables;
 	}
 }

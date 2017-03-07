@@ -89,8 +89,8 @@ public class DatabaseViewer extends JPanel {
 	private void updateSelectedDatabase(String newSelectedDatabaseName) {
 		Database newSelectedDatabase = getDatabases().get(newSelectedDatabaseName);
 		
-		getTablesViewer().updateTables(newSelectedDatabase.getTables());
-		getSelectedTableViewer().updateTable(newSelectedDatabase.getTables().get(0));
+		getTablesViewer().updateTables(newSelectedDatabase.getTablesAsList());
+		getSelectedTableViewer().updateTable(newSelectedDatabase.getTablesAsList().get(0));
 		updateSelectedTable(getTablesViewer().getGraphicTables().get(0));
 		
 		// Listeners for graphic tables in the db viewer
