@@ -28,12 +28,13 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		
 		// EXPRESSION
 		sqlTranslation += visit(ctx.expr()) + ";";
+		System.out.println(sqlTranslation);
 		return sqlTranslation;
 	}
 
 	@Override
 	public String visitViewAssignment(RelationalAlgebraParser.ViewAssignmentContext ctx) {
-		return "CREATE VIEW [" + ctx.IDENTIFIER().getText() + "] AS\n" +
+		return "CREATE OR REPLACE VIEW " + ctx.IDENTIFIER().getText() + " AS\n" +
 				visit(ctx.expr()) + ";";
 	}
 	
@@ -52,21 +53,43 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	@Override
 	public String visitSelection(RelationalAlgebraParser.SelectionContext ctx) {
-		// We have to check the parent's type of this context
-		if (ctx.getParent().getChild(0) instanceof TerminalNode) {
-			TerminalNode typeNode = (TerminalNode) ctx.getParent().getChild(0);
+		String selectStatement = "";
+		
+		/**
+		 * Getting the skeleton 'relation WHERE condlist1 AND condlist2...'
+		 * 
+		 * We have to do this in order to translate a cascade of SELECTIONs 
+		 * (such as SELECT [...] (SELECT [...] (...))) to
+		 * a conjunction of condition lists (such as WHERE condlist1 AND condlist2...).
+		 */
+		// If expr() is not a selection node, this is the last selection node in the target subtree
+		if (ctx.expr().getChild(0) instanceof TerminalNode) {
+			TerminalNode childType = (TerminalNode) ctx.expr().getChild(0);
 			
-			// If this selection is inside a projection, we only return the 'where' statement
-			if (typeNode.getSymbol().getType() == RelationalAlgebraLexer.PROJECTION) {
-				return visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist());
-			} 
-			// If the parent is a selection as well, we'll construct a conjuction of selections
-			else if (typeNode.getSymbol().getType() == RelationalAlgebraLexer.SELECTION) {
-				
+			if (childType.getSymbol().getType() == RelationalAlgebraLexer.SELECTION) {
+				selectStatement = visit(ctx.expr()) + " AND " + visit(ctx.condlist());
 			}
 		}
 		
-		return "SELECT *" + "\nFROM " + visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist());
+		else {
+			selectStatement = visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist());
+		}
+		
+		/**
+		 * Append SELECT * if the PARENT is not a PROJECTION or a SELECTION
+		 */
+		if (ctx.getParent().getChild(0) instanceof TerminalNode) {
+			TerminalNode parentNodeType = (TerminalNode) ctx.getParent().getChild(0);
+			
+			// If the previous rule name is a projection or selection, we return what we have
+			if (parentNodeType.getSymbol().getType() == RelationalAlgebraLexer.PROJECTION
+					|| parentNodeType.getSymbol().getType() == RelationalAlgebraLexer.SELECTION) {
+				return selectStatement;
+			}
+		}
+		
+		//Otherwise, we append SELECT *
+		return "SELECT *\nFROM " + selectStatement;
 	}
 	
 	@Override
@@ -101,7 +124,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitNaturalJoin(RelationalAlgebraParser.NaturalJoinContext ctx) {
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		return left + " NATURAL JOIN " + right;
+		return left + " * " + right;
 	}
 	
 	@Override 
@@ -136,7 +159,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitOrCondlist(RelationalAlgebraParser.OrCondlistContext ctx) {
 		String left = (String) visit(ctx.condlist(0));
 		String right = (String) visit(ctx.condlist(1));
-		return left + " OR " + right;
+		return "(" + left + " OR " + right + ")";
 	}
 	
 	@Override public String visitAndCondlist(RelationalAlgebraParser.AndCondlistContext ctx) {

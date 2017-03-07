@@ -194,7 +194,7 @@ public class MainWindow extends JFrame {
 	
 	private class ExecutionListener implements ActionListener {
 
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent evt) {
 			Database currentDatabase = getDatabaseViewerPanel().getSelectedDatabase();
 			PostgreDriver postgreDriver = currentDatabase.getPostgreDriver();
 			String sqlQuery = getWorkspace().getSqlCodeEditor().getText();
@@ -204,7 +204,10 @@ public class MainWindow extends JFrame {
 				postgreDriver.executeQuery(sqlQuery);
 				resultSet = postgreDriver.getQueryResultSet();
 				getWorkspace().updateQueryResultViewer(resultSet);
-			} catch (SQLException e1) {
+			} 
+			
+			catch (SQLException e) {
+				e.printStackTrace();
 				System.out.println("> An error occurred executing the query...");
 			}
 		}
