@@ -89,7 +89,6 @@ public class MenuBarListenersSetter {
 									
 									// Add new database to the environment
 									mainWindow.addDatabase(importedDatabase);
-									
 									System.out.println("> Database '" + importedDatabase.getName() + 
 											"' was created.");
 								}
@@ -104,7 +103,9 @@ public class MenuBarListenersSetter {
 									
 									if (dbComparator.databasesAreCompatible()) {
 										mainWindow.addDatabase(importedDatabase);
-									} 
+										System.out.println("> Database '" + importedDatabase.getName() +
+												"' was retrieved from DBMS.");
+									}
 									
 									else {
 										showDatabasesContentsDifferDialog();

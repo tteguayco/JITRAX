@@ -74,6 +74,10 @@ public class Table {
 		return getAttributes().size();
 	}
 	
+	public int getNumOfRows() {
+		return getRows().size();
+	}
+	
 	/**
 	 * Adds a new row or tuple to this table.
 	 * @return

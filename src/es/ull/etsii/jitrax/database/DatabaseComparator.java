@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,12 +21,18 @@ public class DatabaseComparator {
 	
 	private Database database;
 	private Connection dbmsConnection;
+	private ArrayList<String> updatingQueries;
 	
 	public DatabaseComparator(Database aDatabase, Connection aDbmsConnection) {
 		database = aDatabase;
 		dbmsConnection = aDbmsConnection;
+		updatingQueries = new ArrayList<String>();
 	}
 
+	/**
+	 * @return true if the object database is identical to the database 
+	 * on the DBMS (all queries executed within this method are read-only).
+	 */
 	public boolean databasesAreCompatible() {
 		
 		try {
@@ -88,6 +95,40 @@ public class DatabaseComparator {
 						return false;
 					}
 				}
+				
+				// COMPARING ROWS
+				for (int i = 0; i < getDatabase().getNumOfTables(); i++) {
+					int numOfRows = 0;
+					Statement st = getDbmsConnection().createStatement();
+					ResultSet countRS = st.executeQuery("select count(*) from " + 
+							currentLocalTable.getName());
+					
+					countRS.next();
+					numOfRows = countRS.getInt(1);
+					
+					// Check matching between number of rows (on DBMS and local)
+					if (currentLocalTable.getNumOfRows() != numOfRows) {
+						return false;
+					}
+					
+					// Compare contents
+					String[][] rowsData = currentLocalTable.getRowsData();
+					for (int j = 0; j < rowsData.length; j++) {
+						String query = "SELECT * FROM " + currentLocalTable.getName() + " WHERE ";
+						for (int k = 0; k < rowsData[j].length; k++) {
+							query += currentLocalTable.getAttributes().get(k).getName() + "=";
+							query += rowsData[j][k];
+							if (k < rowsData[j].length - 1) {
+								query += " AND";
+							}
+						}
+						ResultSet rs = st.executeQuery(query);
+						System.out.println(query);
+						if (!rs.next()) {
+							return false;
+						}
+					}
+				}
 			}
 			
 			// COMPARING TABLES (it does not matter if there are more tables in the DBMS;
@@ -98,9 +139,6 @@ public class DatabaseComparator {
 					return false;
 				}
 			}
-			
-			// COMPARING ROWS
-			
 		}
 		
 		catch (SQLException e) {
@@ -108,6 +146,13 @@ public class DatabaseComparator {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Executes all the queries needed to set up an identical database on the DBMS.
+	 */
+	public void updateDatabaseOnDBMS() {
+		
 	}
 	
 	public Database getDatabase() {
