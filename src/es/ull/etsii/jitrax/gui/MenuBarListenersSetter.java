@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JFrame;
@@ -12,6 +14,7 @@ import javax.swing.JOptionPane;
 import org.postgresql.util.PSQLException;
 
 import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.database.DatabaseComparator;
 import es.ull.etsii.jitrax.database.PostgreDriver;
 import es.ull.etsii.jitrax.gui.dialogs.DBMSConnectionWindow;
 import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
@@ -65,14 +68,15 @@ public class MenuBarListenersSetter {
 					else {
 						FileDialog fileDialog = new FileDialog();
 						Database importedDatabase = fileDialog.importDatabaseDialog();
+						PostgreDriver postgreDriver;
 						
 						if (importedDatabase != null) {
 							try {
 								// Establish a connection and create the database
-								PostgreDriver postgreDriver = new PostgreDriver(hostname, 
-																				port, 
-																				username, 
-																				password);
+								postgreDriver = new PostgreDriver(hostname, 
+																	port, 
+																	username, 
+																	password);
 								
 								// Assign a PostgreDriver to the new database
 								importedDatabase.setPostgreDriver(postgreDriver);
@@ -91,11 +95,24 @@ public class MenuBarListenersSetter {
 								}
 								
 								else {
-									showDatabaseAlreadyExistsDialog();
-									// Habría que comprobar que la existente es igual a la especificada
-									// en fichero?
+									// Switch to the existing database
+									postgreDriver.switchDatabase(importedDatabase.getName());
+									
+									// Compare them
+									DatabaseComparator dbComparator = new DatabaseComparator(
+											importedDatabase, postgreDriver.getConnection());
+									
+									if (dbComparator.databasesAreCompatible()) {
+										mainWindow.addDatabase(importedDatabase);
+									} 
+									
+									else {
+										showDatabasesContentsDifferDialog();
+										// TODO ask for updating the database in the dbms
+										postgreDriver.closeConnection();
+									}
 								}
-				
+								
 							} catch (PSQLException e) {
 								e.printStackTrace();
 							} catch (SQLException e) {
@@ -150,10 +167,10 @@ public class MenuBarListenersSetter {
 				"Warning", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
-	private void showDatabaseAlreadyExistsDialog() {
-		JOptionPane.showMessageDialog(null,"A database with the specified name"
-				+ " already exists on the DBMS.",
-				"Not implemented yet", JOptionPane.INFORMATION_MESSAGE);
+	private void showDatabasesContentsDifferDialog() {
+		JOptionPane.showMessageDialog(null,"A database exists on the DBMS whose content differs "
+				+ "from the content of the specified database.",
+				"Error", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public MainWindow getMainWindow() {

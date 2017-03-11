@@ -3,6 +3,7 @@ package es.ull.etsii.jitrax.adt;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Set;
 import java.util.UUID;
 
 import es.ull.etsii.jitrax.database.PostgreDriver;
@@ -11,11 +12,7 @@ import es.ull.etsii.jitrax.exceptions.DuplicateTableException;
 public class Database {
 
 	private String name;
-	
-	/**
-	 * LinkedHashMap to preserve order insertion.
-	 */
-	private LinkedHashMap<String, Table> tables;
+	private ArrayList<Table> tables;
 	private PostgreDriver postgreDriver;
 	
 	/**
@@ -23,22 +20,20 @@ public class Database {
 	 */
 	public Database(String aName) {
 		name = aName;
-		tables = new LinkedHashMap<String, Table>();
+		tables = new ArrayList<Table>();
 	}
 	
-	public Database(String aName, LinkedHashMap<String, Table> tableList) {
+	public Database(String aName, ArrayList<Table> tableList) {
 		name = aName;
 		tables = tableList;
 	}
 	
 	public void addTable(Table newTable) throws DuplicateTableException {
-		if (getTables().get(newTable.getName()) != null) {
-			throw new DuplicateTableException();
-		}
-		
-		else {
-			getTables().put(newTable.getName(), newTable);
-		}
+		/**
+		 * provisional
+		 * 
+		 */
+		getTables().add(newTable);
 	}
 	
 	public String[] getTablesNames() {
@@ -49,6 +44,23 @@ public class Database {
 		}
 		
 		return tablesNames;
+	}
+	
+	/**
+	 * Ask if the database contains the specified table 
+	 * (case sensitive way).
+	 * 
+	 * @param tableName
+	 * @return
+	 */
+	public boolean containsTable(String tableName) {
+		if (getTables().contains(tableName)) {
+			return true;
+		}
+		
+		else {
+			return false;
+		}
 	}
 	
 	public String toString() {
@@ -101,8 +113,20 @@ public class Database {
 		return toString;
 	}
 	
-	public ArrayList<Table> getTablesAsList() {
-		return new ArrayList<Table>(getTables().values());
+	/**
+	 * Returns the table whose name matches the specified.
+	 * 
+	 * @param tableName
+	 * @return
+	 */
+	public Table getTableByName(String tableName) {
+		for (int i = 0; i < getTables().size(); i++) {
+			if (tableName.equalsIgnoreCase(getTables().get(i).getName())) {
+				return getTables().get(i);
+			}
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -129,11 +153,11 @@ public class Database {
 		this.postgreDriver = postgreDriver;
 	}
 
-	public HashMap<String, Table> getTables() {
+	public ArrayList<Table> getTables() {
 		return tables;
 	}
 
-	public void setTables(LinkedHashMap<String, Table> tables) {
+	public void setTables(ArrayList<Table> tables) {
 		this.tables = tables;
 	}
 }

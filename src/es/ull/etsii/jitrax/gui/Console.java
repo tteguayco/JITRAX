@@ -77,6 +77,7 @@ public class Console extends JPanel {
 	}
 	
 	public void appendMessage(String newMessage) {
+		// Scroll to bottom
 		getConsole().setCaretPosition(getConsole().getDocument().getLength());
 		getConsole().append(newMessage);
 	}

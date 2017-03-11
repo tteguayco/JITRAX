@@ -93,7 +93,7 @@ public class MainWindow extends JFrame {
 		/**
 		 * Redirect System.out to the console in the GUI.
 		 */
-		redirectOutputToConsole();
+		//redirectOutputToConsole();
 	}
 	
 	public void addDatabase(Database database) {

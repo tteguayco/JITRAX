@@ -32,6 +32,18 @@ public class Table {
 		}
 	}
 	
+	public boolean attributeExists(String attrName, DataType attrDataType, boolean pk) {
+		for (int i = 0; i < getAttributes().size(); i++) {
+			if (getAttributes().get(i).getName().equalsIgnoreCase(attrName) 
+					&& getAttributes().get(i).getDataType() == attrDataType
+					/*&& getAttributes().get(i).isPrimaryKey() == pk*/) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public String[] getColumnsNames() {
 		String[] columnNames = new String[getAttributes().size()];
 		

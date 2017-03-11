@@ -50,6 +50,10 @@ public class PostgreDriver {
 		return "jdbc:postgresql://" + hostname + ":" + port + "/" + databaseName;
 	}
 	
+	public void closeConnection() throws SQLException {
+		getConnection().close();
+	}
+	
 	/**
 	 * Switches to an existing database in PostgreSQL.
 	 * @param databaseName
@@ -103,7 +107,7 @@ public class PostgreDriver {
 		
 		// CREATE TABLES
 		for (int i = 0; i < database.getNumOfTables(); i++) {
-			auxTable = database.getTablesAsList().get(i);
+			auxTable = database.getTables().get(i);
 			createTable(auxTable);
 			
 			// INSERT ROWS
