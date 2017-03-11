@@ -119,11 +119,11 @@ public class DatabaseComparator {
 							query += currentLocalTable.getAttributes().get(k).getName() + "=";
 							query += rowsData[j][k];
 							if (k < rowsData[j].length - 1) {
-								query += " AND";
+								query += " AND ";
 							}
 						}
 						ResultSet rs = st.executeQuery(query);
-						System.out.println(query);
+						//System.out.println(query);
 						if (!rs.next()) {
 							return false;
 						}

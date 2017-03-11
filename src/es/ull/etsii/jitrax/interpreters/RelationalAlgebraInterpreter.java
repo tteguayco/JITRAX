@@ -6,11 +6,9 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.analysis.CustomErrorListener;
-import es.ull.etsii.jitrax.analysis.dsl.DatabaseEvalVisitor;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraEvalVisitor;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraLexer;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser;
-import es.ull.etsii.jitrax.gui.Console;
 
 public class RelationalAlgebraInterpreter {
 	
@@ -50,7 +48,7 @@ public class RelationalAlgebraInterpreter {
 	    }
 	    
 	    else {
-	    	System.out.println("> The Relational Algebra contains syntax errors:");
+	    	System.out.println("> The entered Relational Algebra expression contains syntax errors:");
 	    	errorListener.printErrors();
 	    }
 	    
@@ -64,6 +62,14 @@ public class RelationalAlgebraInterpreter {
 	private void runSemanticAnalysis() {
 		eval = new RelationalAlgebraEvalVisitor(database);
 		sqlTranslation = eval.visit(tree);
+		
+		// Semantic errors?
+		if (eval.getErrorsList().size() > 0) {
+			System.out.println("> The entered Relational Algebra expression contains semantic errors:");
+			for (int i = 0; i < eval.getErrorsList().size(); i++) {
+				System.out.println(" - " + eval.getErrorsList().get(i));
+			}
+		}
 	}
 
 	public ANTLRInputStream getInput() {

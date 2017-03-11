@@ -1,5 +1,6 @@
 package es.ull.etsii.jitrax.analysis.ra;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -9,14 +10,19 @@ import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.StartContext;
 
 public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<String> {
-	HashMap<String, String> views;
+	//HashMap<String, String> views;
 	String sqlTranslation;
 	Database database;
+	ArrayList<String> errors;
 
 	public RelationalAlgebraEvalVisitor(Database aDatabase) {
-		 views = new HashMap<String, String>();
 		 sqlTranslation = "";
 		 database = aDatabase;
+		 errors = new ArrayList<String>();
+	}
+	
+	public ArrayList<String> getErrorsList() {
+		return errors;
 	}
 	
 	@Override 
@@ -28,7 +34,11 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		
 		// EXPRESSION
 		sqlTranslation += visit(ctx.expr()) + ";";
-		System.out.println(sqlTranslation);
+
+		if (errors.size() > 0) {
+			return null;
+		}
+		
 		return sqlTranslation;
 	}
 
@@ -233,8 +243,12 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		 *  
 		 *  Check whether this relation exists in the database
 		 */
+		if (database.containsTable(ctx.IDENTIFIER().getText())) {
+			return ctx.IDENTIFIER().getText();
+		}
 		
-		return ctx.IDENTIFIER().getText();
+		errors.add(new String("Relation '" + ctx.IDENTIFIER().getText() + "' does not exist."));
+		return "";
 	}
 	
 	@Override

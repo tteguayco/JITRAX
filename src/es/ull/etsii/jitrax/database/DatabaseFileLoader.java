@@ -60,6 +60,7 @@ public class DatabaseFileLoader {
 		    if (errorListener.getSyntaxErrorsList().size() == 0) {	
 		    	DatabaseEvalVisitor eval = new DatabaseEvalVisitor();
 				database = (Database) eval.visit(tree);
+				
 				return true;
 		    }
 		    
