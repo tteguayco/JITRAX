@@ -24,7 +24,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		 sqlTranslation = "";
 		 database = aDatabase;
 		 errors = new ArrayList<String>();
-		 subqueryCounter = 0;
+		 subqueryCounter = 1;
 	}
 	
 	public ArrayList<String> getErrorsList() {

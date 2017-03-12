@@ -250,15 +250,8 @@ public class Workspace extends JPanel {
 	}
 	
 	public void updateQueryResultViewer(ResultSet resultSet) throws SQLException {
-		System.out.println("provisional");
-		
-		while (resultSet.next()) {
-			int numColumns = resultSet.getMetaData().getColumnCount();
-	        System.out.println();
-			for (int i = 1 ; i <= numColumns ; i++) {
-	           System.out.print(resultSet.getObject(i) + " || ");
-	        }
-		}
+		queryResultViewer.updateTableData(resultSet);
+		enableResultTab();
 	}
 	
 	/**
