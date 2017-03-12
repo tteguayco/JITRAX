@@ -1,11 +1,13 @@
 package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -25,14 +27,23 @@ public class QueryResultViewer extends JPanel {
 		graphicTable.setModel(tableModel);
 		
 		setLayout(new BorderLayout());
-		JScrollPane scrollPane = new JScrollPane(graphicTable);
+		JScrollPane scrollPane = new JScrollPane(graphicTable,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setBorder(BorderFactory.createEmptyBorder());
+		
 		graphicTable.setFillsViewportHeight(false);
-		add(scrollPane, BorderLayout.WEST);
+		graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		graphicTable.setEnabled(false);
+		
+		JPanel container = new JPanel();
+		container.add(scrollPane);
+		container.setLayout(new GridLayout(1,1));
+		add(container, BorderLayout.WEST);
 	}
 	
 	public void updateTableData(ResultSet resultSet) throws SQLException {
 		int numColumns = resultSet.getMetaData().getColumnCount();
-		int numRows = 0;
 		boolean columnNamesAreFilled = false;
 		
 		ArrayList<String> columnNames = new ArrayList<String>();
@@ -44,18 +55,17 @@ public class QueryResultViewer extends JPanel {
 				if (!columnNamesAreFilled) {
 					columnNames.add(resultSet.getMetaData().getColumnName(i));
 				}
-				rowData[i-1] = (String) resultSet.getObject(i);
+				rowData[i-1] = String.valueOf(resultSet.getObject(i));
 	        }
 			
 			rowsData.add(rowData);
 			columnNamesAreFilled = true;
 		}
 		
-		String[] columnNamesAsArray = new String[numColumns];
+		String[] columnNamesAsArray = columnNames.toArray(new String[columnNames.size()]);
 		String[][] rowsDataAsArray = new String[rowsData.size()][numColumns];
 		
-		for (int i = 0; i < numColumns; i++) {
-			columnNamesAsArray[i] = columnNames.get(i);
+		for (int i = 0; i < rowsData.size(); i++) {
 			for (int j = 0; j < rowsData.get(i).length; j++) {
 				rowsDataAsArray[i][j] = (String) rowsData.get(i)[j];
 			}

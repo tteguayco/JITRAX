@@ -42,7 +42,7 @@ public class MainWindow extends JFrame {
 	private static final int MINIMUM_HEIGHT = 500;
 	private static final int BORDER_GAP = 10;
 	
-	private static final double HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT = 0.95;
+	private static final double HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT = 0.35d;
 	private static final double VERTICAL_SPLITPANE_DEFAULT_WEIGHT = 0.02;
 	
 	private static final String FRAME_TITLE = "JITRAX";
@@ -72,16 +72,17 @@ public class MainWindow extends JFrame {
 		horSplitPane.setOneTouchExpandable(true);
 		
 		// VERTICAL SPLITPANE
-		JSplitPane verSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, 
-				databaseViewerPanel, rightPanel);
-		verSplitPane.setResizeWeight(VERTICAL_SPLITPANE_DEFAULT_WEIGHT);
-		verSplitPane.setOneTouchExpandable(true);
+		//JSplitPane verSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, 
+			//	databaseViewerPanel, rightPanel);
+		//verSplitPane.setResizeWeight(VERTICAL_SPLITPANE_DEFAULT_WEIGHT);
+		//verSplitPane.setOneTouchExpandable(true);
 		
 		rightPanel.add(horSplitPane, BorderLayout.CENTER);
 		mainContainer.setBorder(new EmptyBorder(BORDER_GAP, BORDER_GAP, BORDER_GAP, BORDER_GAP));
 		
 		setLayout(new BorderLayout());
-		mainContainer.add(verSplitPane, BorderLayout.CENTER);
+		mainContainer.add(databaseViewerPanel, BorderLayout.WEST);
+		mainContainer.add(horSplitPane);
 		add(mainContainer, BorderLayout.CENTER);
 		
 		mainContainer.setVisible(false);
@@ -204,6 +205,7 @@ public class MainWindow extends JFrame {
 				postgreDriver.executeQuery(sqlQuery);
 				resultSet = postgreDriver.getQueryResultSet();
 				getWorkspace().updateQueryResultViewer(resultSet);
+				getWorkspace().switchToQueryResultTab();
 			} 
 			
 			catch (SQLException e) {
