@@ -73,8 +73,6 @@ public class QueryResultViewer extends JPanel {
 		
 		tableModel.setDataVector(rowsDataAsArray, columnNamesAsArray);
 		tableModel.fireTableDataChanged();
-		revalidate();
-		repaint();
 	}
 
 	public ResultSet getResultSet() {

@@ -213,7 +213,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitNaturalJoin(RelationalAlgebraParser.NaturalJoinContext ctx) {
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		return left + " * " + right;
+		return left + " NATURAL JOIN " + right;
 	}
 	
 	@Override 

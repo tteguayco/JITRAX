@@ -209,8 +209,8 @@ public class MainWindow extends JFrame {
 			} 
 			
 			catch (SQLException e) {
-				e.printStackTrace();
-				System.out.println("> An error occurred executing the query...");
+				System.out.println("> The DBMS detected the following error:");
+				System.out.println(" - " + e.getMessage());
 			}
 		}
 	}
