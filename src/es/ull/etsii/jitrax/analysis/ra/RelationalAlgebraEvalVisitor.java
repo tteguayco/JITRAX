@@ -1,12 +1,16 @@
 package es.ull.etsii.jitrax.analysis.ra;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.AttributeFromAttrlistContext;
+import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.ProjectionContext;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.StartContext;
 
 public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<String> {
@@ -14,16 +18,42 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	String sqlTranslation;
 	Database database;
 	ArrayList<String> errors;
+	int subqueryCounter;
 
 	public RelationalAlgebraEvalVisitor(Database aDatabase) {
 		 sqlTranslation = "";
 		 database = aDatabase;
 		 errors = new ArrayList<String>();
+		 subqueryCounter = 0;
 	}
 	
 	public ArrayList<String> getErrorsList() {
 		return errors;
 	}
+	
+	public boolean errors() {
+		if (getErrorsList().size() > 0) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public void printErrorsList() {
+		for (int i = 0; i < getErrorsList().size(); i++) {
+			System.out.println(getErrorsList().get(i));
+		}
+	}
+	
+	public String getSqlTranslation() {
+		return sqlTranslation;
+	}
+	
+	private void appendError(String errorMsg) {
+		getErrorsList().add(errorMsg);
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override 
 	public String visitStart(RelationalAlgebraParser.StartContext ctx) {
@@ -55,10 +85,55 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		// Brackets if it's a nested projection
 		if (ctx.getParent().getParent() != null) {
 			translation = "(" + translation;
-			translation += ")";
+			translation += ") AS s" + subqueryCounter;
+			subqueryCounter++;
+		}
+		
+		/**
+		 * CASCADE OF PROJECTIONS: PROJECT [...] (PROJECT [...] (...));
+		 * => check if the attributes list of a projection contains
+		 * in the outer projection's attributes list.
+		 */
+		// If its parent it's a projection as well...
+		if (ctx.getParent().getChild(0) instanceof TerminalNode) {
+			TerminalNode parentType = (TerminalNode) ctx.getParent().getChild(0);
+			
+			if (parentType.getSymbol().getType() == RelationalAlgebraLexer.PROJECTION) {
+				RelationalAlgebraParser.ProjectionContext currentProjectAttrList = ctx;
+				RelationalAlgebraParser.ProjectionContext outerProjectAttrList = 
+						(ProjectionContext) ctx.getParent();
+				ArrayList<String> currentProjectAttributes;
+				ArrayList<String> outerProjectAttributes;
+				
+				String[] currentProjectAttrListSplitted = splitAttrList(currentProjectAttrList);
+				String[] outerProjectAttrListSplitted = splitAttrList(outerProjectAttrList);
+				
+				currentProjectAttributes = new ArrayList<String>(
+						Arrays.asList(currentProjectAttrListSplitted));
+				outerProjectAttributes = new ArrayList<String>(Arrays.asList(outerProjectAttrListSplitted));
+			
+				if (!currentProjectAttributes.containsAll(outerProjectAttributes)) {
+					appendError("The projection attributes list " + currentProjectAttributes
+							+ " does not contain its outer projection attributes list "
+							+ outerProjectAttributes);
+				}
+				
+				// Otherwise, OK
+			}
+			
 		}
 		
 		return translation;
+	}
+	
+	/**
+	 * Attribute separator is ','.
+	 * @param projectionContext
+	 * @return
+	 */
+	private String[] splitAttrList(RelationalAlgebraParser.ProjectionContext ctx) {
+		String attrList = visit(ctx.attrlist());
+		return attrList.split(",");
 	}
 	
 	@Override
@@ -78,6 +153,10 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 			
 			if (childType.getSymbol().getType() == RelationalAlgebraLexer.SELECTION) {
 				selectStatement = visit(ctx.expr()) + " AND " + visit(ctx.condlist());
+			}
+			
+			else {
+				selectStatement = visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist());
 			}
 		}
 		
@@ -238,17 +317,13 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	@Override
 	public String visitRelationIdentifier(RelationalAlgebraParser.RelationIdentifierContext ctx) { 
-		/**
-		 *  TODO 
-		 *  
-		 *  Check whether this relation exists in the database
-		 */
-		if (database.containsTable(ctx.IDENTIFIER().getText())) {
+		// Does this relation exist?
+		//if (database.containsTable(ctx.IDENTIFIER().getText())) {
 			return ctx.IDENTIFIER().getText();
-		}
+		//}
 		
-		errors.add(new String("Relation '" + ctx.IDENTIFIER().getText() + "' does not exist."));
-		return "";
+		//errors.add(new String("Relation '" + ctx.IDENTIFIER().getText() + "' does not exist."));
+		//return "";
 	}
 	
 	@Override
