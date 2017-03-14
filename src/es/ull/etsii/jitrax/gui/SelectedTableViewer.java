@@ -31,6 +31,7 @@ public class SelectedTableViewer extends JPanel {
 	private static final int ODD_ROW_R = 220;
 	private static final int ODD_ROW_G = 220;
 	private static final int ODD_ROW_B = 220;
+	private static final int COL_MIN_WIDTH = 100;
 	
 	private Table table;
 	private JTable graphicTable;
@@ -63,10 +64,10 @@ public class SelectedTableViewer extends JPanel {
 		
 		setLayout(new BorderLayout());
 		graphicTable.setEnabled(false);
-		//graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		graphicTable.setMinimumSize(graphicTable.getPreferredScrollableViewportSize());
 		//graphicTable.setPreferredScrollableViewportSize(graphicTable.getPreferredSize());
-		//graphicTable.setFillsViewportHeight(true);
+		graphicTable.setFillsViewportHeight(false);
 		
 		JScrollPane tableSP = new JScrollPane(graphicTable);
 		tableSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -83,6 +84,16 @@ public class SelectedTableViewer extends JPanel {
 		tableModel.setDataVector(aTable.getRowsData(), aTable.getColumnsNames());
 		tableModel.fireTableDataChanged();
 		updateTitle();
+		setMinColumnsWidth();
+	}
+	
+	/**
+	 * Sets a minimum width for all table's columns.
+	 */
+	private void setMinColumnsWidth() {
+		for (int i = 0; i < graphicTable.getColumnModel().getColumnCount(); i++) {
+			graphicTable.getColumnModel().getColumn(i).setMinWidth(COL_MIN_WIDTH);
+		}
 	}
 	
 	/**

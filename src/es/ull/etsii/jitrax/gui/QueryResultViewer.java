@@ -14,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class QueryResultViewer extends JPanel {
+	private static final int COL_MIN_WIDTH = 150;
 	
 	private ResultSet resultSet;
 	private JTable graphicTable;
@@ -33,13 +34,23 @@ public class QueryResultViewer extends JPanel {
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		
 		graphicTable.setFillsViewportHeight(false);
+	
 		graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		graphicTable.setEnabled(false);
 		
 		JPanel container = new JPanel();
 		container.add(scrollPane);
-		container.setLayout(new GridLayout(1,1));
-		add(container, BorderLayout.WEST);
+		setLayout(new GridLayout(1,1));
+		add(scrollPane);
+	}
+	
+	/**
+	 * Sets a minimum width for all table's columns.
+	 */
+	private void setMinColumnsWidth() {
+		for (int i = 0; i < graphicTable.getColumnModel().getColumnCount(); i++) {
+			graphicTable.getColumnModel().getColumn(i).setMinWidth(COL_MIN_WIDTH);
+		}
 	}
 	
 	public void updateTableData(ResultSet resultSet) throws SQLException {
@@ -73,6 +84,7 @@ public class QueryResultViewer extends JPanel {
 		
 		tableModel.setDataVector(rowsDataAsArray, columnNamesAsArray);
 		tableModel.fireTableDataChanged();
+		setMinColumnsWidth();
 	}
 
 	public ResultSet getResultSet() {

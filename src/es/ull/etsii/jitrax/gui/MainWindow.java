@@ -42,6 +42,11 @@ public class MainWindow extends JFrame {
 	private static final int MINIMUM_HEIGHT = 500;
 	private static final int BORDER_GAP = 10;
 	
+	private static final String WELCOME_MSG = "\"> Welcome to JITRAX (v1.0)";
+	private static final String QUERY_TRANSLATION_MSG = "> Relational Algebra query translated to SQL.";
+	private static final String DBMS_EXECUTION_MSG = "> SQL query executed on DBMS.";
+	private static final String DBMS_ERRORS_MSG = "> The DBMS detected the following error:";
+	
 	private static final double HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT = 0.35d;
 	private static final double VERTICAL_SPLITPANE_DEFAULT_WEIGHT = 0.02;
 	
@@ -132,14 +137,15 @@ public class MainWindow extends JFrame {
 		
 		MainWindow window = new MainWindow();
 		
-		System.out.println("> Welcome to JITRAX (v1.0)");
+		System.out.println(WELCOME_MSG);
 		System.out.println();
 		
 		MenuBarListenersSetter menuBarController = new MenuBarListenersSetter(window);
 	}
 	
 	/**
-	 * Everything written through System.out will be displayed in the console.
+	 * After a call to this method, everything written through 
+	 * System.out will be displayed in the GUI console.
 	 */
 	private void redirectOutputToConsole() {
 		
@@ -188,7 +194,7 @@ public class MainWindow extends JFrame {
 		        getWorkspace().enableParseTreeTab();
 				getWorkspace().switchToSqlTab();
 		        
-				System.out.println("> Query successfully translated.");
+				System.out.println(QUERY_TRANSLATION_MSG);
 			}
 		}
 	}
@@ -206,10 +212,11 @@ public class MainWindow extends JFrame {
 				resultSet = postgreDriver.getQueryResultSet();
 				getWorkspace().updateQueryResultViewer(resultSet);
 				getWorkspace().switchToQueryResultTab();
+				System.out.println(DBMS_EXECUTION_MSG);
 			} 
 			
 			catch (SQLException e) {
-				System.out.println("> The DBMS detected the following error:");
+				System.out.println(DBMS_ERRORS_MSG);
 				System.out.println(" - " + e.getMessage());
 			}
 		}
