@@ -35,6 +35,7 @@ public class MenuBarListenersSetter {
 		getMainWindow().getBarMenu().getNewDatabase().addActionListener(new NewListener());
 		getMainWindow().getBarMenu().getSaveDatabase().addActionListener(new SaveListener());
 		getMainWindow().getBarMenu().getSaveDatabaseAs().addActionListener(new SaveAsListener());
+		getMainWindow().getBarMenu().getExitOption().addActionListener(new ExitListener());
 	}
 	
 	private class NewListener implements ActionListener {
@@ -160,6 +161,20 @@ public class MenuBarListenersSetter {
 			String currentDatabaseString = currentDatabase.toString();
 			fileDialog.exportFile("Save Database", currentDatabaseString, ".db");
 			setLastSavingLocation(fileDialog.getLastSavingLocation());
+		}
+	}
+	
+	private class ExitListener implements ActionListener {
+		
+		public void actionPerformed(ActionEvent e) {
+			int dialogResult = JOptionPane.showConfirmDialog (null, 
+					"Are you sure you want to exit JITRAX?",
+					"Confirm Exit",
+					JOptionPane.YES_NO_OPTION);
+			
+			if(dialogResult == JOptionPane.YES_OPTION){
+				getMainWindow().dispose();
+			}
 		}
 	}
 	

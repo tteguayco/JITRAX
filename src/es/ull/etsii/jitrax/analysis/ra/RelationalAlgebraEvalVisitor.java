@@ -53,6 +53,24 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		getErrorsList().add(errorMsg);
 	}
 	
+	/**
+	 * Returns the list of attributes for the specified relational 
+	 * algebra expression (a relation, a natural join operation, etc).
+	 * @return
+	 */
+	private ArrayList<String> expressionSchema(RelationalAlgebraParser.ExprContext expr) {
+		
+		// if (expr es relation) {
+			// return esquema de la relacion
+		//}
+		
+		
+		
+		
+		return null;
+		
+	}
+	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override 
@@ -60,6 +78,15 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		// VIEWS
 		for (int i = 0; i < ctx.view().size(); i++) {
 			sqlTranslation += visit(ctx.view(i)) + "\n\n";
+		}
+		
+		// Append 'SELECT *' if needed
+		if (ctx.expr().getChild(0) instanceof TerminalNode) {
+			TerminalNode childType = (TerminalNode) ctx.expr().getChild(0);
+			if (childType.getSymbol().getType() != RelationalAlgebraParser.PROJECTION
+					|| childType.getSymbol().getType() != RelationalAlgebraParser.SELECTION) {
+				sqlTranslation += "SELECT *\nFROM ";
+			}
 		}
 		
 		// EXPRESSION
@@ -231,7 +258,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	@Override 
 	public String visitBracketsExpr(RelationalAlgebraParser.BracketsExprContext ctx) {
-		return "(" + visit(ctx.expr()) + ")";
+		return visit(ctx.expr());
 	}
 	
 	@Override 

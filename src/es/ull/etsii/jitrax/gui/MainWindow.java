@@ -136,6 +136,7 @@ public class MainWindow extends JFrame {
         }
 		
 		MainWindow window = new MainWindow();
+		translateGUI();
 		
 		System.out.println(WELCOME_MSG);
 		System.out.println();
@@ -220,6 +221,10 @@ public class MainWindow extends JFrame {
 				System.out.println(" - " + e.getMessage());
 			}
 		}
+	}
+	
+	private static void translateGUI() {
+		UIManager.put("OptionPane.yesButtonText", "Yes");
 	}
 	
 	public MenuBar getBarMenu() {
