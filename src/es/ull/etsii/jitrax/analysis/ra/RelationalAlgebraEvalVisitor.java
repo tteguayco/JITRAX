@@ -54,6 +54,12 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		getErrorsList().add(errorMsg);
 	}
 	
+	private String getSubqueryAlias() {
+		String alias = "s" + subqueryCounter;
+		subqueryCounter++;
+		return alias;
+	}
+	
 	/**
 	 * Attribute separator is ','.
 	 * @param projectionContext
@@ -310,14 +316,22 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitUnion(RelationalAlgebraParser.UnionContext ctx) { 
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		return "SELECT * FROM " + left + "\nUNION\n" + "SELECT * FROM " + right;
+		String translation = "(SELECT * FROM " + left + 
+				"\nUNION\n" + 
+				"SELECT * FROM " + right + ") " + 
+				"AS " + getSubqueryAlias();
+		return translation;
 	}
 
 	@Override
 	public String visitDifference(RelationalAlgebraParser.DifferenceContext ctx) {
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		return "SELECT * FROM " + left + "\nEXCEPT\n" + "SELECT * FROM " + right;
+		String translation = "(SELECT * FROM " + left + 
+				"\nEXCEPT\n" + 
+				"SELECT * FROM " + right + ") " + 
+				"AS " + getSubqueryAlias();
+		return translation;
 	}
 	
 	@Override 
@@ -331,7 +345,11 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitIntersection(RelationalAlgebraParser.IntersectionContext ctx) {
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		return "SELECT * FROM " + left + "\nINTERSECT\n" + "SELECT * FROM " + right;
+		String translation = "(SELECT * FROM " + left + 
+				"\nINTERSECT\n" + 
+				"SELECT * FROM " + right + ") " + 
+				"AS " + getSubqueryAlias();
+		return translation;
 	}
 	
 	@Override 
