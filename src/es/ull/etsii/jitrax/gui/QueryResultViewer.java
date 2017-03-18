@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -15,33 +16,38 @@ import javax.swing.table.DefaultTableModel;
 
 public class QueryResultViewer extends JPanel {
 	private static final int COL_MIN_WIDTH = 150;
+	private static String EMPTY_RESULT_MSG = "Empty relation as a result.";
 	
 	private ResultSet resultSet;
 	private JTable graphicTable;
 	private DefaultTableModel tableModel;
+	private JLabel emptyResultLabel;
+	private JPanel mainContainer;
+	private JScrollPane tableSP;
 	
 	public QueryResultViewer() {
 		resultSet = null;
 		graphicTable = new JTable();
 		tableModel = new DefaultTableModel();
-	
+		emptyResultLabel = new JLabel(EMPTY_RESULT_MSG);
+		mainContainer = new JPanel();
+		
 		graphicTable.setModel(tableModel);
 		
 		setLayout(new BorderLayout());
-		JScrollPane scrollPane = new JScrollPane(graphicTable,
+		tableSP = new JScrollPane(graphicTable,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPane.setBorder(BorderFactory.createEmptyBorder());
+		tableSP.setBorder(BorderFactory.createEmptyBorder());
 		
 		graphicTable.setFillsViewportHeight(false);
 	
 		graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		graphicTable.setEnabled(false);
 		
-		JPanel container = new JPanel();
-		container.add(scrollPane);
+		mainContainer.add(tableSP);
 		setLayout(new GridLayout(1,1));
-		add(scrollPane);
+		add(tableSP);
 	}
 	
 	/**
@@ -85,6 +91,10 @@ public class QueryResultViewer extends JPanel {
 		tableModel.setDataVector(rowsDataAsArray, columnNamesAsArray);
 		tableModel.fireTableDataChanged();
 		setMinColumnsWidth();
+		
+		if (tableModel.getColumnCount() <= 0) {
+			System.out.println("> " + EMPTY_RESULT_MSG);
+		}
 	}
 
 	public ResultSet getResultSet() {

@@ -44,6 +44,9 @@ public class Table {
 		return false;
 	}
 	
+	/**
+	 * Returns the names of the columns of this table.
+	 */
 	public String[] getColumnsNames() {
 		String[] columnNames = new String[getAttributes().size()];
 		
@@ -53,6 +56,20 @@ public class Table {
 		
 		return columnNames;
 	}
+	
+	/**
+	 * Returns the names of the columns of this table with
+	 * the schema 'table.column'.
+	 */
+	/*public String[] getColumnsNamesWithTable() {
+		String[] columnNames = new String[getAttributes().size()];
+		
+		for (int i = 0; i < getAttributes().size(); i++) {
+			columnNames[i] = getName() + "." + getAttributes().get(i).getName();
+		}
+		
+		return columnNames;
+	}*/
 	
 	public String[][] getRowsData() {
 		String[][] rowsData = new String[getRows().size()][getAttributes().size()];

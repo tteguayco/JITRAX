@@ -3,6 +3,8 @@ package es.ull.etsii.jitrax.analysis.ra;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -14,7 +16,6 @@ import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.ProjectionContext
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.StartContext;
 
 public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<String> {
-	//HashMap<String, String> views;
 	String sqlTranslation;
 	Database database;
 	ArrayList<String> errors;
@@ -54,21 +55,125 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	}
 	
 	/**
+	 * Attribute separator is ','.
+	 * @param projectionContext
+	 * @return
+	 */
+	private String[] splitAttrList(RelationalAlgebraParser.ProjectionContext ctx) {
+		String attrList = visit(ctx.attrlist());
+		return attrList.split(",");
+	}
+	
+	/**
 	 * Returns the list of attributes for the specified relational 
 	 * algebra expression (a relation, a natural join operation, etc).
 	 * @return
 	 */
 	private ArrayList<String> expressionSchema(RelationalAlgebraParser.ExprContext expr) {
 		
-		// if (expr es relation) {
-			// return esquema de la relacion
-		//}
+		// PROJECTION: the schema will be the list of attributes 'L' in P(L)(R)
+		if (expr instanceof RelationalAlgebraParser.ProjectionContext) {
+			System.out.println("Projection");
+			return new ArrayList<String>(
+					Arrays.asList(splitAttrList((ProjectionContext) expr)));
+		}
 		
+		// RELATION: return its list of attributes
+		else if (expr instanceof RelationalAlgebraParser.RelationFromExprContext) {
+			String tableName = expr.getText();
+			System.out.println("tableName: " + tableName);
+			return new ArrayList<String>(
+					Arrays.asList(database.getTableByName(tableName).getColumnsNames()));
+		}
 		
+		// SELECTION: 
+		else if (expr instanceof RelationalAlgebraParser.SelectionContext) {
+			expressionSchema(((RelationalAlgebraParser.SelectionContext) expr).expr());
+		}
 		
+		// CARTESIAN PRODUCT: R(r) x S(s) -> r+s
+		else if (expr instanceof RelationalAlgebraParser.CartesianProductContext) {
+			ArrayList<String> leftRelationSchema = 
+					expressionSchema(((RelationalAlgebraParser.CartesianProductContext) expr).expr(0));
+			ArrayList<String> rightRelationSchema =
+					expressionSchema(((RelationalAlgebraParser.CartesianProductContext) expr).expr(1));
+			
+			// Concatenate the schemas
+			leftRelationSchema.addAll(rightRelationSchema);
+			return leftRelationSchema;
+		}
+		
+		// UNION: R(r) U S(s) -> r U s
+		else if (expr instanceof RelationalAlgebraParser.UnionContext) {
+			ArrayList<String> leftRelationSchema = 
+					expressionSchema(((RelationalAlgebraParser.UnionContext) expr).expr(0));
+			ArrayList<String> rightRelationSchema =
+					expressionSchema(((RelationalAlgebraParser.UnionContext) expr).expr(1));
+			
+			Set<String> leftSchemaSet = new HashSet<String>(leftRelationSchema);
+			Set<String> rightSchemaSet = new HashSet<String>(rightRelationSchema);
+			
+			// Union between the sets
+			leftSchemaSet.addAll(rightSchemaSet);
+			return new ArrayList<String>(leftSchemaSet);
+		}
+		
+		// DIFFERENCE: R(r) - S(s) -> r
+		else if (expr instanceof RelationalAlgebraParser.DifferenceContext) {
+			ArrayList<String> leftRelationSchema = 
+					expressionSchema(((RelationalAlgebraParser.DifferenceContext) expr).expr(0));
+			
+			return leftRelationSchema;
+		}
+		
+		// INTERSECTION: R(r) ^ S(s) -> 
+		else if (expr instanceof RelationalAlgebraParser.IntersectionContext) {
+			
+		}
+		
+		// JOIN: R(r) JOIN S(s) [condlist] -> r+s 
+		else if (expr instanceof RelationalAlgebraParser.JoinContext) {
+			ArrayList<String> leftRelationSchema = 
+					expressionSchema(((RelationalAlgebraParser.JoinContext) expr).expr(0));
+			ArrayList<String> rightRelationSchema =
+					expressionSchema(((RelationalAlgebraParser.JoinContext) expr).expr(1));
+			
+			// Concatenate the schemas
+			leftRelationSchema.addAll(rightRelationSchema);
+			return leftRelationSchema;
+		}
+		
+		// NATURAL JOIN: R(r) * S(s) -> r U s
+		else if (expr instanceof RelationalAlgebraParser.NaturalJoinContext) {
+			ArrayList<String> leftRelationSchema = 
+					expressionSchema(((RelationalAlgebraParser.NaturalJoinContext) expr).expr(0));
+			ArrayList<String> rightRelationSchema =
+					expressionSchema(((RelationalAlgebraParser.NaturalJoinContext) expr).expr(1));
+			
+			Set<String> leftSchemaSet = new HashSet<String>(leftRelationSchema);
+			Set<String> rightSchemaSet = new HashSet<String>(rightRelationSchema);
+			
+			// Union between the sets
+			leftSchemaSet.addAll(rightSchemaSet);
+			return new ArrayList<String>(leftSchemaSet);
+		}
+		
+		// DIVISION: R(r) / S(s) -> r-s
+		else if (expr instanceof RelationalAlgebraParser.DivisionContext) {
+			ArrayList<String> leftRelationSchema = 
+					expressionSchema(((RelationalAlgebraParser.DivisionContext) expr).expr(0));
+			ArrayList<String> rightRelationSchema =
+					expressionSchema(((RelationalAlgebraParser.DivisionContext) expr).expr(1));
+			
+			Set<String> leftSchemaSet = new HashSet<String>(leftRelationSchema);
+			Set<String> rightSchemaSet = new HashSet<String>(rightRelationSchema);
+			
+			// Difference between sets
+			leftSchemaSet.removeAll(rightSchemaSet);
+			return new ArrayList<String>(leftSchemaSet);
+		}
 		
 		return null;
-		
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -83,8 +188,9 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		// Append 'SELECT *' if needed
 		if (ctx.expr().getChild(0) instanceof TerminalNode) {
 			TerminalNode childType = (TerminalNode) ctx.expr().getChild(0);
+			
 			if (childType.getSymbol().getType() != RelationalAlgebraParser.PROJECTION
-					|| childType.getSymbol().getType() != RelationalAlgebraParser.SELECTION) {
+					&& childType.getSymbol().getType() != RelationalAlgebraParser.SELECTION) {
 				sqlTranslation += "SELECT *\nFROM ";
 			}
 		}
@@ -101,8 +207,8 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 
 	@Override
 	public String visitViewAssignment(RelationalAlgebraParser.ViewAssignmentContext ctx) {
-		return "CREATE OR REPLACE VIEW " + ctx.IDENTIFIER().getText() + " AS\n" +
-				visit(ctx.expr()) + ";";
+		return "CREATE OR REPLACE VIEW " + ctx.IDENTIFIER().getText() + " AS\n(" +
+				visit(ctx.expr()) + ");";
 	}
 	
 	@Override
@@ -111,10 +217,21 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		
 		// Brackets if it's a nested projection
 		if (ctx.getParent().getParent() != null) {
-			translation = "(" + translation;
-			translation += ") AS s" + subqueryCounter;
-			subqueryCounter++;
+			// Si el padre no es una vista
+			if (ctx.getParent().getChild(0) instanceof TerminalNode) {
+				TerminalNode parentType = (TerminalNode) ctx.getParent().getChild(0);
+				if (parentType.getSymbol().getType() == RelationalAlgebraParser.RULE_view) {
+					// do nothing
+				}
+			}
+			else {
+				translation = "(" + translation;
+				translation += ") AS s" + subqueryCounter;
+				subqueryCounter++;
+			}
 		}
+		
+		System.out.println(expressionSchema(ctx));
 		
 		/**
 		 * CASCADE OF PROJECTIONS: PROJECT [...] (PROJECT [...] (...));
@@ -151,16 +268,6 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		}
 		
 		return translation;
-	}
-	
-	/**
-	 * Attribute separator is ','.
-	 * @param projectionContext
-	 * @return
-	 */
-	private String[] splitAttrList(RelationalAlgebraParser.ProjectionContext ctx) {
-		String attrList = visit(ctx.attrlist());
-		return attrList.split(",");
 	}
 	
 	@Override
@@ -343,14 +450,8 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	}
 	
 	@Override
-	public String visitRelationIdentifier(RelationalAlgebraParser.RelationIdentifierContext ctx) { 
-		// Does this relation exist?
-		//if (database.containsTable(ctx.IDENTIFIER().getText())) {
-			return ctx.IDENTIFIER().getText();
-		//}
-		
-		//errors.add(new String("Relation '" + ctx.IDENTIFIER().getText() + "' does not exist."));
-		//return "";
+	public String visitRelationIdentifier(RelationalAlgebraParser.RelationIdentifierContext ctx) {
+		return ctx.IDENTIFIER().getText();
 	}
 	
 	@Override
