@@ -64,6 +64,19 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		return attrList.split(",");
 	}
 	
+	private String listToString(ArrayList<String> list) {
+		String listString = "";
+		for (int i = 0; i < list.size(); i++) {
+			listString += list.get(i);
+			if (i < list.size() - 1) {
+				listString += ", ";
+			}
+		}
+		
+		return listString;
+		
+	}
+	
 	/**
 	 * Returns the list of attributes for the specified relational 
 	 * algebra expression (a relation, a natural join operation, etc).
@@ -73,7 +86,6 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		
 		// PROJECTION: the schema will be the list of attributes 'L' in P(L)(R)
 		if (expr instanceof RelationalAlgebraParser.ProjectionContext) {
-			System.out.println("Projection");
 			return new ArrayList<String>(
 					Arrays.asList(splitAttrList((ProjectionContext) expr)));
 		}
@@ -81,14 +93,13 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		// RELATION: return its list of attributes
 		else if (expr instanceof RelationalAlgebraParser.RelationFromExprContext) {
 			String tableName = expr.getText();
-			System.out.println("tableName: " + tableName);
 			return new ArrayList<String>(
 					Arrays.asList(database.getTableByName(tableName).getColumnsNames()));
 		}
 		
 		// SELECTION: 
 		else if (expr instanceof RelationalAlgebraParser.SelectionContext) {
-			expressionSchema(((RelationalAlgebraParser.SelectionContext) expr).expr());
+			return expressionSchema(((RelationalAlgebraParser.SelectionContext) expr).expr());
 		}
 		
 		// CARTESIAN PRODUCT: R(r) x S(s) -> r+s
@@ -173,6 +184,11 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 			return new ArrayList<String>(leftSchemaSet);
 		}
 		
+		// Expression between brackets -> call the method again
+		else if (expr instanceof RelationalAlgebraParser.BracketsExprContext) {
+			return expressionSchema(((RelationalAlgebraParser.BracketsExprContext) expr).expr());
+		}
+		
 		return null;
 	}
 	
@@ -185,20 +201,10 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 			sqlTranslation += visit(ctx.view(i)) + "\n\n";
 		}
 		
-		// Append 'SELECT *' if needed
-		if (ctx.expr().getChild(0) instanceof TerminalNode) {
-			TerminalNode childType = (TerminalNode) ctx.expr().getChild(0);
-			
-			if (childType.getSymbol().getType() != RelationalAlgebraParser.PROJECTION
-					&& childType.getSymbol().getType() != RelationalAlgebraParser.SELECTION) {
-				sqlTranslation += "SELECT *\nFROM ";
-			}
-		}
-		
 		// EXPRESSION
 		sqlTranslation += visit(ctx.expr()) + ";";
 
-		if (errors.size() > 0) {
+		if (errors()) {
 			return null;
 		}
 		
@@ -230,8 +236,6 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 				subqueryCounter++;
 			}
 		}
-		
-		System.out.println(expressionSchema(ctx));
 		
 		/**
 		 * CASCADE OF PROJECTIONS: PROJECT [...] (PROJECT [...] (...));
@@ -358,9 +362,39 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		return left + " INNER JOIN " + right + "\nON " + condition;
 	}
 	
-	@Override 
+	/**
+	 * https://users.dcc.uchile.cl/~cgutierr/cursos/BD/divisionSQL.pdf
+	 */
+	@Override
 	public String visitDivision(RelationalAlgebraParser.DivisionContext ctx) {
-		return "DIVISION NOT IMPLEMENTED YET";
+		ArrayList<String> leftRelationColumns = expressionSchema(ctx.expr(0));
+		ArrayList<String> rightRelationColumns = expressionSchema(ctx.expr(1));
+		
+		// Let R(r) / S(s), r must contain s strictly 
+		if (leftRelationColumns.size() > rightRelationColumns.size()) {
+			if (leftRelationColumns.containsAll(rightRelationColumns)) {
+				String division = "";
+				String divisionSchema = listToString(expressionSchema(ctx));
+				String rightRelationSchema = listToString(expressionSchema(ctx.expr(1)));
+				String leftRelationName = visit(ctx.expr(0));
+				String rightRelationName = visit(ctx.expr(1));
+				
+				division += "SELECT " + divisionSchema + "\n";
+				division += "FROM " + leftRelationName + "\n";
+				division += "WHERE (" + rightRelationSchema + ")";
+				division += " IN (SELECT " + rightRelationSchema + " FROM " + rightRelationName +")\n";
+				division += "GROUP BY " + divisionSchema + "\n";
+				division += "HAVING COUNT(*) = (SELECT COUNT(*) FROM " + rightRelationName + ")";
+				
+				return division;
+			}
+		}
+		
+		else {
+			appendError("Division: incompatible schemas.");
+		}
+		
+		return "";
 	}
 	
 	@Override 
