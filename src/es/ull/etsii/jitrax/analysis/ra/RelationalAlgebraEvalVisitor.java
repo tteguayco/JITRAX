@@ -93,8 +93,13 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		// RELATION: return its list of attributes
 		else if (expr instanceof RelationalAlgebraParser.RelationFromExprContext) {
 			String tableName = expr.getText();
-			return new ArrayList<String>(
+			try {
+				return new ArrayList<String>(
 					Arrays.asList(database.getTableByName(tableName).getColumnsNames()));
+			}
+			catch (NullPointerException e) {
+				appendError("TABLE NOT FOUND (" + tableName + ")");
+			}
 		}
 		
 		// SELECTION: 
@@ -243,32 +248,27 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		 * in the outer projection's attributes list.
 		 */
 		// If its parent it's a projection as well...
-		if (ctx.getParent().getChild(0) instanceof TerminalNode) {
-			TerminalNode parentType = (TerminalNode) ctx.getParent().getChild(0);
+		if (ctx.getParent() instanceof RelationalAlgebraParser.ProjectionContext) {
+			RelationalAlgebraParser.ProjectionContext currentProjectAttrList = ctx;
+			RelationalAlgebraParser.ProjectionContext outerProjectAttrList = 
+					(ProjectionContext) ctx.getParent();
+			ArrayList<String> currentProjectAttributes;
+			ArrayList<String> outerProjectAttributes;
 			
-			if (parentType.getSymbol().getType() == RelationalAlgebraLexer.PROJECTION) {
-				RelationalAlgebraParser.ProjectionContext currentProjectAttrList = ctx;
-				RelationalAlgebraParser.ProjectionContext outerProjectAttrList = 
-						(ProjectionContext) ctx.getParent();
-				ArrayList<String> currentProjectAttributes;
-				ArrayList<String> outerProjectAttributes;
-				
-				String[] currentProjectAttrListSplitted = splitAttrList(currentProjectAttrList);
-				String[] outerProjectAttrListSplitted = splitAttrList(outerProjectAttrList);
-				
-				currentProjectAttributes = new ArrayList<String>(
-						Arrays.asList(currentProjectAttrListSplitted));
-				outerProjectAttributes = new ArrayList<String>(Arrays.asList(outerProjectAttrListSplitted));
+			String[] currentProjectAttrListSplitted = splitAttrList(currentProjectAttrList);
+			String[] outerProjectAttrListSplitted = splitAttrList(outerProjectAttrList);
 			
-				if (!currentProjectAttributes.containsAll(outerProjectAttributes)) {
-					appendError("The projection attributes list " + currentProjectAttributes
-							+ " does not contain its outer projection attributes list "
-							+ outerProjectAttributes);
-				}
-				
-				// Otherwise, OK
+			currentProjectAttributes = new ArrayList<String>(
+					Arrays.asList(currentProjectAttrListSplitted));
+			outerProjectAttributes = new ArrayList<String>(Arrays.asList(outerProjectAttrListSplitted));
+		
+			if (!currentProjectAttributes.containsAll(outerProjectAttributes)) {
+				appendError("The projection attributes list " + currentProjectAttributes
+						+ " does not contain its outer projection attributes list "
+						+ outerProjectAttributes);
 			}
 			
+			// Otherwise, OK
 		}
 		
 		return translation;
@@ -286,33 +286,19 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		 * a conjunction of condition lists (such as WHERE condlist1 AND condlist2...).
 		 */
 		// If expr() is not a selection node, this is the last selection node in the target subtree
-		if (ctx.expr().getChild(0) instanceof TerminalNode) {
-			TerminalNode childType = (TerminalNode) ctx.expr().getChild(0);
-			
-			if (childType.getSymbol().getType() == RelationalAlgebraLexer.SELECTION) {
-				selectStatement = visit(ctx.expr()) + " AND " + visit(ctx.condlist());
-			}
-			
-			else {
-				selectStatement = visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist());
-			}
-		}
-		
-		else {
+		if (ctx.expr() instanceof RelationalAlgebraParser.SelectionContext) {
+			selectStatement = visit(ctx.expr()) + " AND " + visit(ctx.condlist());
+		} else {
 			selectStatement = visit(ctx.expr()) + "\nWHERE " + visit(ctx.condlist());
 		}
 		
 		/**
 		 * Append SELECT * if the PARENT is not a PROJECTION or a SELECTION
 		 */
-		if (ctx.getParent().getChild(0) instanceof TerminalNode) {
-			TerminalNode parentNodeType = (TerminalNode) ctx.getParent().getChild(0);
-			
-			// If the previous rule name is a projection or selection, we return what we have
-			if (parentNodeType.getSymbol().getType() == RelationalAlgebraLexer.PROJECTION
-					|| parentNodeType.getSymbol().getType() == RelationalAlgebraLexer.SELECTION) {
-				return selectStatement;
-			}
+		// If the previous rule name is a projection or selection, we return what we have
+		if (ctx.getParent() instanceof RelationalAlgebraParser.ProjectionContext
+				|| ctx.getParent() instanceof RelationalAlgebraParser.SelectionContext) {
+			return selectStatement;
 		}
 		
 		//Otherwise, we append SELECT *
@@ -370,12 +356,16 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		ArrayList<String> leftRelationColumns = expressionSchema(ctx.expr(0));
 		ArrayList<String> rightRelationColumns = expressionSchema(ctx.expr(1));
 		
+		if (leftRelationColumns == null || rightRelationColumns == null) {
+			return "";
+		}
+		
 		// Let R(r) / S(s), r must contain s strictly 
 		if (leftRelationColumns.size() > rightRelationColumns.size()) {
 			if (leftRelationColumns.containsAll(rightRelationColumns)) {
 				String division = "";
 				String divisionSchema = listToString(expressionSchema(ctx));
-				String rightRelationSchema = listToString(expressionSchema(ctx.expr(1)));
+				String rightRelationSchema = listToString(rightRelationColumns);
 				String leftRelationName = visit(ctx.expr(0));
 				String rightRelationName = visit(ctx.expr(1));
 				
@@ -390,10 +380,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 			}
 		}
 		
-		else {
-			appendError("Division: incompatible schemas.");
-		}
-		
+		appendError("Division: incompatible schemas.");
 		return "";
 	}
 	

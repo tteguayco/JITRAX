@@ -42,7 +42,7 @@ public class MainWindow extends JFrame {
 	private static final int MINIMUM_HEIGHT = 500;
 	private static final int BORDER_GAP = 10;
 	
-	private static final String WELCOME_MSG = "\"> Welcome to JITRAX (v1.0)";
+	private static final String WELCOME_MSG = "> Welcome to JITRAX (v1.0)";
 	private static final String QUERY_TRANSLATION_MSG = "> Relational Algebra query translated to SQL.";
 	private static final String DBMS_EXECUTION_MSG = "> SQL query executed on DBMS.";
 	private static final String DBMS_ERRORS_MSG = "> The DBMS detected the following error:";
@@ -138,8 +138,7 @@ public class MainWindow extends JFrame {
 		MainWindow window = new MainWindow();
 		translateGUI();
 		
-		System.out.println(WELCOME_MSG);
-		System.out.println();
+		System.out.println(WELCOME_MSG + "\n");
 		
 		MenuBarListenersSetter menuBarController = new MenuBarListenersSetter(window);
 	}
@@ -196,6 +195,11 @@ public class MainWindow extends JFrame {
 				getWorkspace().switchToSqlTab();
 		        
 				System.out.println(QUERY_TRANSLATION_MSG);
+			}
+			
+			// Errors...
+			else {
+				
 			}
 		}
 	}

@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -40,12 +41,12 @@ public class Console extends JPanel {
 	private static final int FONT_SIZE = 14;
 	private static final int NROWS = 12;
 	
-	private JTextArea console;
+	private JEditorPane console;
 	private JButton clearButton;
 	private JButton exportButton;
 	
 	public Console() {
-		console = new JTextArea();
+		console = new JEditorPane();
 		clearButton = new JButton("Clear");
 		exportButton = new JButton("Export");
 		
@@ -58,7 +59,7 @@ public class Console extends JPanel {
 		buttonsPanel.add(exportButton);
 		
 		console.setFont(new Font(CONSOLE_STYLE, Font.PLAIN, FONT_SIZE));
-		console.setRows(NROWS);
+		//console.setRows(NROWS);
 		console.setEditable(false);
 		JScrollPane sp = new JScrollPane(console);
 		console.setSelectedTextColor(Color.GRAY);
@@ -71,7 +72,7 @@ public class Console extends JPanel {
 		
 		add(buttonsPanel, BorderLayout.SOUTH);
 		add(sp);
-		 
+		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
 	}
@@ -79,14 +80,15 @@ public class Console extends JPanel {
 	public void appendMessage(String newMessage) {
 		// Scroll to bottom
 		getConsole().setCaretPosition(getConsole().getDocument().getLength());
-		getConsole().append(newMessage);
+		String currentText = getConsole().getText();
+		getConsole().setText(currentText + newMessage);
 	}
 
-	public JTextArea getConsole() {
+	public JEditorPane getConsole() {
 		return console;
 	}
 
-	public void setConsole(JTextArea console) {
+	public void setConsole(JEditorPane console) {
 		this.console = console;
 	}
 
