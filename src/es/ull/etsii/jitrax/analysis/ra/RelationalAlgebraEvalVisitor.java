@@ -268,7 +268,8 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 						+ outerProjectAttributes);
 			}
 			
-			// Otherwise, OK
+			// Return only RELATION
+			return visit(ctx.expr());
 		}
 		
 		return translation;
@@ -309,14 +310,14 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitUnion(RelationalAlgebraParser.UnionContext ctx) { 
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		return left + " UNION " + right;
+		return "SELECT * FROM " + left + "\nUNION\n" + "SELECT * FROM " + right;
 	}
 
 	@Override
 	public String visitDifference(RelationalAlgebraParser.DifferenceContext ctx) {
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		return left + " EXCEPT " + right;
+		return "SELECT * FROM " + left + "\nEXCEPT\n" + "SELECT * FROM " + right;
 	}
 	
 	@Override 
@@ -330,7 +331,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitIntersection(RelationalAlgebraParser.IntersectionContext ctx) {
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		return left + " INTERSECT " + right;
+		return "SELECT * FROM " + left + "\nINTERSECT\n" + "SELECT * FROM " + right;
 	}
 	
 	@Override 
