@@ -18,6 +18,26 @@ public class Attribute {
 		dataType = aDataType;
 	}
 	
+	public boolean equals(Object object) {
+		if (object != null && object instanceof Attribute) {
+			Attribute anotherAttr = (Attribute) object;
+			
+			// Comparing names and domains (data types)
+			if (this.getName().equalsIgnoreCase(anotherAttr.getName())) {
+				if (this.getDataType() == anotherAttr.getDataType()) {
+					System.out.println(this.getName() + " == " + anotherAttr.getName());
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public int hashCode() {
+		return getName().hashCode() * getDataType().hashCode();
+	}
+	
 	public String toString() {
 		String toString = "";
 		

@@ -63,6 +63,24 @@ public class Database {
 		}
 	}
 	
+	/**
+	 * Returns the attribute which matches the name.
+	 * @param attrName
+	 * @return
+	 */
+	public Attribute getAttributeByName(String attrName) {
+		for (int i = 0; i < getTables().size(); i++) {
+			for (int j = 0; j < getTables().get(i).getAttributes().size(); j++) {
+				Attribute auxAttr = getTables().get(i).getAttributes().get(j);
+				if (attrName.equalsIgnoreCase(auxAttr.getName())) {
+					return auxAttr;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
 	public String toString() {
 		String toString = "";
 		

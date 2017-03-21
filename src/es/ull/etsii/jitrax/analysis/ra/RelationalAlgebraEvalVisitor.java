@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.AttributeFromAttrlistContext;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.ProjectionContext;
@@ -54,8 +55,8 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		getErrorsList().add(errorMsg);
 	}
 	
-	private String getSubqueryAlias() {
-		String alias = "s" + subqueryCounter;
+	private String appendAlias() {
+		String alias = " AS s" + subqueryCounter;
 		subqueryCounter++;
 		return alias;
 	}
@@ -67,20 +68,19 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	 */
 	private String[] splitAttrList(RelationalAlgebraParser.ProjectionContext ctx) {
 		String attrList = visit(ctx.attrlist());
-		return attrList.split(",");
+		return attrList.split(",\\s+");
 	}
 	
-	private String listToString(ArrayList<String> list) {
+	private String listToString(ArrayList<Attribute> list) {
 		String listString = "";
 		for (int i = 0; i < list.size(); i++) {
-			listString += list.get(i);
+			listString += list.get(i).getName();
 			if (i < list.size() - 1) {
 				listString += ", ";
 			}
 		}
 		
 		return listString;
-		
 	}
 	
 	/**
@@ -88,20 +88,26 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	 * algebra expression (a relation, a natural join operation, etc).
 	 * @return
 	 */
-	private ArrayList<String> expressionSchema(RelationalAlgebraParser.ExprContext expr) {
+	private ArrayList<Attribute> expressionSchema(RelationalAlgebraParser.ExprContext expr) {
 		
 		// PROJECTION: the schema will be the list of attributes 'L' in P(L)(R)
 		if (expr instanceof RelationalAlgebraParser.ProjectionContext) {
-			return new ArrayList<String>(
+			ArrayList<String> attributesNames = new ArrayList<String>(
 					Arrays.asList(splitAttrList((ProjectionContext) expr)));
+			ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+			// Getting the attributes
+			for (int i = 0; i < attributesNames.size(); i++) {
+				attributes.add(database.getAttributeByName(attributesNames.get(i)));
+			}
+			
+			return attributes;
 		}
 		
 		// RELATION: return its list of attributes
 		else if (expr instanceof RelationalAlgebraParser.RelationFromExprContext) {
 			String tableName = expr.getText();
 			try {
-				return new ArrayList<String>(
-					Arrays.asList(database.getTableByName(tableName).getColumnsNames()));
+				return new ArrayList<Attribute>(database.getTableByName(tableName).getAttributes());
 			}
 			catch (NullPointerException e) {
 				appendError("TABLE NOT FOUND (" + tableName + ")");
@@ -115,9 +121,9 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		
 		// CARTESIAN PRODUCT: R(r) x S(s) -> r+s
 		else if (expr instanceof RelationalAlgebraParser.CartesianProductContext) {
-			ArrayList<String> leftRelationSchema = 
+			ArrayList<Attribute> leftRelationSchema = 
 					expressionSchema(((RelationalAlgebraParser.CartesianProductContext) expr).expr(0));
-			ArrayList<String> rightRelationSchema =
+			ArrayList<Attribute> rightRelationSchema =
 					expressionSchema(((RelationalAlgebraParser.CartesianProductContext) expr).expr(1));
 			
 			// Concatenate the schemas
@@ -127,22 +133,22 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		
 		// UNION: R(r) U S(s) -> r U s
 		else if (expr instanceof RelationalAlgebraParser.UnionContext) {
-			ArrayList<String> leftRelationSchema = 
+			ArrayList<Attribute> leftRelationSchema = 
 					expressionSchema(((RelationalAlgebraParser.UnionContext) expr).expr(0));
-			ArrayList<String> rightRelationSchema =
+			ArrayList<Attribute> rightRelationSchema =
 					expressionSchema(((RelationalAlgebraParser.UnionContext) expr).expr(1));
 			
-			Set<String> leftSchemaSet = new HashSet<String>(leftRelationSchema);
-			Set<String> rightSchemaSet = new HashSet<String>(rightRelationSchema);
+			Set<Attribute> leftSchemaSet = new HashSet<Attribute>(leftRelationSchema);
+			Set<Attribute> rightSchemaSet = new HashSet<Attribute>(rightRelationSchema);
 			
 			// Union between the sets
 			leftSchemaSet.addAll(rightSchemaSet);
-			return new ArrayList<String>(leftSchemaSet);
+			return new ArrayList<Attribute>(leftSchemaSet);
 		}
 		
 		// DIFFERENCE: R(r) - S(s) -> r
 		else if (expr instanceof RelationalAlgebraParser.DifferenceContext) {
-			ArrayList<String> leftRelationSchema = 
+			ArrayList<Attribute> leftRelationSchema = 
 					expressionSchema(((RelationalAlgebraParser.DifferenceContext) expr).expr(0));
 			
 			return leftRelationSchema;
@@ -155,9 +161,9 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		
 		// JOIN: R(r) JOIN S(s) [condlist] -> r+s 
 		else if (expr instanceof RelationalAlgebraParser.JoinContext) {
-			ArrayList<String> leftRelationSchema = 
+			ArrayList<Attribute> leftRelationSchema = 
 					expressionSchema(((RelationalAlgebraParser.JoinContext) expr).expr(0));
-			ArrayList<String> rightRelationSchema =
+			ArrayList<Attribute> rightRelationSchema =
 					expressionSchema(((RelationalAlgebraParser.JoinContext) expr).expr(1));
 			
 			// Concatenate the schemas
@@ -167,32 +173,35 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		
 		// NATURAL JOIN: R(r) * S(s) -> r U s
 		else if (expr instanceof RelationalAlgebraParser.NaturalJoinContext) {
-			ArrayList<String> leftRelationSchema = 
+			ArrayList<Attribute> leftRelationSchema = 
 					expressionSchema(((RelationalAlgebraParser.NaturalJoinContext) expr).expr(0));
-			ArrayList<String> rightRelationSchema =
+			ArrayList<Attribute> rightRelationSchema =
 					expressionSchema(((RelationalAlgebraParser.NaturalJoinContext) expr).expr(1));
 			
-			Set<String> leftSchemaSet = new HashSet<String>(leftRelationSchema);
-			Set<String> rightSchemaSet = new HashSet<String>(rightRelationSchema);
+			Set<Attribute> leftSchemaSet = new HashSet<Attribute>(leftRelationSchema);
+			Set<Attribute> rightSchemaSet = new HashSet<Attribute>(rightRelationSchema);
 			
 			// Union between the sets
 			leftSchemaSet.addAll(rightSchemaSet);
-			return new ArrayList<String>(leftSchemaSet);
+			return new ArrayList<Attribute>(leftSchemaSet);
 		}
 		
 		// DIVISION: R(r) / S(s) -> r-s
 		else if (expr instanceof RelationalAlgebraParser.DivisionContext) {
-			ArrayList<String> leftRelationSchema = 
+			ArrayList<Attribute> leftRelationSchema = 
 					expressionSchema(((RelationalAlgebraParser.DivisionContext) expr).expr(0));
-			ArrayList<String> rightRelationSchema =
+			ArrayList<Attribute> rightRelationSchema =
 					expressionSchema(((RelationalAlgebraParser.DivisionContext) expr).expr(1));
 			
-			Set<String> leftSchemaSet = new HashSet<String>(leftRelationSchema);
-			Set<String> rightSchemaSet = new HashSet<String>(rightRelationSchema);
+			Set<Attribute> leftSchemaSet = new HashSet<Attribute>(leftRelationSchema);
+			Set<Attribute> rightSchemaSet = new HashSet<Attribute>(rightRelationSchema);
 			
 			// Difference between sets
+			System.out.println("left: " + leftSchemaSet);
+			System.out.println("right: " + rightSchemaSet);
 			leftSchemaSet.removeAll(rightSchemaSet);
-			return new ArrayList<String>(leftSchemaSet);
+			System.out.println("division schema: " + leftSchemaSet);
+			return new ArrayList<Attribute>(leftSchemaSet);
 		}
 		
 		// Expression between brackets -> call the method again
@@ -201,6 +210,28 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * This method is method is used before performing a set operation (Union, Intersection 
+	 * or Difference). It checks two conditions:
+	 * 	i) Both schemas have the same grade.
+	 * 	ii) Ith attributes have compatible domains.
+	 * @param attrList1
+	 * @param attrList2
+	 */
+	private boolean attrListsSatisfySetOperationsConditions 
+		(ArrayList<Attribute> attrList1, ArrayList<Attribute> attrList2) {
+		
+		if (attrList1.size() == attrList2.size()) {
+			for (int i = 0; i < attrList1.size(); i++) {
+				//if () {
+					
+			//	}
+			}
+		}
+		
+		return false;
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -221,6 +252,8 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		
 		return sqlTranslation;
 	}
+	
+	
 
 	@Override
 	public String visitViewAssignment(RelationalAlgebraParser.ViewAssignmentContext ctx) {
@@ -232,20 +265,10 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitProjection(RelationalAlgebraParser.ProjectionContext ctx) {
 		String translation = "SELECT " + visit(ctx.attrlist()) + "\nFROM " + visit(ctx.expr());
 		
-		// Brackets if it's a nested projection
-		if (ctx.getParent().getParent() != null) {
-			// Si el padre no es una vista
-			if (ctx.getParent().getChild(0) instanceof TerminalNode) {
-				TerminalNode parentType = (TerminalNode) ctx.getParent().getChild(0);
-				if (parentType.getSymbol().getType() == RelationalAlgebraParser.RULE_view) {
-					// do nothing
-				}
-			}
-			else {
-				translation = "(" + translation;
-				translation += ") AS s" + subqueryCounter;
-				subqueryCounter++;
-			}
+		// Append an alias to subquery
+		if (ctx.getParent() instanceof RelationalAlgebraParser.ExprContext
+				/*|| ctx.getParent() instanceof RelationalAlgebraParser.SelectionContext*/) {
+			translation = "(" + translation + ")" + appendAlias();
 		}
 		
 		/**
@@ -274,7 +297,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 						+ outerProjectAttributes);
 			}
 			
-			// Return only RELATION
+			// Return only the RELATION
 			return visit(ctx.expr());
 		}
 		
@@ -312,28 +335,6 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		return "SELECT *\nFROM " + selectStatement;
 	}
 	
-	@Override
-	public String visitUnion(RelationalAlgebraParser.UnionContext ctx) { 
-		String left = visit(ctx.expr(0));
-		String right = visit(ctx.expr(1));
-		String translation = "(SELECT * FROM " + left + 
-				"\nUNION\n" + 
-				"SELECT * FROM " + right + ") " + 
-				"AS " + getSubqueryAlias();
-		return translation;
-	}
-
-	@Override
-	public String visitDifference(RelationalAlgebraParser.DifferenceContext ctx) {
-		String left = visit(ctx.expr(0));
-		String right = visit(ctx.expr(1));
-		String translation = "(SELECT * FROM " + left + 
-				"\nEXCEPT\n" + 
-				"SELECT * FROM " + right + ") " + 
-				"AS " + getSubqueryAlias();
-		return translation;
-	}
-	
 	@Override 
 	public String visitCartesianProduct(RelationalAlgebraParser.CartesianProductContext ctx) {
 		String left = visit(ctx.expr(0));
@@ -341,14 +342,27 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		return left + ", " + right;
 	}
 	
+	@Override
+	public String visitUnion(RelationalAlgebraParser.UnionContext ctx) { 
+		String left = visit(ctx.expr(0));
+		String right = visit(ctx.expr(1));
+		String translation = left + "\nUNION\n" + right;
+		return translation;
+	}
+
+	@Override
+	public String visitDifference(RelationalAlgebraParser.DifferenceContext ctx) {
+		String left = visit(ctx.expr(0));
+		String right = visit(ctx.expr(1));
+		String translation = left + "\nEXCEPT\n" + right;
+		return translation;
+	}
+	
 	@Override 
 	public String visitIntersection(RelationalAlgebraParser.IntersectionContext ctx) {
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		String translation = "(SELECT * FROM " + left + 
-				"\nINTERSECT\n" + 
-				"SELECT * FROM " + right + ") " + 
-				"AS " + getSubqueryAlias();
+		String translation = left + "\nINTERSECT\n" + right;
 		return translation;
 	}
 	
@@ -363,8 +377,8 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitJoin(RelationalAlgebraParser.JoinContext ctx) {
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		String condition = visit(ctx.condlist());
-		return left + " INNER JOIN " + right + "\nON " + condition;
+		String conditionList = visit(ctx.condlist());
+		return left + " INNER JOIN " + right + "\nON " + conditionList;
 	}
 	
 	/**
@@ -372,8 +386,8 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	 */
 	@Override
 	public String visitDivision(RelationalAlgebraParser.DivisionContext ctx) {
-		ArrayList<String> leftRelationColumns = expressionSchema(ctx.expr(0));
-		ArrayList<String> rightRelationColumns = expressionSchema(ctx.expr(1));
+		ArrayList<Attribute> leftRelationColumns = expressionSchema(ctx.expr(0));
+		ArrayList<Attribute> rightRelationColumns = expressionSchema(ctx.expr(1));
 		
 		if (leftRelationColumns == null || rightRelationColumns == null) {
 			return "";
@@ -381,6 +395,9 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		
 		// Let R(r) / S(s), r must contain s strictly 
 		if (leftRelationColumns.size() > rightRelationColumns.size()) {
+			System.out.println("r > s");
+			System.out.println("r -> " + leftRelationColumns);
+			System.out.println("s -> " + rightRelationColumns);
 			if (leftRelationColumns.containsAll(rightRelationColumns)) {
 				String division = "";
 				String divisionSchema = listToString(expressionSchema(ctx));
