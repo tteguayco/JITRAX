@@ -227,14 +227,8 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		return false;
 	}
 	
-	//////////////////////////////////////////////////////////////////////////////////////////
 	
-	@Override 
-	public String visitStart(RelationalAlgebraParser.StartContext ctx) {
-		if (errors()) {
-			return null;
-		}
-		
+	private void calculateTranslation(RelationalAlgebraParser.StartContext ctx) {
 		// VIEWS
 		for (int i = 0; i < ctx.view().size(); i++) {
 			sqlTranslation += visit(ctx.view(i)) + "\n\n";
@@ -246,10 +240,21 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 				&& !(ctx.expr() instanceof RelationalAlgebraParser.SelectionContext)
 					&& !(ctx.expr() instanceof RelationalAlgebraParser.UnionContext)
 						&& !(ctx.expr() instanceof RelationalAlgebraParser.DifferenceContext)
-							&& !(ctx.expr() instanceof RelationalAlgebraParser.IntersectionContext)) {
-			sqlTranslation = "SELECT * FROM " + sqlTranslation;
+							&& !(ctx.expr() instanceof RelationalAlgebraParser.IntersectionContext)
+								&& !(ctx.expr() instanceof RelationalAlgebraParser.DivisionContext)) {
+			sqlTranslation += "SELECT * FROM " + sqlTranslation;
 		}
-		
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	@Override 
+	public String visitStart(RelationalAlgebraParser.StartContext ctx) {
+		if (errors()) {
+			return null;
+		}
+
+		calculateTranslation(ctx);
 		return sqlTranslation;
 	}
 	
@@ -401,10 +406,10 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 				String rightRelationName = visit(ctx.expr(1));
 				
 				division += "SELECT " + divisionSchema + " ";
-				division += "FROM " + leftRelationName + " ";
+				division += "FROM " + leftRelationName + "\n";
 				division += "WHERE (" + rightRelationSchema + ")";
-				division += " IN (SELECT " + rightRelationSchema + " FROM " + rightRelationName +") ";
-				division += "GROUP BY " + divisionSchema + " ";
+				division += "\nIN (SELECT " + rightRelationSchema + " FROM " + rightRelationName +")\n";
+				division += "GROUP BY " + divisionSchema + "\n";
 				division += "HAVING COUNT(*) = (SELECT COUNT(*) FROM " + rightRelationName + ")";
 				
 				return division;
