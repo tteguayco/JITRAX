@@ -54,10 +54,12 @@ public class RelationalAlgebraTokenMaker extends AbstractTokenMaker {
 		TokenMap tokenMap = new TokenMap();
 	
 		tokenMap.put("PROJECTION", Token.RESERVED_WORD);
+		tokenMap.put("projection", Token.RESERVED_WORD);
 		tokenMap.put("PROJECT", Token.RESERVED_WORD);
 		tokenMap.put("project", Token.RESERVED_WORD);
 		
 		tokenMap.put("SELECTION", Token.RESERVED_WORD);
+		tokenMap.put("selection", Token.RESERVED_WORD);
 		tokenMap.put("SELECT", Token.RESERVED_WORD);
 		tokenMap.put("select", Token.RESERVED_WORD);
 		
@@ -77,7 +79,9 @@ public class RelationalAlgebraTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("x", Token.RESERVED_WORD);
 		
 		tokenMap.put("INTERSECTION", Token.RESERVED_WORD);
-		tokenMap.put("INTERSECT",  Token.RESERVED_WORD);
+		tokenMap.put("intersection", Token.RESERVED_WORD);
+		tokenMap.put("INTERSECT", Token.RESERVED_WORD);
+		tokenMap.put("intersect",  Token.RESERVED_WORD);
 		tokenMap.put("∩", Token.RESERVED_WORD);
 		
 		tokenMap.put("NATURAL_JOIN", Token.RESERVED_WORD);

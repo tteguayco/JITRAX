@@ -1,0 +1,26 @@
+DATABASE R1S1;
+
+TABLE R1(A: Char, PK; B: Char; C: Char)
+=>
+('a', 'b', 'c');
+('d', 'a', 'f');
+('c', 'b', 'd');
+
+TABLE S1(D: Char, PK; E: Char; F: Char)
+=>
+('b', 'g', 'a');
+('d', 'a', 'f');
+
+TABLE R2(A: Char, PK; B: Char; C: Char; D: Char)
+=>
+('a', 'b', 'c', 'd');
+('a', 'b', 'e', 'f');
+('b', 'c', 'e', 'f');
+('e', 'd', 'c', 'd');
+('e', 'd', 'e', 'f');
+('a', 'b', 'd', 'e');
+
+TABLE S2(C: Char, PK; D: Char)
+=>
+('c', 'd');
+('e', 'f');

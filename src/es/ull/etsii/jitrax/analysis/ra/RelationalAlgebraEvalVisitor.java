@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
 import es.ull.etsii.jitrax.adt.Attribute;
@@ -230,6 +231,10 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	@Override 
 	public String visitStart(RelationalAlgebraParser.StartContext ctx) {
+		if (errors()) {
+			return null;
+		}
+		
 		// VIEWS
 		for (int i = 0; i < ctx.view().size(); i++) {
 			sqlTranslation += visit(ctx.view(i)) + "\n\n";
@@ -237,11 +242,13 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		
 		// EXPRESSION
 		sqlTranslation += visit(ctx.expr()) + ";";
-
-		if (errors()) {
-			return null;
+		if (!(ctx.expr() instanceof RelationalAlgebraParser.ProjectionContext)
+				&& !(ctx.expr() instanceof RelationalAlgebraParser.SelectionContext)
+					&& !(ctx.expr() instanceof RelationalAlgebraParser.UnionContext)
+						&& !(ctx.expr() instanceof RelationalAlgebraParser.DifferenceContext)
+							&& !(ctx.expr() instanceof RelationalAlgebraParser.IntersectionContext)) {
+			sqlTranslation = "SELECT * FROM " + sqlTranslation;
 		}
-		
 		
 		return sqlTranslation;
 	}
@@ -334,10 +341,10 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	}
 	
 	@Override
-	public String visitUnion(RelationalAlgebraParser.UnionContext ctx) { 
+	public String visitUnion(RelationalAlgebraParser.UnionContext ctx) {
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		String translation = left + " UNION " + right;
+		String translation = "SELECT * FROM " + left + " UNION SELECT * FROM " + right;
 		return translation;
 	}
 
@@ -345,7 +352,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitDifference(RelationalAlgebraParser.DifferenceContext ctx) {
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		String translation = left + " EXCEPT " + right;
+		String translation = "SELECT * FROM " + left + " EXCEPT SELECT * FROM " + right;
 		return translation;
 	}
 	
@@ -353,7 +360,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitIntersection(RelationalAlgebraParser.IntersectionContext ctx) {
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		String translation = left + " INTERSECT " + right;
+		String translation = "SELECT * FROM " + left + " INTERSECT SELECT * FROM " + right;
 		return translation;
 	}
 	
