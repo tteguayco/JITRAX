@@ -182,7 +182,7 @@ public class MainWindow extends JFrame {
 			
 			// Successful translation
 			if (sqlTranslation != null) {
-				getWorkspace().getSQLCodeEditor().setText(sqlTranslation);
+				getWorkspace().setSqlTranslation(sqlTranslation);
 				
 				// Show ParseTree
 				Parser parser = interpreter.getParser();

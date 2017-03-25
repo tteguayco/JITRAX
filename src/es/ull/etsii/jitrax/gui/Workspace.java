@@ -12,11 +12,13 @@ import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
@@ -32,6 +34,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
 public class Workspace extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -87,6 +90,10 @@ public class Workspace extends JPanel {
 	private JButton executeButton;
 	private JPanel parseTreePanel;
 	private QueryResultViewer queryResultViewer;
+	private JCheckBox formattedSqlCodeCheck;
+	
+	private String unformattedSqlCode;
+	private BasicFormatterImpl sqlFormatter;
 	
 	public Workspace() {
 		relationalAlgebraCodeEditor = new RSyntaxTextArea();
@@ -95,6 +102,9 @@ public class Workspace extends JPanel {
 		executeButton = new JButton("Execute on DBMS");
 		parseTreePanel = new JPanel(new BorderLayout());
 		queryResultViewer = new QueryResultViewer();
+		formattedSqlCodeCheck = new JCheckBox("Display SQL code formatted");
+		
+		sqlFormatter = new BasicFormatterImpl();
 		
 		relationalAlgebraCodeEditor.setCaretColor(RA_CARET_COLOR);
 		String raCurrentFontName = relationalAlgebraCodeEditor.getFont().getName();
@@ -171,6 +181,9 @@ public class Workspace extends JPanel {
 	    sqlPanel.add(sqlSP, BorderLayout.CENTER);
 	    sqlPanel.add(sqlControlPanel, BorderLayout.SOUTH);
 	    executionPanel.add(executeButton);
+	    executionPanel.add(new JSeparator());
+	    executionPanel.add(new JSeparator());
+	    executionPanel.add(formattedSqlCodeCheck);
 	    sqlControlPanel.add(executionPanel, BorderLayout.WEST);
 	    sqlControlPanel.add(sqlEditorElementsPanel);
 	    sqlEditorElementsPanel.add(new JLabel("Style: "));
@@ -312,8 +325,39 @@ public class Workspace extends JPanel {
 				sqlCodeEditor.setFont(currentFont.deriveFont(styleFonts[styleIndex]));
 			}
 		});
+		
+		formattedSqlCodeCheck.addActionListener(new FormatSqlCodeListener());
+	} 
+	
+	public void setSqlTranslation(String sqlTranslation) {
+		unformattedSqlCode = sqlTranslation;
+		if (getFormattedSqlCodeCheck().isSelected()) {
+			getSQLCodeEditor().setText(sqlFormatter.format(sqlTranslation));
+		}
+		
+		else {
+			getSQLCodeEditor().setText(sqlTranslation);
+		}
 	}
-
+	
+	private class FormatSqlCodeListener implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			if (formattedSqlCodeCheck.isSelected()) {
+				String sqlCode = sqlCodeEditor.getText();
+				if (sqlCode.length() > 0) {
+					// Format SQL Code
+					sqlCodeEditor.setText(new BasicFormatterImpl().format(sqlCode));
+				}
+			}
+			
+			else {
+				sqlCodeEditor.setText(unformattedSqlCode);
+			}
+		}
+	}
+	
 	public RSyntaxTextArea getRelationalAlgebraCodeEditor() {
 		return relationalAlgebraCodeEditor;
 	}
@@ -424,5 +468,13 @@ public class Workspace extends JPanel {
 
 	public void setParseTreePanel(JPanel parseTreePanel) {
 		this.parseTreePanel = parseTreePanel;
+	}
+
+	public JCheckBox getFormattedSqlCodeCheck() {
+		return formattedSqlCodeCheck;
+	}
+
+	public void setFormattedSqlCodeCheck(JCheckBox formattedSqlCodeCheck) {
+		this.formattedSqlCodeCheck = formattedSqlCodeCheck;
 	}
 }
