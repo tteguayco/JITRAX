@@ -8,16 +8,16 @@ start: 	(view ';')*  expr ';' EOF
 view:	IDENTIFIER '=' expr			# viewAssignment
 ;
 
-expr:	relation							# relationFromExpr
+expr:	relation								# relationFromExpr
     |   '(' expr ')'							# bracketsExpr
-    |	PROJECTION '['attrlist']' '('expr')'				# projection
-    |   SELECTION '['condlist']' '('expr')'				# selection
+    |	PROJECTION '['attrlist']' '('expr')'	# projection
+    |   SELECTION '['condlist']' '('expr')'		# selection
     |	expr UNION expr							# union
-    |   expr CARTESIAN_PRODUCT expr					# cartesianProduct
-    |   expr DIFFERENCE expr						# difference
-    |	expr NATURAL_JOIN expr						# naturalJoin
-    |   expr INTERSECTION expr						# intersection
-    |   expr JOIN expr '[' condlist ']'					# join
+    |   expr CARTESIAN_PRODUCT expr				# cartesianProduct
+    |   expr DIFFERENCE expr					# difference
+    |	expr NATURAL_JOIN expr					# naturalJoin
+    |   expr INTERSECTION expr					# intersection
+    |   expr JOIN expr '[' condlist ']'			# join
     |   expr DIVISION expr						# division
     |   RENAME relation AS relation					# renameTable
     |   RENAME relation '(' attrlist ')' AS relation '(' attrlist ')' 	# renameSchema

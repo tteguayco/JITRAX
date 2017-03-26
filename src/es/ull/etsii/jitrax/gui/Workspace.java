@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -24,6 +26,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.LineBorder;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -90,6 +94,8 @@ public class Workspace extends JPanel {
 	private JPanel parseTreePanel;
 	private QueryResultViewer queryResultViewer;
 	private JCheckBox formattedSqlCodeCheck;
+	private JLabel raEditorCaretPositionLabel;
+	private JLabel sqlEditorCaretPositionLabel;
 	
 	private String unformattedSqlCode;
 	private BasicFormatterImpl sqlFormatter;
@@ -102,6 +108,8 @@ public class Workspace extends JPanel {
 		parseTreePanel = new JPanel(new BorderLayout());
 		queryResultViewer = new QueryResultViewer();
 		formattedSqlCodeCheck = new JCheckBox("Display SQL code formatted");
+		raEditorCaretPositionLabel = new JLabel("Position: 0");
+		sqlEditorCaretPositionLabel = new JLabel("Position 0");
 		
 		sqlFormatter = new BasicFormatterImpl();
 		
@@ -165,6 +173,9 @@ public class Workspace extends JPanel {
 	    raPanel.add(relationalAlgebraSP, BorderLayout.CENTER);
 	    raPanel.add(raControlPanel, BorderLayout.SOUTH);
 	    translationPanel.add(translateButton);
+	    translationPanel.add(new JSeparator());
+	    translationPanel.add(new JSeparator());
+	    translationPanel.add(raEditorCaretPositionLabel);
 	    raControlPanel.add(translationPanel, BorderLayout.WEST);
 	    raControlPanel.add(raEditorElementsPanel, BorderLayout.EAST);
 	    raEditorElementsPanel.add(new JLabel("Style: "));
@@ -175,14 +186,22 @@ public class Workspace extends JPanel {
 	    // SQL Tab
 	    JPanel sqlPanel = new JPanel(new BorderLayout());
 	    JPanel sqlControlPanel = new JPanel(new BorderLayout());
-	    JPanel executionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	    JPanel executionPanel = new JPanel(new BorderLayout());
 	    JPanel sqlEditorElementsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 	    sqlPanel.add(sqlSP, BorderLayout.CENTER);
 	    sqlPanel.add(sqlControlPanel, BorderLayout.SOUTH);
-	    executionPanel.add(executeButton);
-	    executionPanel.add(new JSeparator());
-	    executionPanel.add(new JSeparator());
-	    executionPanel.add(formattedSqlCodeCheck);
+	    JPanel auxTopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	    JPanel auxBottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	    JPanel auxCenterPanel = new JPanel(new BorderLayout());
+	    auxTopPanel.add(executeButton);
+	    auxTopPanel.add(new JSeparator());
+	    auxTopPanel.add(new JSeparator());
+	    auxTopPanel.add(sqlEditorCaretPositionLabel);
+	    auxBottomPanel.add(new JSeparator());
+	    auxBottomPanel.add(formattedSqlCodeCheck);
+	    auxCenterPanel.add(auxTopPanel, BorderLayout.CENTER);
+	    auxCenterPanel.add(auxBottomPanel, BorderLayout.NORTH);
+	    executionPanel.add(auxCenterPanel);
 	    sqlControlPanel.add(executionPanel, BorderLayout.WEST);
 	    sqlControlPanel.add(sqlEditorElementsPanel);
 	    sqlEditorElementsPanel.add(new JLabel("Style: "));
@@ -285,6 +304,14 @@ public class Workspace extends JPanel {
 		getSQLCodeEditor().setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
 	}
 	
+	private void updateSqlCaretPositionLabel(int pos) {
+		getSqlEditorCaretPositionLabel().setText("Position: " + pos);
+	}
+	
+	private void updateRaCaretPositionLabel(int pos) {
+		getRaEditorCaretPositionLabel().setText("Position: " + pos);
+	}
+	
 	private void setListeners() {
 		
 		raFontSizeSelector.addChangeListener(new ChangeListener() {
@@ -326,6 +353,19 @@ public class Workspace extends JPanel {
 		});
 		
 		formattedSqlCodeCheck.addActionListener(new FormatSqlCodeListener());
+		
+		sqlCodeEditor.addCaretListener(new CaretListener() {
+			 public void caretUpdate(CaretEvent caretEvent) {
+		        updateSqlCaretPositionLabel(sqlCodeEditor.getCaretPosition());
+		      }
+		});
+		
+		relationalAlgebraCodeEditor.addCaretListener(new CaretListener() {
+			 public void caretUpdate(CaretEvent caretEvent) {
+		        updateRaCaretPositionLabel(relationalAlgebraCodeEditor.getCaretPosition());
+		      }
+		});
+		
 	} 
 	
 	public void setSqlTranslation(String sqlTranslation) {
@@ -475,5 +515,45 @@ public class Workspace extends JPanel {
 
 	public void setFormattedSqlCodeCheck(JCheckBox formattedSqlCodeCheck) {
 		this.formattedSqlCodeCheck = formattedSqlCodeCheck;
+	}
+
+	public QueryResultViewer getQueryResultViewer() {
+		return queryResultViewer;
+	}
+
+	public void setQueryResultViewer(QueryResultViewer queryResultViewer) {
+		this.queryResultViewer = queryResultViewer;
+	}
+
+	public JLabel getRaEditorCaretPositionLabel() {
+		return raEditorCaretPositionLabel;
+	}
+
+	public void setRaEditorCaretPositionLabel(JLabel raEditorCaretPositionLabel) {
+		this.raEditorCaretPositionLabel = raEditorCaretPositionLabel;
+	}
+
+	public JLabel getSqlEditorCaretPositionLabel() {
+		return sqlEditorCaretPositionLabel;
+	}
+
+	public void setSqlEditorCaretPositionLabel(JLabel sqlEditorCaretPositionLabel) {
+		this.sqlEditorCaretPositionLabel = sqlEditorCaretPositionLabel;
+	}
+
+	public String getUnformattedSqlCode() {
+		return unformattedSqlCode;
+	}
+
+	public void setUnformattedSqlCode(String unformattedSqlCode) {
+		this.unformattedSqlCode = unformattedSqlCode;
+	}
+
+	public BasicFormatterImpl getSqlFormatter() {
+		return sqlFormatter;
+	}
+
+	public void setSqlFormatter(BasicFormatterImpl sqlFormatter) {
+		this.sqlFormatter = sqlFormatter;
 	}
 }

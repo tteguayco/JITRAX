@@ -13,6 +13,8 @@ import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.ProjectionContext;
 
 public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<String> {
+	private static final String ALIAS_PREFIX = "query";
+	
 	String sqlTranslation;
 	Database database;
 	ArrayList<String> errors;
@@ -52,7 +54,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	}
 	
 	private String appendAlias() {
-		String alias = " AS s" + subqueryCounter;
+		String alias = " AS " + ALIAS_PREFIX + subqueryCounter;
 		subqueryCounter++;
 		return alias;
 	}
@@ -227,6 +229,55 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		return false;
 	}
 	
+	/**
+	 * If the specified expression is a subquery (its parent it's not the start node
+	 * and it isn't a relation), returns true;
+	 * @param ctx
+	 * @return
+	 */
+	private boolean isSubquery(RelationalAlgebraParser.ExprContext ctx) {
+		if (!(ctx.getParent() instanceof RelationalAlgebraParser.StartContext)) {
+			if (!(ctx instanceof RelationalAlgebraParser.RelationFromExprContext)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Appends an alias to the translation if the context is a subquery.
+	 * @param ctx
+	 * @param translation
+	 * @return
+	 */
+	private String appendAliasIfSubquery(RelationalAlgebraParser.ExprContext ctx, String translation) {
+		if (isSubquery(ctx)) {
+			return "(" + translation + ")" + appendAlias(); 
+		}
+		
+		return translation;
+	}
+	
+	private String preppendSelectStarIfNeeded(RelationalAlgebraParser.StartContext ctx, String translation) {
+		if (ctx.expr() instanceof RelationalAlgebraParser.ProjectionContext) {
+			return translation;
+		}
+		
+		if (ctx.expr() instanceof RelationalAlgebraParser.SelectionContext) {
+			return translation;
+		}
+		
+		if (ctx.expr() instanceof RelationalAlgebraParser.DivisionContext) {
+			return translation;
+		}
+		
+		if (ctx.expr() instanceof RelationalAlgebraParser.RelationFromExprContext) {
+			return "SELECT * FROM " + translation;
+		}
+		
+		return translation = "SELECT * FROM (" + translation + ")" + appendAlias();
+	}
 	
 	private void calculateTranslation(RelationalAlgebraParser.StartContext ctx) {
 		// VIEWS
@@ -235,15 +286,9 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		}
 		
 		// EXPRESSION
-		sqlTranslation += visit(ctx.expr()) + ";";
-		if (!(ctx.expr() instanceof RelationalAlgebraParser.ProjectionContext)
-				&& !(ctx.expr() instanceof RelationalAlgebraParser.SelectionContext)
-					&& !(ctx.expr() instanceof RelationalAlgebraParser.UnionContext)
-						&& !(ctx.expr() instanceof RelationalAlgebraParser.DifferenceContext)
-							&& !(ctx.expr() instanceof RelationalAlgebraParser.IntersectionContext)
-								&& !(ctx.expr() instanceof RelationalAlgebraParser.DivisionContext)) {
-			sqlTranslation += "SELECT * FROM " + sqlTranslation;
-		}
+		sqlTranslation += visit(ctx.expr());
+		sqlTranslation = preppendSelectStarIfNeeded(ctx, sqlTranslation);
+		sqlTranslation += ";";
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -267,12 +312,6 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	@Override
 	public String visitProjection(RelationalAlgebraParser.ProjectionContext ctx) {
 		String translation = "SELECT " + visit(ctx.attrlist()) + " FROM " + visit(ctx.expr());
-		
-		// Append an alias to subquery
-		if (ctx.getParent() instanceof RelationalAlgebraParser.ExprContext
-				/*|| ctx.getParent() instanceof RelationalAlgebraParser.SelectionContext*/) {
-			translation = "(" + translation + ")" + appendAlias();
-		}
 		
 		/**
 		 * CASCADE OF PROJECTIONS: PROJECT [...] (PROJECT [...] (...));
@@ -342,15 +381,18 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitCartesianProduct(RelationalAlgebraParser.CartesianProductContext ctx) {
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
-		return left + ", " + right;
+		String translation = left + ", " + right;
+		return appendAliasIfSubquery(ctx, translation);
 	}
 	
 	@Override
 	public String visitUnion(RelationalAlgebraParser.UnionContext ctx) {
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
+		left = appendAliasIfSubquery(ctx.expr(0), left);
+		right = appendAliasIfSubquery(ctx.expr(1), right);
 		String translation = "SELECT * FROM " + left + " UNION SELECT * FROM " + right;
-		return translation;
+		return appendAliasIfSubquery(ctx, translation);
 	}
 
 	@Override
@@ -358,7 +400,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
 		String translation = "SELECT * FROM " + left + " EXCEPT SELECT * FROM " + right;
-		return translation;
+		return appendAliasIfSubquery(ctx, translation);
 	}
 	
 	@Override 
@@ -366,7 +408,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		String left = visit(ctx.expr(0));
 		String right = visit(ctx.expr(1));
 		String translation = "SELECT * FROM " + left + " INTERSECT SELECT * FROM " + right;
-		return translation;
+		return appendAliasIfSubquery(ctx, translation);
 	}
 	
 	@Override 
@@ -412,7 +454,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 				division += "GROUP BY " + divisionSchema + "\n";
 				division += "HAVING COUNT(*) = (SELECT COUNT(*) FROM " + rightRelationName + ")";
 				
-				return division;
+				return appendAliasIfSubquery(ctx, division);
 			}
 		}
 		

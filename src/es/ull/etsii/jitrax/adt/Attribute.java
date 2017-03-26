@@ -25,7 +25,6 @@ public class Attribute {
 			// Comparing names and domains (data types)
 			if (this.getName().equalsIgnoreCase(anotherAttr.getName())) {
 				if (this.getDataType() == anotherAttr.getDataType()) {
-					System.out.println(this.getName() + " == " + anotherAttr.getName());
 					return true;
 				}
 			}

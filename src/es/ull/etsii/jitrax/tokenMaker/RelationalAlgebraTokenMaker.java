@@ -93,6 +93,8 @@ public class RelationalAlgebraTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("JOIN", Token.RESERVED_WORD);
 		tokenMap.put("join", Token.RESERVED_WORD);
 		tokenMap.put("*", Token.RESERVED_WORD);
+		tokenMap.put("Y", Token.RESERVED_WORD);
+		tokenMap.put("y", Token.RESERVED_WORD);
 		
 		tokenMap.put("DIVISION", Token.RESERVED_WORD);
 		tokenMap.put("division", Token.RESERVED_WORD);
