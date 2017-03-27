@@ -27,7 +27,7 @@ public class Main {
 			RelationalAlgebraEvalVisitor eval = new RelationalAlgebraEvalVisitor(null);
 			eval.visit(tree);
 			
-			if (eval.errors()) {
+			if (eval.syntaxErrors()) {
 				eval.printErrorsList();
 			} else {
 				System.out.println(eval.getSqlTranslation());

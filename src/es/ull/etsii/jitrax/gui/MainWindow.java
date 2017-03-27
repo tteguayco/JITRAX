@@ -47,7 +47,7 @@ public class MainWindow extends JFrame {
 	private static final String DBMS_EXECUTION_MSG = "> SQL query executed on DBMS.";
 	private static final String DBMS_ERRORS_MSG = "> The DBMS detected the following error:";
 	
-	private static final double HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT = 0.35d;
+	private static final double HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT = 0.45d;
 	private static final double VERTICAL_SPLITPANE_DEFAULT_WEIGHT = 0.02;
 	
 	private static final String FRAME_TITLE = "JITRAX";
