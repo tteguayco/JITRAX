@@ -18,31 +18,30 @@ public class RelationalAlgebraParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, PROJECTION=9, 
-		SELECTION=10, UNION=11, DIFFERENCE=12, CARTESIAN_PRODUCT=13, INTERSECTION=14, 
-		NATURAL_JOIN=15, JOIN=16, DIVISION=17, RENAME=18, AS=19, EQUAL=20, NOT_EQUAL=21, 
-		GREATER_THAN=22, GREATER_EQUAL=23, LESS_THAN=24, LESS_EQUAL=25, BOOLEAN_AND=26, 
-		BOOLEAN_OR=27, BOOLEAN_NOT=28, IDENTIFIER=29, NUMBER=30, WHITESPACES=31;
+		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, PROJECTION=8, 
+		SELECTION=9, UNION=10, DIFFERENCE=11, CARTESIAN_PRODUCT=12, INTERSECTION=13, 
+		NATURAL_JOIN=14, JOIN=15, DIVISION=16, RENAME=17, AS=18, EQUAL=19, NOT_EQUAL=20, 
+		GREATER_THAN=21, GREATER_EQUAL=22, LESS_THAN=23, LESS_EQUAL=24, BOOLEAN_AND=25, 
+		BOOLEAN_OR=26, BOOLEAN_NOT=27, STRING=28, IDENTIFIER=29, NUMBER=30, WHITESPACES=31;
 	public static final int
 		RULE_start = 0, RULE_view = 1, RULE_expr = 2, RULE_attrlist = 3, RULE_condlist = 4, 
-		RULE_comparator = 5, RULE_compared = 6, RULE_relation = 7, RULE_attribute = 8, 
-		RULE_data = 9;
+		RULE_comparator = 5, RULE_compared = 6, RULE_relation = 7, RULE_attribute = 8;
 	public static final String[] ruleNames = {
 		"start", "view", "expr", "attrlist", "condlist", "comparator", "compared", 
-		"relation", "attribute", "data"
+		"relation", "attribute"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "';'", "'='", "'('", "')'", "'['", "']'", "','", "'NOT'", null, 
-		null, null, null, null, null, null, null, null, null, null, "'=='", "'!='", 
-		"'>'", "'>='", "'<'", "'<='"
+		null, "';'", "'('", "')'", "'['", "']'", "','", "'NOT'", null, null, null, 
+		null, null, null, null, null, null, null, null, "'='", null, "'>'", "'>='", 
+		"'<'", "'<='"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, null, null, "PROJECTION", "SELECTION", 
+		null, null, null, null, null, null, null, null, "PROJECTION", "SELECTION", 
 		"UNION", "DIFFERENCE", "CARTESIAN_PRODUCT", "INTERSECTION", "NATURAL_JOIN", 
 		"JOIN", "DIVISION", "RENAME", "AS", "EQUAL", "NOT_EQUAL", "GREATER_THAN", 
 		"GREATER_EQUAL", "LESS_THAN", "LESS_EQUAL", "BOOLEAN_AND", "BOOLEAN_OR", 
-		"BOOLEAN_NOT", "IDENTIFIER", "NUMBER", "WHITESPACES"
+		"BOOLEAN_NOT", "STRING", "IDENTIFIER", "NUMBER", "WHITESPACES"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -122,29 +121,29 @@ public class RelationalAlgebraParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(25);
+			setState(23);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,0,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(20);
+					setState(18);
 					view();
-					setState(21);
+					setState(19);
 					match(T__0);
 					}
 					} 
 				}
-				setState(27);
+				setState(25);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,0,_ctx);
 			}
-			setState(28);
+			setState(26);
 			expr(0);
-			setState(29);
+			setState(27);
 			match(T__0);
-			setState(30);
+			setState(28);
 			match(EOF);
 			}
 		}
@@ -190,11 +189,11 @@ public class RelationalAlgebraParser extends Parser {
 			_localctx = new ViewAssignmentContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(32);
+			setState(30);
 			match(IDENTIFIER);
-			setState(33);
-			match(T__1);
-			setState(34);
+			setState(31);
+			match(EQUAL);
+			setState(32);
 			expr(0);
 			}
 		}
@@ -434,7 +433,7 @@ public class RelationalAlgebraParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(74);
+			setState(72);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 			case 1:
@@ -443,7 +442,7 @@ public class RelationalAlgebraParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(37);
+				setState(35);
 				relation();
 				}
 				break;
@@ -452,12 +451,12 @@ public class RelationalAlgebraParser extends Parser {
 				_localctx = new BracketsExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
+				setState(36);
+				match(T__1);
+				setState(37);
+				expr(0);
 				setState(38);
 				match(T__2);
-				setState(39);
-				expr(0);
-				setState(40);
-				match(T__3);
 				}
 				break;
 			case 3:
@@ -465,20 +464,20 @@ public class RelationalAlgebraParser extends Parser {
 				_localctx = new ProjectionContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(42);
+				setState(40);
 				match(PROJECTION);
+				setState(41);
+				match(T__3);
+				setState(42);
+				attrlist();
 				setState(43);
 				match(T__4);
 				setState(44);
-				attrlist();
+				match(T__1);
 				setState(45);
-				match(T__5);
+				expr(0);
 				setState(46);
 				match(T__2);
-				setState(47);
-				expr(0);
-				setState(48);
-				match(T__3);
 				}
 				break;
 			case 4:
@@ -486,20 +485,20 @@ public class RelationalAlgebraParser extends Parser {
 				_localctx = new SelectionContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(50);
+				setState(48);
 				match(SELECTION);
+				setState(49);
+				match(T__3);
+				setState(50);
+				condlist(0);
 				setState(51);
 				match(T__4);
 				setState(52);
-				condlist(0);
+				match(T__1);
 				setState(53);
-				match(T__5);
+				expr(0);
 				setState(54);
 				match(T__2);
-				setState(55);
-				expr(0);
-				setState(56);
-				match(T__3);
 				}
 				break;
 			case 5:
@@ -507,13 +506,13 @@ public class RelationalAlgebraParser extends Parser {
 				_localctx = new RenameTableContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(58);
+				setState(56);
 				match(RENAME);
-				setState(59);
+				setState(57);
 				relation();
-				setState(60);
+				setState(58);
 				match(AS);
-				setState(61);
+				setState(59);
 				relation();
 				}
 				break;
@@ -522,31 +521,31 @@ public class RelationalAlgebraParser extends Parser {
 				_localctx = new RenameSchemaContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(63);
+				setState(61);
 				match(RENAME);
-				setState(64);
+				setState(62);
 				relation();
+				setState(63);
+				match(T__1);
+				setState(64);
+				attrlist();
 				setState(65);
 				match(T__2);
 				setState(66);
-				attrlist();
-				setState(67);
-				match(T__3);
-				setState(68);
 				match(AS);
-				setState(69);
+				setState(67);
 				relation();
+				setState(68);
+				match(T__1);
+				setState(69);
+				attrlist();
 				setState(70);
 				match(T__2);
-				setState(71);
-				attrlist();
-				setState(72);
-				match(T__3);
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(103);
+			setState(101);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -554,18 +553,18 @@ public class RelationalAlgebraParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(101);
+					setState(99);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
 					case 1:
 						{
 						_localctx = new UnionContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(76);
+						setState(74);
 						if (!(precpred(_ctx, 9))) throw new FailedPredicateException(this, "precpred(_ctx, 9)");
-						setState(77);
+						setState(75);
 						match(UNION);
-						setState(78);
+						setState(76);
 						expr(10);
 						}
 						break;
@@ -573,11 +572,11 @@ public class RelationalAlgebraParser extends Parser {
 						{
 						_localctx = new CartesianProductContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(79);
+						setState(77);
 						if (!(precpred(_ctx, 8))) throw new FailedPredicateException(this, "precpred(_ctx, 8)");
-						setState(80);
+						setState(78);
 						match(CARTESIAN_PRODUCT);
-						setState(81);
+						setState(79);
 						expr(9);
 						}
 						break;
@@ -585,11 +584,11 @@ public class RelationalAlgebraParser extends Parser {
 						{
 						_localctx = new DifferenceContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(82);
+						setState(80);
 						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
-						setState(83);
+						setState(81);
 						match(DIFFERENCE);
-						setState(84);
+						setState(82);
 						expr(8);
 						}
 						break;
@@ -597,11 +596,11 @@ public class RelationalAlgebraParser extends Parser {
 						{
 						_localctx = new NaturalJoinContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(85);
+						setState(83);
 						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
-						setState(86);
+						setState(84);
 						match(NATURAL_JOIN);
-						setState(87);
+						setState(85);
 						expr(7);
 						}
 						break;
@@ -609,11 +608,11 @@ public class RelationalAlgebraParser extends Parser {
 						{
 						_localctx = new IntersectionContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(88);
+						setState(86);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
-						setState(89);
+						setState(87);
 						match(INTERSECTION);
-						setState(90);
+						setState(88);
 						expr(6);
 						}
 						break;
@@ -621,11 +620,11 @@ public class RelationalAlgebraParser extends Parser {
 						{
 						_localctx = new DivisionContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(91);
+						setState(89);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(92);
+						setState(90);
 						match(DIVISION);
-						setState(93);
+						setState(91);
 						expr(4);
 						}
 						break;
@@ -633,24 +632,24 @@ public class RelationalAlgebraParser extends Parser {
 						{
 						_localctx = new JoinContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(94);
+						setState(92);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(95);
+						setState(93);
 						match(JOIN);
-						setState(96);
+						setState(94);
 						expr(0);
+						setState(95);
+						match(T__3);
+						setState(96);
+						condlist(0);
 						setState(97);
 						match(T__4);
-						setState(98);
-						condlist(0);
-						setState(99);
-						match(T__5);
 						}
 						break;
 					}
 					} 
 				}
-				setState(105);
+				setState(103);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
 			}
@@ -708,14 +707,14 @@ public class RelationalAlgebraParser extends Parser {
 		AttrlistContext _localctx = new AttrlistContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_attrlist);
 		try {
-			setState(111);
+			setState(109);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
 			case 1:
 				_localctx = new AttributeFromAttrlistContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(106);
+				setState(104);
 				attribute();
 				}
 				break;
@@ -723,11 +722,11 @@ public class RelationalAlgebraParser extends Parser {
 				_localctx = new AttributeListContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(107);
+				setState(105);
 				attribute();
-				setState(108);
-				match(T__6);
-				setState(109);
+				setState(106);
+				match(T__5);
+				setState(107);
 				attrlist();
 				}
 				break;
@@ -840,45 +839,46 @@ public class RelationalAlgebraParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(124);
+			setState(122);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-			case T__7:
+			case T__6:
 				{
 				_localctx = new NotCondlistContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(114);
-				match(T__7);
-				setState(115);
+				setState(112);
+				match(T__6);
+				setState(113);
 				condlist(3);
 				}
 				break;
-			case T__2:
+			case T__1:
 				{
 				_localctx = new BracketsCondlistContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
+				setState(114);
+				match(T__1);
+				setState(115);
+				condlist(0);
 				setState(116);
 				match(T__2);
-				setState(117);
-				condlist(0);
-				setState(118);
-				match(T__3);
 				}
 				break;
+			case STRING:
 			case IDENTIFIER:
 			case NUMBER:
 				{
 				_localctx = new ComparedCondlistContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(120);
+				setState(118);
 				compared();
-				setState(121);
+				setState(119);
 				comparator();
-				setState(122);
+				setState(120);
 				compared();
 				}
 				break;
@@ -886,7 +886,7 @@ public class RelationalAlgebraParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(134);
+			setState(132);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -894,18 +894,18 @@ public class RelationalAlgebraParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(132);
+					setState(130);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 					case 1:
 						{
 						_localctx = new OrCondlistContext(new CondlistContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_condlist);
-						setState(126);
+						setState(124);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
-						setState(127);
+						setState(125);
 						match(BOOLEAN_OR);
-						setState(128);
+						setState(126);
 						condlist(6);
 						}
 						break;
@@ -913,18 +913,18 @@ public class RelationalAlgebraParser extends Parser {
 						{
 						_localctx = new AndCondlistContext(new CondlistContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_condlist);
-						setState(129);
+						setState(127);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(130);
+						setState(128);
 						match(BOOLEAN_AND);
-						setState(131);
+						setState(129);
 						condlist(5);
 						}
 						break;
 					}
 					} 
 				}
-				setState(136);
+				setState(134);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			}
@@ -1011,14 +1011,14 @@ public class RelationalAlgebraParser extends Parser {
 		ComparatorContext _localctx = new ComparatorContext(_ctx, getState());
 		enterRule(_localctx, 10, RULE_comparator);
 		try {
-			setState(143);
+			setState(141);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case EQUAL:
 				_localctx = new EqualContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(137);
+				setState(135);
 				match(EQUAL);
 				}
 				break;
@@ -1026,7 +1026,7 @@ public class RelationalAlgebraParser extends Parser {
 				_localctx = new NonEqualContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(138);
+				setState(136);
 				match(NOT_EQUAL);
 				}
 				break;
@@ -1034,7 +1034,7 @@ public class RelationalAlgebraParser extends Parser {
 				_localctx = new GreaterThanContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(139);
+				setState(137);
 				match(GREATER_THAN);
 				}
 				break;
@@ -1042,7 +1042,7 @@ public class RelationalAlgebraParser extends Parser {
 				_localctx = new GreaterEqualContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(140);
+				setState(138);
 				match(GREATER_EQUAL);
 				}
 				break;
@@ -1050,7 +1050,7 @@ public class RelationalAlgebraParser extends Parser {
 				_localctx = new LessThanContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(141);
+				setState(139);
 				match(LESS_THAN);
 				}
 				break;
@@ -1058,7 +1058,7 @@ public class RelationalAlgebraParser extends Parser {
 				_localctx = new LessEqualContext(_localctx);
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(142);
+				setState(140);
 				match(LESS_EQUAL);
 				}
 				break;
@@ -1088,12 +1088,12 @@ public class RelationalAlgebraParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class DataFromComparedContext extends ComparedContext {
-		public TerminalNode NUMBER() { return getToken(RelationalAlgebraParser.NUMBER, 0); }
-		public DataFromComparedContext(ComparedContext ctx) { copyFrom(ctx); }
+	public static class StringFromComparedContext extends ComparedContext {
+		public TerminalNode STRING() { return getToken(RelationalAlgebraParser.STRING, 0); }
+		public StringFromComparedContext(ComparedContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof RelationalAlgebraVisitor ) return ((RelationalAlgebraVisitor<? extends T>)visitor).visitDataFromCompared(this);
+			if ( visitor instanceof RelationalAlgebraVisitor ) return ((RelationalAlgebraVisitor<? extends T>)visitor).visitStringFromCompared(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1108,27 +1108,44 @@ public class RelationalAlgebraParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
+	public static class NumberFromComparedContext extends ComparedContext {
+		public TerminalNode NUMBER() { return getToken(RelationalAlgebraParser.NUMBER, 0); }
+		public NumberFromComparedContext(ComparedContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof RelationalAlgebraVisitor ) return ((RelationalAlgebraVisitor<? extends T>)visitor).visitNumberFromCompared(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 
 	public final ComparedContext compared() throws RecognitionException {
 		ComparedContext _localctx = new ComparedContext(_ctx, getState());
 		enterRule(_localctx, 12, RULE_compared);
 		try {
-			setState(147);
+			setState(146);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case IDENTIFIER:
 				_localctx = new AttributeFromComparedContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(145);
+				setState(143);
 				attribute();
 				}
 				break;
-			case NUMBER:
-				_localctx = new DataFromComparedContext(_localctx);
+			case STRING:
+				_localctx = new StringFromComparedContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(146);
+				setState(144);
+				match(STRING);
+				}
+				break;
+			case NUMBER:
+				_localctx = new NumberFromComparedContext(_localctx);
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(145);
 				match(NUMBER);
 				}
 				break;
@@ -1175,7 +1192,7 @@ public class RelationalAlgebraParser extends Parser {
 			_localctx = new RelationIdentifierContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(149);
+			setState(148);
 			match(IDENTIFIER);
 			}
 		}
@@ -1218,76 +1235,8 @@ public class RelationalAlgebraParser extends Parser {
 			_localctx = new AttributeIdentifierContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(151);
+			setState(150);
 			match(IDENTIFIER);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class DataContext extends ParserRuleContext {
-		public DataContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_data; }
-	 
-		public DataContext() { }
-		public void copyFrom(DataContext ctx) {
-			super.copyFrom(ctx);
-		}
-	}
-	public static class DataNumberContext extends DataContext {
-		public TerminalNode NUMBER() { return getToken(RelationalAlgebraParser.NUMBER, 0); }
-		public DataNumberContext(DataContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof RelationalAlgebraVisitor ) return ((RelationalAlgebraVisitor<? extends T>)visitor).visitDataNumber(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class DataIdentifierContext extends DataContext {
-		public TerminalNode IDENTIFIER() { return getToken(RelationalAlgebraParser.IDENTIFIER, 0); }
-		public DataIdentifierContext(DataContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof RelationalAlgebraVisitor ) return ((RelationalAlgebraVisitor<? extends T>)visitor).visitDataIdentifier(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final DataContext data() throws RecognitionException {
-		DataContext _localctx = new DataContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_data);
-		try {
-			setState(155);
-			_errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case NUMBER:
-				_localctx = new DataNumberContext(_localctx);
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(153);
-				match(NUMBER);
-				}
-				break;
-			case IDENTIFIER:
-				_localctx = new DataIdentifierContext(_localctx);
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(154);
-				match(IDENTIFIER);
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1340,51 +1289,49 @@ public class RelationalAlgebraParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3!\u00a0\4\2\t\2\4"+
-		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
-		"\13\3\2\3\2\3\2\7\2\32\n\2\f\2\16\2\35\13\2\3\2\3\2\3\2\3\2\3\3\3\3\3"+
-		"\3\3\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3!\u009b\4\2\t\2\4"+
+		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\3\2\3\2"+
+		"\3\2\7\2\30\n\2\f\2\16\2\33\13\2\3\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\4\3"+
+		"\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4"+
 		"\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3"+
-		"\4\3\4\3\4\3\4\3\4\5\4M\n\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3"+
-		"\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\7\4h\n\4\f"+
-		"\4\16\4k\13\4\3\5\3\5\3\5\3\5\3\5\5\5r\n\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6"+
-		"\3\6\3\6\3\6\3\6\5\6\177\n\6\3\6\3\6\3\6\3\6\3\6\3\6\7\6\u0087\n\6\f\6"+
-		"\16\6\u008a\13\6\3\7\3\7\3\7\3\7\3\7\3\7\5\7\u0092\n\7\3\b\3\b\5\b\u0096"+
-		"\n\b\3\t\3\t\3\n\3\n\3\13\3\13\5\13\u009e\n\13\3\13\2\4\6\n\f\2\4\6\b"+
-		"\n\f\16\20\22\24\2\2\u00ae\2\33\3\2\2\2\4\"\3\2\2\2\6L\3\2\2\2\bq\3\2"+
-		"\2\2\n~\3\2\2\2\f\u0091\3\2\2\2\16\u0095\3\2\2\2\20\u0097\3\2\2\2\22\u0099"+
-		"\3\2\2\2\24\u009d\3\2\2\2\26\27\5\4\3\2\27\30\7\3\2\2\30\32\3\2\2\2\31"+
-		"\26\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2\2\34\36\3\2\2\2\35"+
-		"\33\3\2\2\2\36\37\5\6\4\2\37 \7\3\2\2 !\7\2\2\3!\3\3\2\2\2\"#\7\37\2\2"+
-		"#$\7\4\2\2$%\5\6\4\2%\5\3\2\2\2&\'\b\4\1\2\'M\5\20\t\2()\7\5\2\2)*\5\6"+
-		"\4\2*+\7\6\2\2+M\3\2\2\2,-\7\13\2\2-.\7\7\2\2./\5\b\5\2/\60\7\b\2\2\60"+
-		"\61\7\5\2\2\61\62\5\6\4\2\62\63\7\6\2\2\63M\3\2\2\2\64\65\7\f\2\2\65\66"+
-		"\7\7\2\2\66\67\5\n\6\2\678\7\b\2\289\7\5\2\29:\5\6\4\2:;\7\6\2\2;M\3\2"+
-		"\2\2<=\7\24\2\2=>\5\20\t\2>?\7\25\2\2?@\5\20\t\2@M\3\2\2\2AB\7\24\2\2"+
-		"BC\5\20\t\2CD\7\5\2\2DE\5\b\5\2EF\7\6\2\2FG\7\25\2\2GH\5\20\t\2HI\7\5"+
-		"\2\2IJ\5\b\5\2JK\7\6\2\2KM\3\2\2\2L&\3\2\2\2L(\3\2\2\2L,\3\2\2\2L\64\3"+
-		"\2\2\2L<\3\2\2\2LA\3\2\2\2Mi\3\2\2\2NO\f\13\2\2OP\7\r\2\2Ph\5\6\4\fQR"+
-		"\f\n\2\2RS\7\17\2\2Sh\5\6\4\13TU\f\t\2\2UV\7\16\2\2Vh\5\6\4\nWX\f\b\2"+
-		"\2XY\7\21\2\2Yh\5\6\4\tZ[\f\7\2\2[\\\7\20\2\2\\h\5\6\4\b]^\f\5\2\2^_\7"+
-		"\23\2\2_h\5\6\4\6`a\f\6\2\2ab\7\22\2\2bc\5\6\4\2cd\7\7\2\2de\5\n\6\2e"+
-		"f\7\b\2\2fh\3\2\2\2gN\3\2\2\2gQ\3\2\2\2gT\3\2\2\2gW\3\2\2\2gZ\3\2\2\2"+
-		"g]\3\2\2\2g`\3\2\2\2hk\3\2\2\2ig\3\2\2\2ij\3\2\2\2j\7\3\2\2\2ki\3\2\2"+
-		"\2lr\5\22\n\2mn\5\22\n\2no\7\t\2\2op\5\b\5\2pr\3\2\2\2ql\3\2\2\2qm\3\2"+
-		"\2\2r\t\3\2\2\2st\b\6\1\2tu\7\n\2\2u\177\5\n\6\5vw\7\5\2\2wx\5\n\6\2x"+
-		"y\7\6\2\2y\177\3\2\2\2z{\5\16\b\2{|\5\f\7\2|}\5\16\b\2}\177\3\2\2\2~s"+
-		"\3\2\2\2~v\3\2\2\2~z\3\2\2\2\177\u0088\3\2\2\2\u0080\u0081\f\7\2\2\u0081"+
-		"\u0082\7\35\2\2\u0082\u0087\5\n\6\b\u0083\u0084\f\6\2\2\u0084\u0085\7"+
-		"\34\2\2\u0085\u0087\5\n\6\7\u0086\u0080\3\2\2\2\u0086\u0083\3\2\2\2\u0087"+
-		"\u008a\3\2\2\2\u0088\u0086\3\2\2\2\u0088\u0089\3\2\2\2\u0089\13\3\2\2"+
-		"\2\u008a\u0088\3\2\2\2\u008b\u0092\7\26\2\2\u008c\u0092\7\27\2\2\u008d"+
-		"\u0092\7\30\2\2\u008e\u0092\7\31\2\2\u008f\u0092\7\32\2\2\u0090\u0092"+
-		"\7\33\2\2\u0091\u008b\3\2\2\2\u0091\u008c\3\2\2\2\u0091\u008d\3\2\2\2"+
-		"\u0091\u008e\3\2\2\2\u0091\u008f\3\2\2\2\u0091\u0090\3\2\2\2\u0092\r\3"+
-		"\2\2\2\u0093\u0096\5\22\n\2\u0094\u0096\7 \2\2\u0095\u0093\3\2\2\2\u0095"+
-		"\u0094\3\2\2\2\u0096\17\3\2\2\2\u0097\u0098\7\37\2\2\u0098\21\3\2\2\2"+
-		"\u0099\u009a\7\37\2\2\u009a\23\3\2\2\2\u009b\u009e\7 \2\2\u009c\u009e"+
-		"\7\37\2\2\u009d\u009b\3\2\2\2\u009d\u009c\3\2\2\2\u009e\25\3\2\2\2\r\33"+
-		"Lgiq~\u0086\u0088\u0091\u0095\u009d";
+		"\4\3\4\5\4K\n\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3"+
+		"\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\7\4f\n\4\f\4\16\4i\13\4"+
+		"\3\5\3\5\3\5\3\5\3\5\5\5p\n\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6"+
+		"\3\6\5\6}\n\6\3\6\3\6\3\6\3\6\3\6\3\6\7\6\u0085\n\6\f\6\16\6\u0088\13"+
+		"\6\3\7\3\7\3\7\3\7\3\7\3\7\5\7\u0090\n\7\3\b\3\b\3\b\5\b\u0095\n\b\3\t"+
+		"\3\t\3\n\3\n\3\n\2\4\6\n\13\2\4\6\b\n\f\16\20\22\2\2\u00aa\2\31\3\2\2"+
+		"\2\4 \3\2\2\2\6J\3\2\2\2\bo\3\2\2\2\n|\3\2\2\2\f\u008f\3\2\2\2\16\u0094"+
+		"\3\2\2\2\20\u0096\3\2\2\2\22\u0098\3\2\2\2\24\25\5\4\3\2\25\26\7\3\2\2"+
+		"\26\30\3\2\2\2\27\24\3\2\2\2\30\33\3\2\2\2\31\27\3\2\2\2\31\32\3\2\2\2"+
+		"\32\34\3\2\2\2\33\31\3\2\2\2\34\35\5\6\4\2\35\36\7\3\2\2\36\37\7\2\2\3"+
+		"\37\3\3\2\2\2 !\7\37\2\2!\"\7\25\2\2\"#\5\6\4\2#\5\3\2\2\2$%\b\4\1\2%"+
+		"K\5\20\t\2&\'\7\4\2\2\'(\5\6\4\2()\7\5\2\2)K\3\2\2\2*+\7\n\2\2+,\7\6\2"+
+		"\2,-\5\b\5\2-.\7\7\2\2./\7\4\2\2/\60\5\6\4\2\60\61\7\5\2\2\61K\3\2\2\2"+
+		"\62\63\7\13\2\2\63\64\7\6\2\2\64\65\5\n\6\2\65\66\7\7\2\2\66\67\7\4\2"+
+		"\2\678\5\6\4\289\7\5\2\29K\3\2\2\2:;\7\23\2\2;<\5\20\t\2<=\7\24\2\2=>"+
+		"\5\20\t\2>K\3\2\2\2?@\7\23\2\2@A\5\20\t\2AB\7\4\2\2BC\5\b\5\2CD\7\5\2"+
+		"\2DE\7\24\2\2EF\5\20\t\2FG\7\4\2\2GH\5\b\5\2HI\7\5\2\2IK\3\2\2\2J$\3\2"+
+		"\2\2J&\3\2\2\2J*\3\2\2\2J\62\3\2\2\2J:\3\2\2\2J?\3\2\2\2Kg\3\2\2\2LM\f"+
+		"\13\2\2MN\7\f\2\2Nf\5\6\4\fOP\f\n\2\2PQ\7\16\2\2Qf\5\6\4\13RS\f\t\2\2"+
+		"ST\7\r\2\2Tf\5\6\4\nUV\f\b\2\2VW\7\20\2\2Wf\5\6\4\tXY\f\7\2\2YZ\7\17\2"+
+		"\2Zf\5\6\4\b[\\\f\5\2\2\\]\7\22\2\2]f\5\6\4\6^_\f\6\2\2_`\7\21\2\2`a\5"+
+		"\6\4\2ab\7\6\2\2bc\5\n\6\2cd\7\7\2\2df\3\2\2\2eL\3\2\2\2eO\3\2\2\2eR\3"+
+		"\2\2\2eU\3\2\2\2eX\3\2\2\2e[\3\2\2\2e^\3\2\2\2fi\3\2\2\2ge\3\2\2\2gh\3"+
+		"\2\2\2h\7\3\2\2\2ig\3\2\2\2jp\5\22\n\2kl\5\22\n\2lm\7\b\2\2mn\5\b\5\2"+
+		"np\3\2\2\2oj\3\2\2\2ok\3\2\2\2p\t\3\2\2\2qr\b\6\1\2rs\7\t\2\2s}\5\n\6"+
+		"\5tu\7\4\2\2uv\5\n\6\2vw\7\5\2\2w}\3\2\2\2xy\5\16\b\2yz\5\f\7\2z{\5\16"+
+		"\b\2{}\3\2\2\2|q\3\2\2\2|t\3\2\2\2|x\3\2\2\2}\u0086\3\2\2\2~\177\f\7\2"+
+		"\2\177\u0080\7\34\2\2\u0080\u0085\5\n\6\b\u0081\u0082\f\6\2\2\u0082\u0083"+
+		"\7\33\2\2\u0083\u0085\5\n\6\7\u0084~\3\2\2\2\u0084\u0081\3\2\2\2\u0085"+
+		"\u0088\3\2\2\2\u0086\u0084\3\2\2\2\u0086\u0087\3\2\2\2\u0087\13\3\2\2"+
+		"\2\u0088\u0086\3\2\2\2\u0089\u0090\7\25\2\2\u008a\u0090\7\26\2\2\u008b"+
+		"\u0090\7\27\2\2\u008c\u0090\7\30\2\2\u008d\u0090\7\31\2\2\u008e\u0090"+
+		"\7\32\2\2\u008f\u0089\3\2\2\2\u008f\u008a\3\2\2\2\u008f\u008b\3\2\2\2"+
+		"\u008f\u008c\3\2\2\2\u008f\u008d\3\2\2\2\u008f\u008e\3\2\2\2\u0090\r\3"+
+		"\2\2\2\u0091\u0095\5\22\n\2\u0092\u0095\7\36\2\2\u0093\u0095\7 \2\2\u0094"+
+		"\u0091\3\2\2\2\u0094\u0092\3\2\2\2\u0094\u0093\3\2\2\2\u0095\17\3\2\2"+
+		"\2\u0096\u0097\7\37\2\2\u0097\21\3\2\2\2\u0098\u0099\7\37\2\2\u0099\23"+
+		"\3\2\2\2\f\31Jego|\u0084\u0086\u008f\u0094";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

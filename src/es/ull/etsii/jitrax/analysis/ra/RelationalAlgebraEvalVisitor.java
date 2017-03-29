@@ -217,7 +217,8 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 				|| ctx instanceof RelationalAlgebraParser.DifferenceContext
 				|| ctx instanceof RelationalAlgebraParser.IntersectionContext) {
 			
-			if ((ctx.getParent() instanceof RelationalAlgebraParser.StartContext)) {
+			if ((ctx.getParent() instanceof RelationalAlgebraParser.StartContext)
+					|| ctx.getParent() instanceof RelationalAlgebraParser.BracketsExprContext) {
 				return translation;
 			}
 			
@@ -517,7 +518,17 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	}
 	
 	@Override
-	public String visitDataFromCompared(RelationalAlgebraParser.DataFromComparedContext ctx) {
+	public String visitStringFromCompared(RelationalAlgebraParser.StringFromComparedContext ctx) {
+		StringBuilder stringValue = new StringBuilder(ctx.STRING().getText());
+		// We need single quotes ('')
+		stringValue.setCharAt(0, '\'');
+		stringValue.setCharAt(stringValue.length() - 1, '\'');
+		
+		return stringValue.toString();
+	}
+	
+	@Override
+	public String visitNumberFromCompared(RelationalAlgebraParser.NumberFromComparedContext ctx) {
 		return ctx.NUMBER().getText();
 	}
 	
@@ -528,16 +539,6 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	@Override
 	public String visitAttributeIdentifier(RelationalAlgebraParser.AttributeIdentifierContext ctx) {
-		return ctx.IDENTIFIER().getText();
-	}
-	
-	@Override
-	public String visitDataNumber(RelationalAlgebraParser.DataNumberContext ctx) {
-		return ctx.NUMBER().getText();
-	}
-	
-	@Override
-	public String visitDataIdentifier(RelationalAlgebraParser.DataIdentifierContext ctx) {
 		return ctx.IDENTIFIER().getText();
 	}
 }

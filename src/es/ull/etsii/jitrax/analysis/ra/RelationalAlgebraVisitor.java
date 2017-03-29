@@ -214,12 +214,19 @@ public interface RelationalAlgebraVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAttributeFromCompared(RelationalAlgebraParser.AttributeFromComparedContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code dataFromCompared}
+	 * Visit a parse tree produced by the {@code stringFromCompared}
 	 * labeled alternative in {@link RelationalAlgebraParser#compared}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDataFromCompared(RelationalAlgebraParser.DataFromComparedContext ctx);
+	T visitStringFromCompared(RelationalAlgebraParser.StringFromComparedContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code numberFromCompared}
+	 * labeled alternative in {@link RelationalAlgebraParser#compared}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNumberFromCompared(RelationalAlgebraParser.NumberFromComparedContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code relationIdentifier}
 	 * labeled alternative in {@link RelationalAlgebraParser#relation}.
@@ -234,18 +241,4 @@ public interface RelationalAlgebraVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAttributeIdentifier(RelationalAlgebraParser.AttributeIdentifierContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code dataNumber}
-	 * labeled alternative in {@link RelationalAlgebraParser#data}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDataNumber(RelationalAlgebraParser.DataNumberContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code dataIdentifier}
-	 * labeled alternative in {@link RelationalAlgebraParser#data}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDataIdentifier(RelationalAlgebraParser.DataIdentifierContext ctx);
 }
