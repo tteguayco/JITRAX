@@ -40,6 +40,8 @@ import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
+import es.ull.etsii.jitrax.adt.Query;
+
 public class Workspace extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
@@ -73,6 +75,7 @@ public class Workspace extends JPanel {
 	private static final int BUTTON_MARGIN_BOTTOM = 2;
 	private static final int BUTTON_MARGIN_RIGHT = 4;
 	
+	private static final int RA_TAB_INDEX = 0;
 	private static final int SQL_TAB_INDEX = 1;
 	private static final int PARSE_TREE_TAB_INDEX = 2;
 	private static final int QUERY_RESULT_TAB_INDEX = 3;
@@ -240,12 +243,28 @@ public class Workspace extends JPanel {
 		getTabbedPane().setEnabledAt(SQL_TAB_INDEX, true);
 	}
 	
+	public void disableSqlTab() {
+		getTabbedPane().setEnabledAt(SQL_TAB_INDEX, false);
+	}
+	
 	public void enableParseTreeTab() {
 		getTabbedPane().setEnabledAt(PARSE_TREE_TAB_INDEX, true);
 	}
 	
+	public void disableParseTreeTab() {
+		getTabbedPane().setEnabledAt(PARSE_TREE_TAB_INDEX, false);
+	}
+	
 	public void enableResultTab() {
 		getTabbedPane().setEnabledAt(QUERY_RESULT_TAB_INDEX, true);
+	}
+	
+	public void disableResultTab() {
+		getTabbedPane().setEnabledAt(QUERY_RESULT_TAB_INDEX, false);
+	}
+	
+	public void switchToRelationalAlgebraTab() {
+		getTabbedPane().setSelectedIndex(RA_TAB_INDEX);
 	}
 	
 	public void switchToSqlTab() {
@@ -400,6 +419,40 @@ public class Workspace extends JPanel {
 			else {
 				sqlCodeEditor.setText(unformattedSqlCode);
 			}
+		}
+	}
+	
+	/**
+	 * Updates the four tabs in the workspace from a query's information.
+	 * @param query
+	 * @throws SQLException
+	 */
+	public void updateWorkspaceFromQuery(Query query) throws SQLException {
+		// Update Relational Algebra editor
+		getRelationalAlgebraCodeEditor().setText(query.getRelationalAlgebraExpr());
+		
+		// Update SQL editor
+		if (query.getSqlTranslation() != null) {
+			getSqlCodeEditor().setText(query.getSqlTranslation());
+			enableSqlTab();
+		} else {
+			disableSqlTab();
+		}
+		
+		// Update ParseTree Viewer
+		if (query.getTreeViewer() != null) {
+			setParseTreeViewer(query.getTreeViewer());
+			enableParseTreeTab();
+		} else {
+			disableParseTreeTab();
+		}
+		
+		// Update Query Result
+		if (query.getResultSet() != null) {
+			updateQueryResultViewer(query.getResultSet());
+			enableResultTab();
+		} else {
+			disableResultTab();
 		}
 	}
 	

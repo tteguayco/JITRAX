@@ -24,6 +24,10 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.antlr.runtime.tree.TreeParser;
 import org.antlr.v4.gui.TreeViewer;
@@ -31,6 +35,7 @@ import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.adt.Query;
 import es.ull.etsii.jitrax.database.PostgreDriver;
 import es.ull.etsii.jitrax.interpreters.RelationalAlgebraInterpreter;
 
@@ -170,6 +175,9 @@ public class MainWindow extends JFrame {
 	private void setListeners() {
 		getWorkspace().getTranslateButton().addActionListener(new TranslationListener());
 		getWorkspace().getExecuteButton().addActionListener(new ExecutionListener());
+		getWorkspace().getRelationalAlgebraCodeEditor().getDocument()
+			.addDocumentListener(new RelationalAlgebraEditorListener());
+		getQueryList().getQueryList().addListSelectionListener(new QueryExchanger());
 	}
 	
 	private class TranslationListener implements ActionListener {
@@ -194,10 +202,19 @@ public class MainWindow extends JFrame {
 				Parser parser = interpreter.getParser();
 				ParseTree tree = interpreter.getTree();
 				TreeViewer treeViewer = new TreeViewer(Arrays.asList(parser.getRuleNames()),tree);
-		        getWorkspace().setParseTreeViewer(treeViewer);
 				
-		        getWorkspace().enableSqlTab();
-		        getWorkspace().enableParseTreeTab();
+		        // Save information into query
+		        Query selectedQuery = getQueryList().getSelectedQuery();
+		        selectedQuery.setSqlTranslation(sqlTranslation);
+		        selectedQuery.setTreeViewer(treeViewer);
+		        
+		        // Update workspace fields
+		        try {
+					getWorkspace().updateWorkspaceFromQuery(selectedQuery);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+		        
 				getWorkspace().switchToSqlTab();
 		        
 				System.out.println(QUERY_TRANSLATION_MSG);
@@ -239,14 +256,59 @@ public class MainWindow extends JFrame {
 				
 				// Send the result table to the Result Viewer
 				resultSet = postgreDriver.getQueryResultSet();
-				getWorkspace().updateQueryResultViewer(resultSet);
+				
+				// Save the query's information
+				Query selectedQuery = getQueryList().getSelectedQuery();
+				selectedQuery.setResultSet(resultSet);
+				getWorkspace().updateWorkspaceFromQuery(selectedQuery);
+				
 				getWorkspace().switchToQueryResultTab();
+				
 				System.out.println(DBMS_EXECUTION_MSG);
-			} 
+			}
 			
 			catch (SQLException e) {
 				System.out.println(DBMS_ERRORS_MSG);
 				System.out.println(" - " + e.getMessage());
+			}
+		}
+	}
+	
+	private class RelationalAlgebraEditorListener implements DocumentListener {
+		Query selectedQuery;
+		
+		private void updateWorkspace() {
+			selectedQuery = getQueryList().getSelectedQuery();
+			String raExpr = getWorkspace().getRelationalAlgebraCodeEditor().getText();
+			selectedQuery.setRelationalAlgebraExpr(raExpr);
+		}
+		
+		@Override
+		public void changedUpdate(DocumentEvent arg0) {
+			updateWorkspace();
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent arg0) {
+			updateWorkspace();
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent arg0) {
+			updateWorkspace();
+		}
+	}
+	
+	private class QueryExchanger implements ListSelectionListener {
+
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			Query selectedQuery = getQueryList().getSelectedQuery();
+			try {
+				getWorkspace().updateWorkspaceFromQuery(selectedQuery);
+				getWorkspace().switchToRelationalAlgebraTab();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
 			}
 		}
 	}
@@ -293,5 +355,13 @@ public class MainWindow extends JFrame {
 
 	public void setRaInterpreter(RelationalAlgebraInterpreter raInterpreter) {
 		this.raInterpreter = raInterpreter;
+	}
+
+	public QueryList getQueryList() {
+		return queryList;
+	}
+
+	public void setQueryList(QueryList queryList) {
+		this.queryList = queryList;
 	}
 }

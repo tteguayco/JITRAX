@@ -16,6 +16,10 @@ public class Query {
 		name = aName;
 	}
 
+	public String toString() {
+		return getName();
+	}
+	
 	public String getName() {
 		return name;
 	}

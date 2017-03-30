@@ -23,7 +23,7 @@ public class QueryList extends JPanel {
 	private static final int CELL_WIDTH = 150;
 	private static final int CELL_HEIGHT = 30;
 	
-	private JList queryList;
+	private JList<Query> queryList;
 	private DefaultListModel listModel;
 	private int queryCounter;
 	private ArrayList<Query> queries;
@@ -31,26 +31,21 @@ public class QueryList extends JPanel {
 	private JButton removeButton;
 	
 	public QueryList() {
-		queryList = new JList();
-		listModel = new DefaultListModel(); 
+		queryList = new JList<Query>();
+		listModel = new DefaultListModel<Query>(); 
 		queryCounter = 1;
 		queries = new ArrayList<Query>();
 		addButton = new JButton("+");
 		removeButton = new JButton("−");
+		addButton.setToolTipText("Add new query");
+		removeButton.setToolTipText("Remove selected query");
 		
 		queryList.setFixedCellWidth(CELL_WIDTH);
 		queryList.setFixedCellHeight(CELL_HEIGHT);
 		
 		queryList.setModel(listModel);
-		listModel.addElement("query1");
-		listModel.addElement("query2");
-		listModel.addElement("query3");
-		listModel.addElement("query4");
-		listModel.addElement("query5");
-		listModel.addElement("query6");
-		listModel.addElement("query7");
-		listModel.addElement("query8");
-		listModel.addElement("query9");
+		listModel.addElement(new Query("query1"));
+		listModel.addElement(new Query("my query 2"));
 		queryList.setSelectedIndex(0);
 		
 		setLayout(new BorderLayout());
@@ -68,6 +63,10 @@ public class QueryList extends JPanel {
 	
 	public void addQuery(String queryName) {
 		
+	}
+	
+	public Query getSelectedQuery() {
+		return (Query) getQueryList().getSelectedValue();
 	}
 
 	public JList getQueryList() {
