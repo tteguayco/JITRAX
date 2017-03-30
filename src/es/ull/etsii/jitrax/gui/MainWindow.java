@@ -47,7 +47,7 @@ public class MainWindow extends JFrame {
 	private static final String DBMS_EXECUTION_MSG = "> SQL query executed on DBMS.";
 	private static final String DBMS_ERRORS_MSG = "> The DBMS detected the following error:";
 	
-	private static final double HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT = 0.45d;
+	private static final double HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT = 0.55d;
 	private static final double VERTICAL_SPLITPANE_DEFAULT_WEIGHT = 0.02;
 	
 	private static final String FRAME_TITLE = "JITRAX";
@@ -57,6 +57,7 @@ public class MainWindow extends JFrame {
 	private Console console;
 	private DatabaseViewer databaseViewerPanel;
 	private JPanel mainContainer;
+	private QueryList queryList;
 	
 	private RelationalAlgebraInterpreter raInterpreter;
 	
@@ -64,15 +65,20 @@ public class MainWindow extends JFrame {
 		barMenu = new MenuBar();
 		
 		workspace = new Workspace();
+		queryList = new QueryList();
 		console = new Console();
 		databaseViewerPanel = new DatabaseViewer();
 		
 		mainContainer = new JPanel(new BorderLayout());
 		JPanel rightPanel = new JPanel(new BorderLayout());
+		JPanel rightInnerPanel = new JPanel(new BorderLayout());
+		
+		rightInnerPanel.add(queryList, BorderLayout.WEST);
+		rightInnerPanel.add(workspace, BorderLayout.CENTER);
 		
 		// HORIZONTAL SPLITPANE
 		JSplitPane horSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true,
-				workspace, console);
+				rightInnerPanel, console);
 		horSplitPane.setResizeWeight(HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT);
 		horSplitPane.setOneTouchExpandable(true);
 		
@@ -209,11 +215,29 @@ public class MainWindow extends JFrame {
 		public void actionPerformed(ActionEvent evt) {
 			Database currentDatabase = getDatabaseViewerPanel().getSelectedDatabase();
 			PostgreDriver postgreDriver = currentDatabase.getPostgreDriver();
-			String sqlQuery = getWorkspace().getSqlCodeEditor().getText();
+			String sqlCode = getWorkspace().getSqlCodeEditor().getText();
+			String statements[];
 			ResultSet resultSet;
 			
+			// Break the translation into views and the single expression
+			statements = sqlCode.split(";");
+			String views[] = new String[0];
+			if (statements.length > 1) {
+				views = Arrays.copyOfRange(statements, 0, statements.length - 2);
+			}
+			String expr = statements[statements.length - 1];
+			
 			try {
-				postgreDriver.executeQuery(sqlQuery);
+				
+				// Execute views
+				for (int i = 0; i < views.length; i++) {
+					postgreDriver.executeQuery(views[i]);
+				}
+				
+				// Execute expression
+				postgreDriver.executeQuery(expr);
+				
+				// Send the result table to the Result Viewer
 				resultSet = postgreDriver.getQueryResultSet();
 				getWorkspace().updateQueryResultViewer(resultSet);
 				getWorkspace().switchToQueryResultTab();

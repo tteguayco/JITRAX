@@ -2,6 +2,7 @@ package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
@@ -55,6 +56,9 @@ public class Workspace extends JPanel {
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
 	private static final Color PARSE_TREE_BACKGROUND_COLOR = Color.WHITE;
+	
+	private static final int FRAME_MIN_WIDTH = 300;
+	private static final int FRAME_MIN_HEIGHT = 1;
 	
 	private static final int DEFAULT_RA_FONT_SIZE = 16;
 	private static final int DEFAULT_RA_FONT_STYLE = Font.PLAIN;
@@ -225,6 +229,8 @@ public class Workspace extends JPanel {
 		add(tabbedPane, BorderLayout.CENTER);
 		
 		setListeners();
+		
+		setMinimumSize(new Dimension(FRAME_MIN_WIDTH, FRAME_MIN_HEIGHT));
 		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));

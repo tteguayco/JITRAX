@@ -235,7 +235,8 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 				|| ctx instanceof RelationalAlgebraParser.JoinContext
 				|| ctx instanceof RelationalAlgebraParser.RelationFromExprContext) {
 			
-			if (!(ctx.getParent() instanceof RelationalAlgebraParser.StartContext)) {
+			if (!(ctx.getParent() instanceof RelationalAlgebraParser.StartContext)
+					&& !(ctx.getParent() instanceof RelationalAlgebraParser.ViewContext)) {
 				return translation;
 			}
 			
@@ -261,15 +262,20 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	@Override 
 	public String visitStart(RelationalAlgebraParser.StartContext ctx) {
+		String view;
+		String expr;
+		
 		// VIEWS
 		for (int i = 0; i < ctx.view().size(); i++) {
 			sqlTranslation += visit(ctx.view(i)) + "\n\n";
 		}
 		
 		// EXPRESSION
-		sqlTranslation += visit(ctx.expr());
-		sqlTranslation = preppendSelectStarIfNeeded(ctx.expr(), sqlTranslation);
-		sqlTranslation += ";";
+		expr = visit(ctx.expr());
+		expr = preppendSelectStarIfNeeded(ctx.expr(), expr);
+		expr += ";";
+				
+		sqlTranslation += expr;
 		
 		// SYNTAX ERRORS?
 		if (syntaxErrors()) {
@@ -281,8 +287,11 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	@Override
 	public String visitViewAssignment(RelationalAlgebraParser.ViewAssignmentContext ctx) {
+		String expr = visit(ctx.expr());
+		expr = preppendSelectStarIfNeeded(ctx.expr(), expr);
+		
 		return "CREATE OR REPLACE VIEW " + ctx.IDENTIFIER().getText() + " AS (" +
-				visit(ctx.expr()) + ");";
+				expr + ");";
 	}
 	
 	@Override

@@ -30,7 +30,7 @@ public class Main {
 			if (eval.syntaxErrors()) {
 				eval.printErrorsList();
 			} else {
-				System.out.println(eval.getSqlTranslation());
+				//System.out.println(eval.getExprTranslation());
 			}
 		}
 		catch (Exception e){
