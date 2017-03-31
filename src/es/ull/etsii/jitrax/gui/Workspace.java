@@ -104,8 +104,8 @@ public class Workspace extends JPanel {
 	private JLabel raEditorCaretPositionLabel;
 	private JLabel sqlEditorCaretPositionLabel;
 	
-	private String unformattedSqlCode;
 	private BasicFormatterImpl sqlFormatter;
+	private Query selectedQuery;
 	
 	public Workspace() {
 		relationalAlgebraCodeEditor = new RSyntaxTextArea();
@@ -337,6 +337,23 @@ public class Workspace extends JPanel {
 		getRaEditorCaretPositionLabel().setText("Position: " + pos);
 	}
 	
+	private void formatCodeIfNeeded() {
+		String nonFormattedSqlCode;
+		if (getSelectedQuery() != null) {
+			nonFormattedSqlCode = getSelectedQuery().getSqlTranslation();
+			if (formattedSqlCodeCheck.isSelected()) {
+				if (nonFormattedSqlCode.length() > 0) {
+					// Format SQL Code
+					sqlCodeEditor.setText(new BasicFormatterImpl().format(nonFormattedSqlCode));
+				}
+			}
+			
+			else {
+				sqlCodeEditor.setText(nonFormattedSqlCode);
+			}
+		}
+	}
+	
 	private void setListeners() {
 		
 		raFontSizeSelector.addChangeListener(new ChangeListener() {
@@ -390,35 +407,13 @@ public class Workspace extends JPanel {
 		        updateRaCaretPositionLabel(relationalAlgebraCodeEditor.getCaretPosition());
 		      }
 		});
-		
-	} 
-	
-	public void setSqlTranslation(String sqlTranslation) {
-		unformattedSqlCode = sqlTranslation;
-		if (getFormattedSqlCodeCheck().isSelected()) {
-			getSQLCodeEditor().setText(sqlFormatter.format(sqlTranslation));
-		}
-		
-		else {
-			getSQLCodeEditor().setText(sqlTranslation);
-		}
 	}
 	
 	private class FormatSqlCodeListener implements ActionListener {
 		
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			if (formattedSqlCodeCheck.isSelected()) {
-				String sqlCode = sqlCodeEditor.getText();
-				if (sqlCode.length() > 0) {
-					// Format SQL Code
-					sqlCodeEditor.setText(new BasicFormatterImpl().format(sqlCode));
-				}
-			}
-			
-			else {
-				sqlCodeEditor.setText(unformattedSqlCode);
-			}
+			formatCodeIfNeeded();
 		}
 	}
 	
@@ -428,6 +423,8 @@ public class Workspace extends JPanel {
 	 * @throws SQLException
 	 */
 	public void updateWorkspaceFromQuery(Query query) throws SQLException {
+		selectedQuery = query;
+		
 		// Update Relational Algebra editor
 		getRelationalAlgebraCodeEditor().setText(query.getRelationalAlgebraExpr());
 		
@@ -435,6 +432,7 @@ public class Workspace extends JPanel {
 		if (query.getSqlTranslation() != null) {
 			getSqlCodeEditor().setText(query.getSqlTranslation());
 			enableSqlTab();
+			formatCodeIfNeeded();
 		} else {
 			disableSqlTab();
 		}
@@ -600,19 +598,19 @@ public class Workspace extends JPanel {
 		this.sqlEditorCaretPositionLabel = sqlEditorCaretPositionLabel;
 	}
 
-	public String getUnformattedSqlCode() {
-		return unformattedSqlCode;
-	}
-
-	public void setUnformattedSqlCode(String unformattedSqlCode) {
-		this.unformattedSqlCode = unformattedSqlCode;
-	}
-
 	public BasicFormatterImpl getSqlFormatter() {
 		return sqlFormatter;
 	}
 
 	public void setSqlFormatter(BasicFormatterImpl sqlFormatter) {
 		this.sqlFormatter = sqlFormatter;
+	}
+
+	public Query getSelectedQuery() {
+		return selectedQuery;
+	}
+
+	public void setSelectedQuery(Query selectedQuery) {
+		this.selectedQuery = selectedQuery;
 	}
 }

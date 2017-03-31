@@ -63,7 +63,7 @@ public class SelectedTableViewer extends JPanel {
 		markOddRows();
 		
 		setLayout(new BorderLayout());
-		graphicTable.setEnabled(false);
+		//graphicTable.setEnabled(false);
 		graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		graphicTable.setMinimumSize(graphicTable.getPreferredScrollableViewportSize());
 		//graphicTable.setPreferredScrollableViewportSize(graphicTable.getPreferredSize());

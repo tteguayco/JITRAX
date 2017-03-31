@@ -62,6 +62,8 @@ public class Console extends JPanel {
 		//console.setRows(NROWS);
 		console.setEditable(false);
 		JScrollPane sp = new JScrollPane(console);
+		sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		console.setSelectedTextColor(Color.GRAY);
 		
 		// Automatic down scrolling
