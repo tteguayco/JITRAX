@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -14,9 +16,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
 import es.ull.etsii.jitrax.adt.Query;
 
@@ -25,10 +31,8 @@ public class QueryList extends JPanel {
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	private static final String DEFAULT_QUERY_PREFIX = "query";
 	
-	private static final int CELL_WIDTH = 150;
+	private static final int CELL_WIDTH = 170;
 	private static final int CELL_HEIGHT = 30;
-	
-	private static final int BUTTON_BORDER_INSET = 10;
 	
 	private JTable queryList;
 	private DefaultTableModel listModel;
@@ -39,30 +43,34 @@ public class QueryList extends JPanel {
 	private JButton saveButton;
 	
 	public QueryList() {
-		queryList = new JTable(1, 1);
-		listModel = new DefaultTableModel(); 
-		queryCounter = 1;
+		Object rowData[][] = { { new Query("query1")} };
+		Object columnNames[] = { "Query" };
+		
+		queryList = new JTable();
+		listModel = new NewListModel(rowData, columnNames); 
+		queryCounter = 2;
 		queries = new ArrayList<Query>();
 		addButton = new JButton("➕");
 		removeButton = new JButton("➖");
 		saveButton = new JButton("💾");
 		
+		addButton.addActionListener(new QueryAdder());
+		removeButton.addActionListener(new QueryRemover());
+		saveButton.addActionListener(new QuerySaver());
+		
 		addButton.setToolTipText("Add new query");
 		removeButton.setToolTipText("Remove selected query");
 		saveButton.setToolTipText("Save selected query");
-	    
-		//queryList.setTableHeader(null);
-		queryList.setFillsViewportHeight(true);
-		
-		//queryList.setFixedCellWidth(CELL_WIDTH);
-		//queryList.setFixedCellHeight(CELL_HEIGHT);
 		
 		queryList.setModel(listModel);
-		listModel.addRow(new Object[] {new Query("query1")});
-		listModel.addRow(new Object[] {new Query("query2")});
-		listModel.addRow(new Object[] {new Query("query3")});
+		queryList.setTableHeader(null);
+		queryList.setFillsViewportHeight(true);
+		queryList.setRowHeight(CELL_HEIGHT);
+		queryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		queryList.setRowSelectionInterval(0, 0);
 		
-		listModel.fireTableDataChanged();
+		//listModel.addRow(new Object[] { new Query("query1")});
+		//listModel.fireTableDataChanged();
 		
 		setLayout(new BorderLayout());
 		JScrollPane sp = new JScrollPane(queryList);
@@ -82,15 +90,67 @@ public class QueryList extends JPanel {
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
 	}
 	
-	public void addQuery(String queryName) {
-		
+	private void addQuery(String queryName) {
+		Query newQuery = new Query(queryName);
+		listModel.addRow(new Object[] { newQuery });
+		listModel.fireTableDataChanged();
+		queryCounter++;
 	}
 	
 	public Query getSelectedQuery() {
-		return null;
-		//return (Query) getQueryList().getSelectedValue();
+		int selectedRowIndex = getQueryList().getSelectedRow();
+		System.out.println("selectedRowIndex: " + selectedRowIndex);
+		if (selectedRowIndex < 0) {
+			selectedRowIndex = queryList.getRowCount() - 1;
+		}
+		return (Query) listModel.getValueAt(selectedRowIndex, 0);
 	}
 
+	private class QueryAdder implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			addQuery(DEFAULT_QUERY_PREFIX + getQueryCounter());
+			int lastRowIndex = queryList.getRowCount() - 1;
+			queryList.changeSelection(lastRowIndex, 0, false, false);
+		}
+	}
+	
+	private class QueryRemover implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+		}
+	}
+	
+	private class QuerySaver implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+		}
+	}
+	
+	private class NewListModel extends DefaultTableModel {
+		public NewListModel(Object[][] rowData, Object[] columnNames) {
+			super(rowData, columnNames);
+		}
+
+		/**
+		 * Cada vez que el usuario cambie el nombre de una consulta,
+		 * lo que se debe modificar el atributo nombre de ESA consulta 
+		 * (no lo que se hace por defecto: sustituir un objeto de tipo
+		 * 'Query' por una String en la queryList)
+		 */
+		@Override
+		public void setValueAt(Object s, int row, int col) {
+			Query targetQuery = (Query) queryList.getModel().getValueAt(row, col);
+			String newQueryName = (String) s;
+			targetQuery.setName(newQueryName);
+		}
+	}
+	
 	public int getQueryCounter() {
 		return queryCounter;
 	}

@@ -177,7 +177,7 @@ public class MainWindow extends JFrame {
 		getWorkspace().getExecuteButton().addActionListener(new ExecutionListener());
 		getWorkspace().getRelationalAlgebraCodeEditor().getDocument()
 			.addDocumentListener(new RelationalAlgebraEditorListener());
-		//getQueryList().getQueryList().addListSelectionListener(new QueryExchanger());
+		getQueryList().getQueryList().getSelectionModel().addListSelectionListener((new QueryExchanger()));
 	}
 	
 	private class TranslationListener implements ActionListener {
