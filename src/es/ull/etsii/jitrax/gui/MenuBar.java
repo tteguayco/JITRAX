@@ -20,6 +20,8 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
+
 public class MenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
 	
@@ -50,7 +52,7 @@ public class MenuBar extends JMenuBar {
 	
 	private JRadioButtonMenuItem englishRadioButton;
 	
-	public MenuBar() {
+	public MenuBar(Workspace aWorkspace) {
 		buildFileMenu();
 		buildEditMenu();
 		buildViewMenu();
@@ -81,9 +83,6 @@ public class MenuBar extends JMenuBar {
 		
 		saveDatabaseAs = new JMenuItem("Save As...");
 		
-		saveDatabase.setEnabled(false);
-		saveDatabaseAs.setEnabled(false);
-		
 		importOption = new JMenu("Import");
 		importRelAlgQuery = new JMenuItem("Relational Algebra Query");
 		importOption.add(importRelAlgQuery);
@@ -106,6 +105,11 @@ public class MenuBar extends JMenuBar {
 		getFileMenu().add(exportOption);
 		getFileMenu().add(new JSeparator());
 		getFileMenu().add(exitOption);
+		
+		saveDatabase.setEnabled(false);
+		saveDatabaseAs.setEnabled(false);
+		importOption.setEnabled(false);
+		exportOption.setEnabled(false);
 	}
 	
 	private void buildEditMenu() {
@@ -137,8 +141,9 @@ public class MenuBar extends JMenuBar {
 		setSourceCodeOption(new JMenuItem("Source Code"));
 		setAboutOption(new JMenuItem("About"));
 		
-		getOnlineDocumentationOption().addActionListener(new UrlListener());
-		getSourceCodeOption().addActionListener(new UrlListener());
+		getOnlineDocumentationOption().addActionListener(new HelpOptionListener());
+		getSourceCodeOption().addActionListener(new HelpOptionListener());
+		getAboutOption().addActionListener(new HelpOptionListener());
 		
 		setHelpMenu(new JMenu("Help"));
 		getHelpMenu().setMnemonic(KeyEvent.VK_H);
@@ -149,7 +154,7 @@ public class MenuBar extends JMenuBar {
 		getHelpMenu().add(getAboutOption());
 	}
 	
-	private class UrlListener implements ActionListener {
+	private class HelpOptionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
 			if (Desktop.isDesktopSupported()) {
@@ -161,6 +166,10 @@ public class MenuBar extends JMenuBar {
 					else if (e.getSource() == getSourceCodeOption()) {
 						Desktop.getDesktop().browse(new URI(SOURCE_CODE_URL));
 					}
+					
+					else if (e.getSource() == getAboutOption()) {
+						// TODO display about dialog
+					}
 				}
 				 
 				catch (IOException e1) {
@@ -171,10 +180,11 @@ public class MenuBar extends JMenuBar {
 			}
 		}
 	}
-	
-	public void enableSavingOptions() {
+	public void enableFileOptions() {
 		getSaveDatabase().setEnabled(true);
 		getSaveDatabaseAs().setEnabled(true);
+		getImportOption().setEnabled(true);
+		getExportOption().setEnabled(true);
 	}
 	
 	public JMenu getFileMenu() {
@@ -319,5 +329,21 @@ public class MenuBar extends JMenuBar {
 
 	public void setExportOption(JMenu exportOption) {
 		this.exportOption = exportOption;
+	}
+
+	public JMenuItem getExportRelAlgQuery() {
+		return exportRelAlgQuery;
+	}
+
+	public void setExportRelAlgQuery(JMenuItem exportRelAlgQuery) {
+		this.exportRelAlgQuery = exportRelAlgQuery;
+	}
+
+	public JMenuItem getExportSqlQuery() {
+		return exportSqlQuery;
+	}
+
+	public void setExportSqlQuery(JMenuItem exportSqlQuery) {
+		this.exportSqlQuery = exportSqlQuery;
 	}
 }

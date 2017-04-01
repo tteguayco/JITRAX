@@ -19,14 +19,17 @@ import es.ull.etsii.jitrax.database.PostgreDriver;
 import es.ull.etsii.jitrax.gui.dialogs.DBMSConnectionWindow;
 import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
 
-public class MenuBarListenersSetter {
-
+public class ListenersSetter {
+	private static final int RA_QUERY_MAX_CHAR = 1000;
+	
 	private MainWindow mainWindow;
 	private String lastSavingLocation;
+	private FileDialog fileDialog;
 	
-	public MenuBarListenersSetter(MainWindow aMainWindow) {
+	public ListenersSetter(MainWindow aMainWindow) {
 		mainWindow = aMainWindow;
 		lastSavingLocation = "";
+		fileDialog = new FileDialog();
 		setFileMenuListeners();
 	}
 	
@@ -36,6 +39,10 @@ public class MenuBarListenersSetter {
 		getMainWindow().getBarMenu().getSaveDatabase().addActionListener(new SaveListener());
 		getMainWindow().getBarMenu().getSaveDatabaseAs().addActionListener(new SaveAsListener());
 		getMainWindow().getBarMenu().getExitOption().addActionListener(new ExitListener());
+		getMainWindow().getBarMenu().getImportRelAlgQuery().addActionListener(new ImportationOptionListener());
+		getMainWindow().getBarMenu().getExportRelAlgQuery().addActionListener(new ExportationOptionListener());
+		getMainWindow().getBarMenu().getExportSqlQuery().addActionListener(new ExportationOptionListener());
+		getMainWindow().getQueryList().getSaveButton().addActionListener(new ExportationOptionListener());
 	}
 	
 	private class NewListener implements ActionListener {
@@ -178,17 +185,68 @@ public class MenuBarListenersSetter {
 		}
 	}
 	
+	private class ImportationOptionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// Import RA query?
+			if (e.getSource() == getMainWindow().getBarMenu().getImportRelAlgQuery()) {
+				// Read file
+				String raQuery = fileDialog.importFileContent("Import Relational Algebra Query");
+				// Too big?
+				if (raQuery.length() > RA_QUERY_MAX_CHAR) {
+					showFileTooLongDialog();
+				}
+					
+				// Create new query in the queries list
+				getMainWindow().getQueryList().getAddButton().doClick();
+				// Fill the RA editor
+				getMainWindow().getWorkspace().getRelationalAlgebraCodeEditor().setText(raQuery);
+			}
+		}
+	}
+	
+	private class ExportationOptionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// Export RA query?
+			if (e.getSource() == getMainWindow().getBarMenu().getExportRelAlgQuery()
+					|| e.getSource() == getMainWindow().getQueryList().getSaveButton()) {
+				String raQuery = getMainWindow().getWorkspace().getRelationalAlgebraCodeEditor().getText();
+				
+				if (raQuery.length() > 0) {
+					fileDialog.exportFile("Export Relational Algebra Query", raQuery, ".ra");
+				}	
+			}
+			
+			// Export SQL query
+			else if (e.getSource() == getMainWindow().getBarMenu().getExportSqlQuery()) {
+				String sqlQuery = getMainWindow().getWorkspace().getSQLCodeEditor().getText();
+				
+				if (sqlQuery.length() > 0) {
+					fileDialog.exportFile("Export SQL Query", sqlQuery, ".sql");
+				}
+			}
+		}
+	}
+	
 	private void showRequiredFieldsDialog() {
 		JOptionPane.showMessageDialog(null,"All the fields are required.",
 				"Warning", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	private void showDatabasesContentsDifferDialog() {
-		JOptionPane.showMessageDialog(null,"A database exists on the DBMS whose content differs "
+		JOptionPane.showMessageDialog(null, "A database exists on the DBMS whose content differs "
 				+ "from the content of the specified database.",
 				"Error", JOptionPane.INFORMATION_MESSAGE);
 	}
 
+	private void showFileTooLongDialog() {
+		JOptionPane.showMessageDialog(null, "The specified file exceeds the size limit",
+				"File too long", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
 	public MainWindow getMainWindow() {
 		return mainWindow;
 	}

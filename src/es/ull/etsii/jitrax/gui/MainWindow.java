@@ -67,9 +67,8 @@ public class MainWindow extends JFrame {
 	private RelationalAlgebraInterpreter raInterpreter;
 	
 	public MainWindow() {
-		barMenu = new MenuBar();
-		
 		workspace = new Workspace();
+		barMenu = new MenuBar(workspace);
 		queryList = new QueryList();
 		console = new Console();
 		databaseViewerPanel = new DatabaseViewer();
@@ -116,7 +115,7 @@ public class MainWindow extends JFrame {
 	public void addDatabase(Database database) {
 		databaseViewerPanel.addDatabase(database);
 		mainContainer.setVisible(true);
-		barMenu.enableSavingOptions();
+		barMenu.enableFileOptions();
 	}
 	
 	private void buildWindow() {
@@ -151,7 +150,7 @@ public class MainWindow extends JFrame {
 		
 		System.out.println(WELCOME_MSG + "\n");
 		
-		MenuBarListenersSetter menuBarController = new MenuBarListenersSetter(window);
+		ListenersSetter menuBarController = new ListenersSetter(window);
 	}
 	
 	/**

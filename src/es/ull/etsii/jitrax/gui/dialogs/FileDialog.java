@@ -7,6 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
@@ -56,6 +59,38 @@ public class FileDialog {
         } else {
         	return null;
         }
+	}
+	
+	/**
+	 * Returns as a string the content of a chosen file.
+	 * @param dialogTitle
+	 * @return
+	 */
+	public String importFileContent(String dialogTitle) {
+		JFileChooser fileChooser = new JFileChooser();
+		String filePath;
+		int userSelection;
+		
+		fileChooser.setDialogTitle(dialogTitle);
+		userSelection = fileChooser.showSaveDialog(null);
+		
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+			filePath = fileChooser.getSelectedFile().getAbsolutePath();
+			
+			// Read file
+			byte[] encoded;
+			
+			try {
+				encoded = Files.readAllBytes(Paths.get(filePath));
+				return new String(encoded, StandardCharsets.UTF_8);
+			}
+			
+			catch (IOException e) {
+				e.printStackTrace();
+			} 
+		}
+		
+		return "";
 	}
 	
 	/**
@@ -126,18 +161,6 @@ public class FileDialog {
 				e1.printStackTrace();
 			} 
 		}
-	}
-	
-	public String importRAQuery() {
-		String raQuery = null;
-		
-		return raQuery;
-	}
-
-	public String importSQLQueryDialog() {
-		String sqlQuery = null;
-		
-		return sqlQuery;
 	}
 	
 	private void showSuccessfulExportationWarning() {

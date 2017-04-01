@@ -56,7 +56,6 @@ public class QueryList extends JPanel {
 		
 		addButton.addActionListener(new QueryAdder());
 		removeButton.addActionListener(new QueryRemover());
-		saveButton.addActionListener(new QuerySaver());
 		
 		addButton.setToolTipText("Add new query");
 		removeButton.setToolTipText("Remove selected query");
@@ -120,15 +119,13 @@ public class QueryList extends JPanel {
 		
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			
-		}
-	}
-	
-	private class QuerySaver implements ActionListener {
-		
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			
+			int selectedRowIndex = getQueryList().getSelectedRow();
+			// We force to be at least one query
+			if (selectedRowIndex > 0) {
+				listModel.removeRow(selectedRowIndex);
+				// Select the former
+				queryList.changeSelection(selectedRowIndex - 1, 0, false, false);
+			}
 		}
 	}
 	

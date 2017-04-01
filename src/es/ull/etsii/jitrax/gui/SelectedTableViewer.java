@@ -67,7 +67,7 @@ public class SelectedTableViewer extends JPanel {
 		graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		graphicTable.setMinimumSize(graphicTable.getPreferredScrollableViewportSize());
 		//graphicTable.setPreferredScrollableViewportSize(graphicTable.getPreferredSize());
-		graphicTable.setFillsViewportHeight(false);
+		graphicTable.setFillsViewportHeight(true);
 		
 		JScrollPane tableSP = new JScrollPane(graphicTable);
 		tableSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
