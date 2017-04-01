@@ -107,6 +107,7 @@ public class DatabaseViewer extends JPanel {
 	private void setListeners() {
 		getSelectedDatabaseViewer().getCombo().addItemListener(new ComboBoxListener());
 		getSelectedDatabaseViewer().getRemoveButton().addActionListener(new RemoveButtonListener());
+		getSelectedDatabaseViewer().getAlterButton().addActionListener(new AlterButtonListener());
 	}
 	
 	private class ComboBoxListener implements ItemListener {
@@ -129,8 +130,16 @@ public class DatabaseViewer extends JPanel {
 			if (databasesCombo.getItemCount() > 1) {
 				String databaseToRemoveName = 
 						(String) getSelectedDatabaseViewer().getCombo().getSelectedItem();
-				getDatabases().remove(databaseToRemoveName);
-				getSelectedDatabaseViewer().updateComboBox(getDatabases());
+				// Confirm deletion
+				int dialogResult = JOptionPane.showConfirmDialog (null, 
+						"Are you sure you want to remove the database " + databaseToRemoveName + "?",
+						"Confirm Deletion",
+						JOptionPane.YES_NO_OPTION);
+				
+				if(dialogResult == JOptionPane.YES_OPTION){
+					getDatabases().remove(databaseToRemoveName);
+					getSelectedDatabaseViewer().updateComboBox(getDatabases());
+				}
 			}
 			
 			else {
@@ -139,6 +148,18 @@ public class DatabaseViewer extends JPanel {
 						"Warning", 
 						JOptionPane.INFORMATION_MESSAGE);
 			}
+		}
+	}
+	
+	private class AlterButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			JOptionPane.showMessageDialog (null, 
+					"The ALTER functionality will be available in \n"
+					+ "upcoming versions of JITRAX.", 
+					"Not implemented yet", 
+					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 	

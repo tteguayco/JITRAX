@@ -87,6 +87,7 @@ public class SelectedDatabaseViewer extends JPanel {
 	 */
 	public void updateComboBox(HashMap<String, Database> databases) {
 		Iterator it = databases.entrySet().iterator();
+		getCombo().removeAllItems();
 	    
 		while (it.hasNext()) {
 	        Map.Entry pair = (Map.Entry)it.next();

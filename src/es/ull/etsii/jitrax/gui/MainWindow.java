@@ -315,6 +315,8 @@ public class MainWindow extends JFrame {
 	
 	private static void translateGUI() {
 		UIManager.put("OptionPane.yesButtonText", "Yes");
+		UIManager.put("OptionPane.cancelButtonText", "Cancel");
+		UIManager.put("OptionPane.okButtonText", "OK");
 	}
 	
 	public MenuBar getBarMenu() {
