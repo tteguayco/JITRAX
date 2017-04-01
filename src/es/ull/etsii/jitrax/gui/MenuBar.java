@@ -24,7 +24,7 @@ public class MenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String DOC_URL = "";
-	private static final String SOURCE_CODE_URL = "https://bitbucket.org/tteguayco/jitrax/src";
+	private static final String SOURCE_CODE_URL = "https://github.com/tteguayco/JITRAX";
 	
 	private JMenu fileMenu;
 	private JMenu editMenu;
@@ -32,12 +32,16 @@ public class MenuBar extends JMenuBar {
 	private JMenu languageMenu;
 	private JMenu helpMenu;
 	
+	private JMenu importOption;
+	private JMenu exportOption;
+	
 	private JMenuItem openDatabase;
 	private JMenuItem newDatabase;
 	private JMenuItem saveDatabase;
 	private JMenuItem saveDatabaseAs;
-	private JMenuItem importOption;
-	private JMenuItem exportOption;
+	private JMenuItem importRelAlgQuery;
+	private JMenuItem exportRelAlgQuery;
+	private JMenuItem exportSqlQuery;
 	private JMenuItem exitOption;
 	
 	private JMenuItem onlineDocumentationOption;
@@ -80,8 +84,15 @@ public class MenuBar extends JMenuBar {
 		saveDatabase.setEnabled(false);
 		saveDatabaseAs.setEnabled(false);
 		
-		importOption = new JMenuItem("Import");
-		exportOption = new JMenuItem("Export");
+		importOption = new JMenu("Import");
+		importRelAlgQuery = new JMenuItem("Relational Algebra Query");
+		importOption.add(importRelAlgQuery);
+		
+		exportOption = new JMenu("Export");
+		exportRelAlgQuery = new JMenuItem("Relational Algebra Query");
+		exportSqlQuery = new JMenuItem("SQL Query");
+		exportOption.add(exportRelAlgQuery);
+		exportOption.add(exportSqlQuery);
 		
 		exitOption = new JMenuItem("Exit");
 		
@@ -250,16 +261,8 @@ public class MenuBar extends JMenuBar {
 		return importOption;
 	}
 
-	public void setImportOption(JMenuItem importOption) {
-		this.importOption = importOption;
-	}
-
 	public JMenuItem getExportOption() {
 		return exportOption;
-	}
-
-	public void setExportOption(JMenuItem exportOption) {
-		this.exportOption = exportOption;
 	}
 
 	public JMenuItem getExitOption() {
@@ -300,5 +303,21 @@ public class MenuBar extends JMenuBar {
 
 	public void setSourceCodeOption(JMenuItem sourceCodeOption) {
 		this.sourceCodeOption = sourceCodeOption;
+	}
+
+	public JMenuItem getImportRelAlgQuery() {
+		return importRelAlgQuery;
+	}
+
+	public void setImportRelAlgQuery(JMenuItem importRelAlgQuery) {
+		this.importRelAlgQuery = importRelAlgQuery;
+	}
+
+	public void setImportOption(JMenu importOption) {
+		this.importOption = importOption;
+	}
+
+	public void setExportOption(JMenu exportOption) {
+		this.exportOption = exportOption;
 	}
 }
