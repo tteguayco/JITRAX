@@ -56,6 +56,7 @@ public class MainWindow extends JFrame {
 	private DatabaseViewer databaseViewerPanel;
 	private JPanel mainContainer;
 	private QueryList queryList;
+	private PostgreDriver postgreDriver;
 	
 	private RelationalAlgebraInterpreter raInterpreter;
 	
@@ -235,6 +236,8 @@ public class MainWindow extends JFrame {
 			String expr = statements[statements.length - 1];
 			
 			try {
+				// Change to current Database
+				postgreDriver.switchDatabase(currentDatabase.getName());
 				
 				// Execute views
 				for (int i = 0; i < views.length; i++) {
@@ -357,5 +360,13 @@ public class MainWindow extends JFrame {
 
 	public void setQueryList(QueryList queryList) {
 		this.queryList = queryList;
+	}
+
+	public PostgreDriver getPostgreDriver() {
+		return postgreDriver;
+	}
+
+	public void setPostgreDriver(PostgreDriver postgreDriver) {
+		this.postgreDriver = postgreDriver;
 	}
 }

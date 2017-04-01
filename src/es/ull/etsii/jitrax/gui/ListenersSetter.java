@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -17,6 +18,7 @@ import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.database.DatabaseComparator;
 import es.ull.etsii.jitrax.database.PostgreDriver;
 import es.ull.etsii.jitrax.gui.dialogs.DBMSConnectionWindow;
+import es.ull.etsii.jitrax.gui.dialogs.ErrorsDialog;
 import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
 
 public class ListenersSetter {
@@ -25,6 +27,7 @@ public class ListenersSetter {
 	private MainWindow mainWindow;
 	private String lastSavingLocation;
 	private FileDialog fileDialog;
+	private PostgreDriver postgreDriver;
 	
 	public ListenersSetter(MainWindow aMainWindow) {
 		mainWindow = aMainWindow;
@@ -54,84 +57,104 @@ public class ListenersSetter {
 	
 	private class OpenListener implements ActionListener {
 
-		public void actionPerformed(ActionEvent arg0) {
-			DBMSConnectionWindow dbmsConnectionWindow = new DBMSConnectionWindow(mainWindow);
+		private void readDatabase(PostgreDriver postgreDriver) throws SQLException {
+			FileDialog fileDialog = new FileDialog();
+			Database importedDatabase = fileDialog.importDatabaseDialog();
 			
-			dbmsConnectionWindow.getNextButton().addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					dbmsConnectionWindow.dispose();
+			if (importedDatabase != null) {
+			
+				// Assign a PostgreDriver to the new database
+				importedDatabase.setPostgreDriver(postgreDriver);
+				
+				// If it does not exist, create, switch and set it up
+				if (!postgreDriver.databaseAlreadyExists(importedDatabase.getName())) {
+					postgreDriver.createDatabase(importedDatabase.getName());
+					postgreDriver.switchDatabase(importedDatabase.getName());
+					postgreDriver.setUpDatabase(importedDatabase);
 					
-					// GET DBMS PARAMETERS
-					String hostname = dbmsConnectionWindow.getHostname().getText();
-					String port = dbmsConnectionWindow.getPort().getText();
-					String username = dbmsConnectionWindow.getUsername().getText();
-					String password = new String(dbmsConnectionWindow.getPassword().getPassword());
+					// Add new database to the environment
+					mainWindow.addDatabase(importedDatabase);
+					System.out.println("> Database '" + importedDatabase.getName() + 
+							"' was created.");
+				}
+				
+				else {
+					// Switch to the existing database
+					postgreDriver.switchDatabase(importedDatabase.getName());
 					
-					// Empty fields are not allowed
-					if (hostname.equals("") || port.equals("") || username.equals("") || password.equals("")) {
-						showRequiredFieldsDialog();
+					// Compare them
+					DatabaseComparator dbComparator = new DatabaseComparator(
+							importedDatabase, postgreDriver.getConnection());
+					
+					if (dbComparator.databasesAreCompatible()) {
+						mainWindow.addDatabase(importedDatabase);
+						System.out.println("> Database '" + importedDatabase.getName() +
+								"' was retrieved from DBMS.");
 					}
 					
 					else {
-						FileDialog fileDialog = new FileDialog();
-						Database importedDatabase = fileDialog.importDatabaseDialog();
-						PostgreDriver postgreDriver;
-						
-						if (importedDatabase != null) {
-							try {
-								// Establish a connection and create the database
-								postgreDriver = new PostgreDriver(hostname, 
-																	port, 
-																	username, 
-																	password);
-								
-								// Assign a PostgreDriver to the new database
-								importedDatabase.setPostgreDriver(postgreDriver);
-								
-								// If it does not exist, create, switch and set it up
-								if (!postgreDriver.databaseAlreadyExists(importedDatabase.getName())) {
-									postgreDriver.createDatabase(importedDatabase.getName());
-									postgreDriver.switchDatabase(importedDatabase.getName());
-									postgreDriver.setUpDatabase(importedDatabase);
-									
-									// Add new database to the environment
-									mainWindow.addDatabase(importedDatabase);
-									System.out.println("> Database '" + importedDatabase.getName() + 
-											"' was created.");
-								}
-								
-								else {
-									// Switch to the existing database
-									postgreDriver.switchDatabase(importedDatabase.getName());
-									
-									// Compare them
-									DatabaseComparator dbComparator = new DatabaseComparator(
-											importedDatabase, postgreDriver.getConnection());
-									
-									if (dbComparator.databasesAreCompatible()) {
-										mainWindow.addDatabase(importedDatabase);
-										System.out.println("> Database '" + importedDatabase.getName() +
-												"' was retrieved from DBMS.");
-									}
-									
-									else {
-										showDatabasesContentsDifferDialog();
-										// TODO ask for updating the database in the dbms
-										postgreDriver.closeConnection();
-									}
-								}
-								
-							} catch (PSQLException e) {
-								e.printStackTrace();
-							} catch (SQLException e) {
-								e.printStackTrace();
-							}
-						}
+						showDatabasesContentsDifferDialog();
+						// TODO ask for updating the database in the dbms
+						postgreDriver.closeConnection();
 					}
 				}
-			});
+					
+			}
 		}
+		
+		public void actionPerformed(ActionEvent arg0) {
+			if (getMainWindow().getPostgreDriver() == null) {
+				DBMSConnectionWindow dbmsConnectionWindow = new DBMSConnectionWindow(mainWindow);
+				
+				dbmsConnectionWindow.getNextButton().addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent event) {
+						dbmsConnectionWindow.dispose();
+						
+						// GET DBMS PARAMETERS
+						String hostname = dbmsConnectionWindow.getHostname().getText();
+						String port = dbmsConnectionWindow.getPort().getText();
+						String username = dbmsConnectionWindow.getUsername().getText();
+						String password = new String(dbmsConnectionWindow.getPassword().getPassword());
+						
+						// Empty fields are not allowed
+						if (hostname.equals("") || port.equals("") 
+								|| username.equals("") || password.equals("")) {
+							showRequiredFieldsDialog();
+						}
+						
+						try {
+							postgreDriver = new PostgreDriver(hostname, 
+									port, 
+									username, 
+									password);
+							
+							getMainWindow().setPostgreDriver(postgreDriver);
+							readDatabase(postgreDriver);
+						} 
+
+						// Errors? Show them
+						catch (SQLException e) {
+							ArrayList<String> errors = new ArrayList<String>();
+							errors.add(e.getMessage());
+							ErrorsDialog errorsDialog = new ErrorsDialog(errors);
+						}
+					}
+				});
+			}
+			
+			else {
+				postgreDriver = getMainWindow().getPostgreDriver();
+				try {
+					readDatabase(postgreDriver);
+				} catch (SQLException e) {
+					ArrayList<String> errors = new ArrayList<String>();
+					errors.add(e.getMessage());
+					ErrorsDialog errorsDialog = new ErrorsDialog(errors);
+				}
+			}
+		}
+			
 	}
 	
 	private class SaveListener implements ActionListener {
@@ -193,15 +216,18 @@ public class ListenersSetter {
 			if (e.getSource() == getMainWindow().getBarMenu().getImportRelAlgQuery()) {
 				// Read file
 				String raQuery = fileDialog.importFileContent("Import Relational Algebra Query");
-				// Too big?
-				if (raQuery.length() > RA_QUERY_MAX_CHAR) {
-					showFileTooLongDialog();
-				}
 					
-				// Create new query in the queries list
-				getMainWindow().getQueryList().getAddButton().doClick();
-				// Fill the RA editor
-				getMainWindow().getWorkspace().getRelationalAlgebraCodeEditor().setText(raQuery);
+				if (raQuery != null) {
+					// Too big?
+					if (raQuery.length() > RA_QUERY_MAX_CHAR) {
+						showFileTooLongDialog();
+					}
+						
+					// Create new query in the queries list
+					getMainWindow().getQueryList().getAddButton().doClick();
+					// Fill the RA editor
+					getMainWindow().getWorkspace().getRelationalAlgebraCodeEditor().setText(raQuery);
+				}
 			}
 		}
 	}

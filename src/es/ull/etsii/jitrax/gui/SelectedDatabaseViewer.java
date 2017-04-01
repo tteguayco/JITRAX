@@ -96,6 +96,16 @@ public class SelectedDatabaseViewer extends JPanel {
 	    }
 	}
 
+	private boolean containsDatabase(String aDatabaseName) {
+		for (int i = 0; i < getCombo().getModel().getSize(); i++) {
+			if (getCombo().getModel().getElementAt(i).equalsIgnoreCase(aDatabaseName)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public JComboBox<String> getCombo() {
 		return dbComboBox;
 	}

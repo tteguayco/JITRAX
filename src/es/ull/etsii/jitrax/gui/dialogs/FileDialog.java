@@ -90,7 +90,7 @@ public class FileDialog {
 			} 
 		}
 		
-		return "";
+		return null;
 	}
 	
 	/**
