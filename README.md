@@ -23,6 +23,8 @@ resultados de la consulta ejecutada.
 * Posibilidad de formatear el código SQL traducido.
 * Consola de retroalimentación para el usuario.
 * Sistema de importación/exportación de consultas mediante ficheros.
+* Soporte para los siguientes operadores del Álgebra Relacional: proyección, selección, unión,
+diferencia, intersección, producto cartesiano, yunción, yunción natural y división.
 
 ## Prototipo
 
@@ -57,8 +59,7 @@ java -jar jitrax_prototype.jar
 
 ## Documentación
 
-Muy pronto se pondrá a disposición de todos los interesados una pequeña guía de usuario y documentación de 
-utilidad para desarrolladores.
+Muy pronto se elaborará una pequeña guía de usuario y documentación de utilidad para desarrolladores.
 
 ## Trabajo futuro
 
@@ -79,7 +80,7 @@ resaltado sintáctico para nuevos lenguajes (en este caso, se ha añadido para �
 la conexión con el Sistema Gestor de PostgreSQL que utilizará la aplicación para ejecutar las traducciones
 a SQL.
 
-* [Hibernate ORM](http://hibernate.org/orm/): incluye infinidad de funciones, pero JITRAX sólo la utiliza para añadir la opción de formateo de código SQL en el editor del entorno gráfico.
+* [Hibernate ORM](http://hibernate.org/orm/): analizador del lenguaje SQL que incluye infinidad de funciones, pero JITRAX sólo la utiliza para añadir la opción de formateo de código SQL en el editor del entorno gráfico.
 
 ## Participante CUSL 2016/2017
 
