@@ -11,6 +11,8 @@ consulta, se utiliza una técnica mucho más ingeniosa: traducir las expresiones
 a expresiones equivalentes en SQL y ejecutar estas últimas sobre un Sistema Gestor de PostgreSQL. ¿No es 
 genial? ;-)
 
+![alt tag](https://cloud.githubusercontent.com/assets/20015750/24579486/88862970-16ee-11e7-969a-d398d8d0a515.png)
+
 ## Características
 
 * Definición de bases de datos con las que trabajar en el entorno mediante un DSL sencillo.
@@ -69,7 +71,7 @@ Muy pronto se elaborará una pequeña guía de usuario y documentación de utili
 Este proyecto acaba de nacer y aún le queda mucho camino por recorrer. Como líneas futuras de trabajo,
 se destacan los siguientes aspectos:
 
-* Lanzamiento de una versión multidiomas.
+* Lanzamiento de una versión multidioma.
 * Soporte para el lenguaje teórico del Cálculo Relacional.
 * Optimizador de consultas para el Álgebra Relacional.
 * Aumentar la lista de operadores soportados del Álgebra Relacional.
