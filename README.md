@@ -46,8 +46,7 @@ futuro se espera incorporar soporte para más idiomas.
 
 Antes de disfrutar de las bondades de JITRAX, instala [PostgreSQL](https://www.postgresql.org/download/). 
 
-Para descargar el prototipo del proyecto, haz click [aquí](). Una vez lo hayas descargado, sitúate 
-desde una terminal en el mismo directorio que el fichero .JAR y ejecuta lo siguiente:
+En el directorio 'prototype' se encuentra el fichero ejecutable del prototipo (jitrax_prototype.jar). Una vez lo hayas descargado, sitúate desde una terminal en el mismo directorio que este fichero .JAR y ejecuta lo siguiente:
 
 ```sh
 java -jar jitrax_prototype.jar
@@ -55,7 +54,11 @@ java -jar jitrax_prototype.jar
 
 ## 'Quick start'
 
+¿Ya has ejecutado el fichero .JAR? Para comenzar a trastear con JITRAX, dirígete a File > Open y selecciona
+aquel fichero que contenga la especificación de la base de datos con la que quieras empezar a trabajar (en el directorio 'examples' de este proyecto dispones de algunos ejemplos). 
 
+NOTA: antes de poder seleccionar el fichero de la base de datos, necesitas establecer conexión con el SG de 
+PostgreSQL que has descargado anteriormente. Por defecto, el puerto en el que se ejecuta PostgreSQL en tu máquina es el 5432 (aunque esto podría no ser así siempre). Además, el nombre de usuario y contraseña que JITRAX propone por defecto es 'postgres', dado que es la cuenta que PostgreSQL crea inicialmente de forma automática.
 
 ## Documentación
 
@@ -63,7 +66,13 @@ Muy pronto se elaborará una pequeña guía de usuario y documentación de utili
 
 ## Trabajo futuro
 
+Este proyecto acaba de nacer y aún le queda mucho camino por recorrer. Como líneas futuras de trabajo,
+se destacan los siguientes aspectos:
 
+* Lanzamiento de una versión multidiomas.
+* Soporte para el lenguaje teórico del Cálculo Relacional.
+* Optimizador de consultas para el Álgebra Relacional.
+* Aumentar la lista de operadores soportados del Álgebra Relacional.
 
 ## Bibliotecas externas
 
