@@ -96,6 +96,12 @@ public class QueryList extends JPanel {
 		queryCounter++;
 	}
 	
+	private void removeQuery(int queryIndex) {
+		listModel.removeRow(queryIndex);
+		listModel.fireTableDataChanged();
+		queryCounter--;
+	}
+	
 	public Query getSelectedQuery() {
 		int selectedRowIndex = getQueryList().getSelectedRow();
 		if (selectedRowIndex < 0) {
@@ -122,7 +128,7 @@ public class QueryList extends JPanel {
 			int selectedRowIndex = getQueryList().getSelectedRow();
 			// We force to be at least one query
 			if (selectedRowIndex > 0) {
-				listModel.removeRow(selectedRowIndex);
+				removeQuery(selectedRowIndex);
 				// Select the former
 				queryList.changeSelection(selectedRowIndex - 1, 0, false, false);
 			}
