@@ -31,6 +31,7 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableModel;
 
 import org.antlr.v4.gui.TreeViewer;
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
@@ -446,8 +447,10 @@ public class Workspace extends JPanel {
 		}
 		
 		// Update Query Result
-		if (query.getResultSet() != null) {
-			updateQueryResultViewer(query.getResultSet());
+		if (query.getResultSetData() != null && query.getResultSetData() != null) {
+			queryResultViewer.getTableModel().setDataVector(query.getResultSetData(), 
+					query.getResultSetColumns());
+			queryResultViewer.getTableModel().fireTableDataChanged();
 			enableResultTab();
 		} else {
 			disableResultTab();

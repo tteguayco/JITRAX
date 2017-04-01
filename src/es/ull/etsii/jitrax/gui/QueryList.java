@@ -47,7 +47,7 @@ public class QueryList extends JPanel {
 		Object columnNames[] = { "Query" };
 		
 		queryList = new JTable();
-		listModel = new NewListModel(rowData, columnNames); 
+		listModel = new CustomListModel(rowData, columnNames); 
 		queryCounter = 2;
 		queries = new ArrayList<Query>();
 		addButton = new JButton("➕");
@@ -99,10 +99,10 @@ public class QueryList extends JPanel {
 	
 	public Query getSelectedQuery() {
 		int selectedRowIndex = getQueryList().getSelectedRow();
-		System.out.println("selectedRowIndex: " + selectedRowIndex);
 		if (selectedRowIndex < 0) {
 			selectedRowIndex = queryList.getRowCount() - 1;
 		}
+		
 		return (Query) listModel.getValueAt(selectedRowIndex, 0);
 	}
 
@@ -132,8 +132,8 @@ public class QueryList extends JPanel {
 		}
 	}
 	
-	private class NewListModel extends DefaultTableModel {
-		public NewListModel(Object[][] rowData, Object[] columnNames) {
+	private class CustomListModel extends DefaultTableModel {
+		public CustomListModel(Object[][] rowData, Object[] columnNames) {
 			super(rowData, columnNames);
 		}
 

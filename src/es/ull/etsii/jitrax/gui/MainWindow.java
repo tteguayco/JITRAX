@@ -199,7 +199,7 @@ public class MainWindow extends JFrame {
 				// Show ParseTree
 				Parser parser = interpreter.getParser();
 				ParseTree tree = interpreter.getTree();
-				TreeViewer treeViewer = new TreeViewer(Arrays.asList(parser.getRuleNames()),tree);
+				TreeViewer treeViewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
 				
 		        // Save information into query
 		        Query selectedQuery = getQueryList().getSelectedQuery();
@@ -254,10 +254,12 @@ public class MainWindow extends JFrame {
 				
 				// Send the result table to the Result Viewer
 				resultSet = postgreDriver.getQueryResultSet();
+				getWorkspace().getQueryResultViewer().updateTableData(resultSet);
 				
 				// Save the query's information
 				Query selectedQuery = getQueryList().getSelectedQuery();
-				selectedQuery.setResultSet(resultSet);
+				selectedQuery.updateResultSetDataFromTableModel(
+						getWorkspace().getQueryResultViewer().getTableModel());
 				getWorkspace().updateWorkspaceFromQuery(selectedQuery);
 				
 				getWorkspace().switchToQueryResultTab();
