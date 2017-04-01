@@ -1,4 +1,4 @@
-# JITRAX
+# JITRAX - CUSL 2016/17
 
 ## ¿Qué es JITRAX?
 
@@ -13,7 +13,16 @@ genial? ;-)
 
 ## Características
 
-
+* Definición de bases de datos con las que trabajar en el entorno mediante un DSL sencillo.
+* Manejo de múltiples bases de datos y consultas en simultáneo.
+* Detección de errores sintácticos en expresiones escritas en Álgebra Relacional.
+* Detección de errores semánticos en expresiones SQL ejecutadas sobre PostgreSQL (referencias a tablas
+inexistentes, comparaciones de atributos con dominios no equivalentes, etc).
+* Visualización del árbol de análisis sintáctico de las expresiones de Álgebra Relacional y tabla de 
+resultados de la consulta ejecutada.
+* Posibilidad de formatear el código SQL traducido.
+* Consola de retroalimentación para el usuario.
+* Sistema de importación/exportación de consultas mediante ficheros.
 
 ## Prototipo
 
@@ -35,34 +44,48 @@ futuro se espera incorporar soporte para más idiomas.
 
 Antes de disfrutar de las bondades de JITRAX, instala [PostgreSQL](https://www.postgresql.org/download/). 
 
-Para descargar el prototipo del proyecto, haz click [aquí](). Una vez lo hayas descargado, sitúate con 
+Para descargar el prototipo del proyecto, haz click [aquí](). Una vez lo hayas descargado, sitúate 
 desde una terminal en el mismo directorio que el fichero .JAR y ejecuta lo siguiente:
 
 ```sh
-	java -jar jitrax_prototype.jar
+java -jar jitrax_prototype.jar
 ```
+
+## 'Quick start'
+
+
 
 ## Documentación
 
-
+Muy pronto se pondrá a disposición de todos los interesados una pequeña guía de usuario y documentación de 
+utilidad para desarrolladores.
 
 ## Trabajo futuro
-
-## Colaboración
 
 
 
 ## Bibliotecas externas
 
 JITRAX hace uso de cuatro bibliotecas externas, todas ellas con licencias de código libre que permiten 
-su reutilización:
+su reutilización en este proyecto atendiendo a las bases del CUSL:
 
-* 
+* [ANTLRv4](http://www.antlr.org/about.html): poderosa herramienta para el reconocimiento de lenguajes
+desarrollada por Terence Parr, profesor de la Universidad de San Francisco.
+
+* [RSyntaxTextArea](http://bobbylight.github.io/RSyntaxTextArea/): editor de código que permite añadir
+resaltado sintáctico para nuevos lenguajes (en este caso, se ha añadido para Álgebra Relacional).
+
+* [JDBC PostgreSQL Driver](https://jdbc.postgresql.org/about/license.html): biblioteca que permite realizar
+la conexión con el Sistema Gestor de PostgreSQL que utilizará la aplicación para ejecutar las traducciones
+a SQL.
+
+* [Hibernate ORM](http://hibernate.org/orm/): incluye infinidad de funciones, pero JITRAX sólo la utiliza para añadir la opción de formateo de código SQL en el editor del entorno gráfico.
 
 ## Participante CUSL 2016/2017
 
-
+A día de hoy, JITRAX participa en el [Concurso Universitario de Software Libre](https://www.concursosoftwarelibre.org/1617/) en su undécima edición. Además, lo hace en la categoría de 
+ocio/educación. 
 
 ## Licencia
 
-This project is under a GPLv3 license.
+Este proyecto se encuentra bajo una licencia GPLv3.
