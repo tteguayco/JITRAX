@@ -98,6 +98,7 @@ public class DBMSConnectionWindow extends JDialog {
 		add(mainContainer);
 		
 		buildWindow();
+		pack();
 	}
 	
 	private void buildWindow() {

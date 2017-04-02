@@ -8,8 +8,6 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -31,7 +29,6 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.DefaultTableModel;
 
 import org.antlr.v4.gui.TreeViewer;
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
@@ -129,8 +126,8 @@ public class Workspace extends JPanel {
 		
 		String sqlCurrentFontName = sqlCodeEditor.getFont().getName();
 		sqlCodeEditor.setFont(new Font(sqlCurrentFontName, 
-				DEFAULT_RA_FONT_STYLE, 
-				DEFAULT_RA_FONT_SIZE));
+				DEFAULT_SQL_FONT_STYLE, 
+				DEFAULT_SQL_FONT_SIZE));
 		sqlCodeEditor.setCaretColor(SQL_CARET_COLOR);
 		//sqlCodeEditor.setEditable(false);
 		

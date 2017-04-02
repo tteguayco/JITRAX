@@ -1,6 +1,7 @@
 package es.ull.etsii.jitrax.gui;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -14,6 +15,8 @@ import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Table;
 
 public class TablePanel extends JPanel {
+	private static final long serialVersionUID = 1L;
+	
 	private static final Color SELECTED_TABLE_COLOR = Color.BLACK;
 	private static final Color UNSELECTED_TABLE_COLOR = new Color(70, 70, 70);
 	private static final Color BACKGROUND_COLOR = Color.WHITE;
@@ -28,13 +31,18 @@ public class TablePanel extends JPanel {
 	
 	private Table table;
 	private boolean isSelected;
+	private JPanel innerPanel;
 	
 	public TablePanel(Table aTable) {
 		table = aTable;
+		innerPanel = new JPanel();
+		
+		add(innerPanel);
 		
 		// Adding the panel's border padding
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setBorder(BorderFactory.createEmptyBorder(NEW_TABLE_PANEL_TOP_PADDING, 
+		setLayout(new FlowLayout(FlowLayout.LEFT));
+		innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
+		innerPanel.setBorder(BorderFactory.createEmptyBorder(NEW_TABLE_PANEL_TOP_PADDING, 
 												NEW_TABLE_PANEL_LEFT_PADDING, 
 												NEW_TABLE_PANEL_BOTTOM_PADDING, 
 												NEW_TABLE_PANEL_RIGHT_PADDING));
@@ -44,6 +52,7 @@ public class TablePanel extends JPanel {
 		
 		// Common settings
 		setBackground(BACKGROUND_COLOR);
+		innerPanel.setBackground(BACKGROUND_COLOR);
 	}
 	
 	private void addAttributes() {
@@ -57,28 +66,18 @@ public class TablePanel extends JPanel {
 			unselect();
 			
 			// Gap between attributes
-			add(Box.createVerticalStrut(GAP_BETWEEN_ATTRIBUTES));
+			innerPanel.add(Box.createVerticalStrut(GAP_BETWEEN_ATTRIBUTES));
 			String newAttributeText = "";
 			JLabel newAttributeLabel = null;
 			
-			// Adding label PK to the new attribute in case it is primary key
-			if (auxAttribute.isPrimaryKey()) {
-				 newAttributeText = " (" + dataType + ", PK)";
-				 newAttributeLabel = new JLabel("<html><u>" 
-						 						+ attributeName 
-						 						+ "</u>"
-						 						+ newAttributeText
-						 						+ "</html>");
-			} else {
-				newAttributeText = attributeName + " (" + dataType + ")";
-				newAttributeLabel = new JLabel(newAttributeText);
-			}
+			newAttributeText = "<html><b>" + attributeName + "</b> (" + dataType + ")</html>";
+			newAttributeLabel = new JLabel(newAttributeText);
 			
 			// Adding the new attribute's info to the current table panel
-			add(newAttributeLabel);
+			innerPanel.add(newAttributeLabel);
 			
 			// Extra gap
-			add(Box.createVerticalStrut(GAP_BETWEEN_ATTRIBUTES));
+			innerPanel.add(Box.createVerticalStrut(GAP_BETWEEN_ATTRIBUTES));
 		}
 	}
 	
