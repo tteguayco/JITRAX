@@ -129,7 +129,7 @@ public class Workspace extends JPanel {
 				DEFAULT_SQL_FONT_STYLE, 
 				DEFAULT_SQL_FONT_SIZE));
 		sqlCodeEditor.setCaretColor(SQL_CARET_COLOR);
-		//sqlCodeEditor.setEditable(false);
+		sqlCodeEditor.setEditable(false);
 		
 		// Buttons
 		translateButton.setMargin(new Insets(BUTTON_MARGIN_TOP, 
