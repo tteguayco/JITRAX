@@ -21,7 +21,7 @@ public class TablePanel extends JPanel {
 	private static final Color UNSELECTED_TABLE_COLOR = new Color(70, 70, 70);
 	private static final Color BACKGROUND_COLOR = Color.WHITE;
 	
-	private static final int NEW_TABLE_PANEL_TOP_PADDING = 10;
+	private static final int NEW_TABLE_PANEL_TOP_PADDING = 0;
 	private static final int NEW_TABLE_PANEL_LEFT_PADDING = 10;
 	private static final int NEW_TABLE_PANEL_BOTTOM_PADDING = 0;
 	private static final int NEW_TABLE_PANEL_RIGHT_PADDING = 10;
