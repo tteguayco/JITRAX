@@ -94,11 +94,6 @@ public class Database {
 				toString += getTables().get(i).getAttributes().get(j).getName() + ": " +
 						getTables().get(i).getAttributes().get(j).getDataType();
 				
-				// Add PK label
-				if (getTables().get(i).getAttributes().get(j).isPrimaryKey()) {
-					toString += ", PK";
-				}
-				
 				// Add semicolon
 				if (j < getTables().get(i).getAttributes().size() - 1) {
 					toString += ";\n";

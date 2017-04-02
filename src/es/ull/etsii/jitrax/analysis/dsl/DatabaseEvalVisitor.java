@@ -105,12 +105,7 @@ public class DatabaseEvalVisitor extends DatabaseBaseVisitor<Object> {
 			dataType = DataType.STRING;
 		}
 		
-		// PrimaryKey?
-		if (ctx.PK() != null) {
-			primaryKey = true;
-		}
-		
-		Attribute attribute = new Attribute(attrName, primaryKey, dataType);
+		Attribute attribute = new Attribute(attrName, dataType);
 		return attribute;
 	}
 	

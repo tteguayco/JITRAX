@@ -135,9 +135,9 @@ public class Table {
 	 * @param attributeDatatype
 	 * @return
 	 */
-	public boolean addAttribute(String attributeName, boolean primaryKey, DataType attributeDatatype) {
+	public boolean addAttribute(String attributeName, DataType attributeDatatype) {
 		if (!attributeExists(attributeName)) {
-			Attribute newAttribute = new Attribute(attributeName, primaryKey, attributeDatatype);
+			Attribute newAttribute = new Attribute(attributeName, attributeDatatype);
 			getAttributes().add(newAttribute);
 			return true;
 			
