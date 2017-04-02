@@ -1,0 +1,15 @@
+DATABASE RS;
+
+TABLE R(A: String, B: String, C: String, D: String)
+=>
+('a', 'b', 'c', 'd');
+('a', 'b', 'e', 'f');
+('b', 'c', 'e', 'f');
+('e', 'd', 'c', 'd');
+('e', 'd', 'e', 'f');
+('a', 'b', 'd', 'e');
+
+TABLE S(C: String, D: String)
+=>
+('c', 'd');
+('e', 'f');

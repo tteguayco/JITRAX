@@ -1,9 +1,9 @@
 DATABASE Flights;
 
-TABLE Flight(Number: Integer, PK; 
-	DeptCity: String; 
-	DestCity: String;
-	DeptTime: String;
+TABLE Flight(Number: Integer, 
+	DeptCity: String,
+	DestCity: String,
+	DeptTime: String,
 	ArrivalTime: String)
 =>
 (1, 'Chicago', 'Washington', '4am', '7am');
@@ -11,14 +11,14 @@ TABLE Flight(Number: Integer, PK;
 (3, 'Florida', 'Paris', '5pm', '12pm');
 (4, 'Memphis', 'London', '4am', '11am');
 
-TABLE Pilot(CompanyID: Integer, PK; Name: String; ExperienceLevel: Integer)
+TABLE Pilot(CompanyID: Integer, Name: Char, ExperienceLevel: Integer)
 =>
 (3, 'Doe', 75);
 (4, 'Swiss', 67);
 (8, 'Lawrence', 102);
 
-TABLE ASSIGNEDTO(CompanyID: Integer, PK; 
-		FlightNumber: Integer, PK;
+TABLE ASSIGNEDTO(CompanyID: Integer,
+		FlightNumber: Integer,
 		DestDate: Date)
 =>
 (3, 2, '2014-11-04');

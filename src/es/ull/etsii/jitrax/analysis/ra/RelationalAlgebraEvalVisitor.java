@@ -137,12 +137,9 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 			ArrayList<Attribute> rightRelationSchema =
 					expressionSchema(((RelationalAlgebraParser.UnionContext) expr).expr(1));
 			
-			Set<Attribute> leftSchemaSet = new HashSet<Attribute>(leftRelationSchema);
-			Set<Attribute> rightSchemaSet = new HashSet<Attribute>(rightRelationSchema);
-			
 			// Union between the sets
-			leftSchemaSet.addAll(rightSchemaSet);
-			return new ArrayList<Attribute>(leftSchemaSet);
+			leftRelationSchema.addAll(rightRelationSchema);
+			return new ArrayList<Attribute>(leftRelationSchema);
 		}
 		
 		// DIFFERENCE: R(r) - S(s) -> r
@@ -177,12 +174,9 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 			ArrayList<Attribute> rightRelationSchema =
 					expressionSchema(((RelationalAlgebraParser.NaturalJoinContext) expr).expr(1));
 			
-			Set<Attribute> leftSchemaSet = new HashSet<Attribute>(leftRelationSchema);
-			Set<Attribute> rightSchemaSet = new HashSet<Attribute>(rightRelationSchema);
-			
 			// Union between the sets
-			leftSchemaSet.addAll(rightSchemaSet);
-			return new ArrayList<Attribute>(leftSchemaSet);
+			leftRelationSchema.addAll(rightRelationSchema);
+			return new ArrayList<Attribute>(leftRelationSchema);
 		}
 		
 		// DIVISION: R(r) / S(s) -> r-s
@@ -192,12 +186,9 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 			ArrayList<Attribute> rightRelationSchema =
 					expressionSchema(((RelationalAlgebraParser.DivisionContext) expr).expr(1));
 			
-			Set<Attribute> leftSchemaSet = new HashSet<Attribute>(leftRelationSchema);
-			Set<Attribute> rightSchemaSet = new HashSet<Attribute>(rightRelationSchema);
-			
 			// Difference between sets
-			leftSchemaSet.removeAll(rightSchemaSet);
-			return new ArrayList<Attribute>(leftSchemaSet);
+			leftRelationSchema.removeAll(rightRelationSchema);
+			return new ArrayList<Attribute>(leftRelationSchema);
 		}
 		
 		// Expression between brackets -> call the method again
@@ -243,7 +234,6 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 			}
 			
 			else {
-				System.out.println("concatenando alias........");
 				return "(" + translation + ")" + appendAlias();
 			}
 		}
@@ -251,7 +241,6 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		// FROM OPERATORS: Cartesian product, natural join, join
 		// PLUS: a single relation
 		else if (isFromExpression(ctx)) {
-			System.out.println("isFromOperator!");
 			if (!(ctx.getParent() instanceof RelationalAlgebraParser.StartContext)
 					&& !(ctx.getParent() instanceof RelationalAlgebraParser.ViewContext)
 					&& !(ctx.getParent() instanceof RelationalAlgebraParser.BracketsExprContext)) {

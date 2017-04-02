@@ -1,0 +1,56 @@
+DATABASE r1r2r3r4;
+
+TABLE R1 (A: Char, B: Char, C: Char)
+=>
+('a','b','c');
+('d','a','f');
+('c','b','d');
+
+TABLE S1 (D: Char, E: Char, F: Char)
+=>
+('b','g','a');
+('d','a','f');
+
+TABLE R2 (A: Char, B: Char, C: Char, D: Char)
+=>
+('a','b','c','d');
+('a','b','e','f');
+('b','c','e','f');
+('e','d','c','d');
+('e','d','e','f');
+('a','b','d','e');
+
+TABLE S2 (C: Char, D: Char)
+=>
+('c','d');
+('e','f');
+
+TABLE R3 (A: Integer, B: Integer, C: Integer)
+=>
+(1,2,3);
+(4,5,6);
+(7,8,9);
+
+TABLE S3 (D: Integer, E: Integer)
+=>
+(3,1);
+(6,2);
+
+TABLE R4 (A: Char, B: Char ,C: Char)
+=>
+('a','b','c');
+('d','b','c');
+('b','b','f');
+('c','a','d');
+('c','b','d');
+
+TABLE S4 (B: Char, C: Char, D: Char)
+=>
+('b','c','d');
+('b','c','e');
+('a','d','b');
+
+TABLE T4 (A: Char, C: Char)
+=>
+('a','c');
+('c','d');
