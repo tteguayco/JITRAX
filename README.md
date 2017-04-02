@@ -73,8 +73,10 @@ se destacan los siguientes aspectos:
 
 * Lanzamiento de una versión multidioma.
 * Soporte para el lenguaje teórico del Cálculo Relacional.
+* Implementación del Álgebra Relacional como DML.
 * Optimizador de consultas para el Álgebra Relacional.
 * Aumentar la lista de operadores soportados del Álgebra Relacional.
+* Incrementar la lista de Sistemas Gestores con los que poder trabajar.
 
 ## Bibliotecas externas
 
