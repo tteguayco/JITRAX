@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
@@ -207,16 +208,35 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		return null;
 	}
 	
-	private String preppendSelectStarIfNeeded(RelationalAlgebraParser.ExprContext ctx, String translation) {
-		// NON-FROM OPERATORS: Projection, Selection, Division, 
+	private boolean isFromExpression(ParserRuleContext ctx) {
+		// NON-FROM EXPRESSIONS: Projection, Selection, Division, 
 		// Union, Difference and Intersection
-		if (ctx instanceof RelationalAlgebraParser.ProjectionContext
+		/*if (ctx instanceof RelationalAlgebraParser.ProjectionContext
 				|| ctx instanceof RelationalAlgebraParser.SelectionContext
 				|| ctx instanceof RelationalAlgebraParser.DivisionContext
 				|| ctx instanceof RelationalAlgebraParser.UnionContext
 				|| ctx instanceof RelationalAlgebraParser.DifferenceContext
 				|| ctx instanceof RelationalAlgebraParser.IntersectionContext) {
-			
+			// debug line
+			return false;
+		}*/
+		
+		// FROM EXPRESSIONS: Cartesian product, natural join, join
+		// PLUS: a single relation
+		if (ctx instanceof RelationalAlgebraParser.CartesianProductContext
+				|| ctx instanceof RelationalAlgebraParser.NaturalJoinContext
+				|| ctx instanceof RelationalAlgebraParser.JoinContext
+				|| ctx instanceof RelationalAlgebraParser.RelationFromExprContext) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private String preppendSelectStarIfNeeded(RelationalAlgebraParser.ExprContext ctx, String translation) {
+		// NON-FROM OPERATORS: Projection, Selection, Division, 
+		// Union, Difference and Intersection
+		if (!isFromExpression(ctx)) {
 			if ((ctx.getParent() instanceof RelationalAlgebraParser.StartContext)
 					|| ctx.getParent() instanceof RelationalAlgebraParser.BracketsExprContext) {
 				return translation;
@@ -227,16 +247,14 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 				return "(" + translation + ")" + appendAlias();
 			}
 		}
-		
+	
 		// FROM OPERATORS: Cartesian product, natural join, join
 		// PLUS: a single relation
-		if (ctx instanceof RelationalAlgebraParser.CartesianProductContext
-				|| ctx instanceof RelationalAlgebraParser.NaturalJoinContext
-				|| ctx instanceof RelationalAlgebraParser.JoinContext
-				|| ctx instanceof RelationalAlgebraParser.RelationFromExprContext) {
-			
+		else if (isFromExpression(ctx)) {
+			System.out.println("isFromOperator!");
 			if (!(ctx.getParent() instanceof RelationalAlgebraParser.StartContext)
-					&& !(ctx.getParent() instanceof RelationalAlgebraParser.ViewContext)) {
+					&& !(ctx.getParent() instanceof RelationalAlgebraParser.ViewContext)
+					&& !(ctx.getParent() instanceof RelationalAlgebraParser.BracketsExprContext)) {
 				return translation;
 			}
 			
@@ -389,7 +407,7 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	@Override 
 	public String visitIntersection(RelationalAlgebraParser.IntersectionContext ctx) {
 		String left = preppendSelectStarIfNeeded(ctx.expr(0), visit(ctx.expr(0)));
-		String right = preppendSelectStarIfNeeded(ctx.expr(1),visit(ctx.expr(1)));
+		String right = preppendSelectStarIfNeeded(ctx.expr(1), visit(ctx.expr(1)));
 		String translation = "SELECT * FROM " + left + " INTERSECT SELECT * FROM " + right;
 		return preppendSelectStarIfNeeded(ctx, translation);
 	}
@@ -397,14 +415,14 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	@Override 
 	public String visitNaturalJoin(RelationalAlgebraParser.NaturalJoinContext ctx) {
 		String left = preppendSelectStarIfNeeded(ctx.expr(0), visit(ctx.expr(0)));
-		String right = preppendSelectStarIfNeeded(ctx.expr(1),visit(ctx.expr(1)));
+		String right = preppendSelectStarIfNeeded(ctx.expr(1), visit(ctx.expr(1)));
 		return left + " NATURAL JOIN " + right;
 	}
 	
 	@Override 
 	public String visitJoin(RelationalAlgebraParser.JoinContext ctx) {
 		String left = preppendSelectStarIfNeeded(ctx.expr(0), visit(ctx.expr(0)));
-		String right = preppendSelectStarIfNeeded(ctx.expr(1),visit(ctx.expr(1)));
+		String right = preppendSelectStarIfNeeded(ctx.expr(1), visit(ctx.expr(1)));
 		String conditionList = visit(ctx.condlist());
 		return left + " INNER JOIN " + right + " ON " + conditionList;
 	}
@@ -447,7 +465,14 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	
 	@Override 
 	public String visitBracketsExpr(RelationalAlgebraParser.BracketsExprContext ctx) {
-		return "(" + visit(ctx.expr()) + ")";
+		String expr = preppendSelectStarIfNeeded(ctx.expr(), visit(ctx.expr()));
+		
+		if (ctx.getParent() instanceof RelationalAlgebraParser.StartContext
+				|| ctx.getParent() instanceof RelationalAlgebraParser.BracketsExprContext) {
+			return expr;
+		}
+		
+		return "(" + expr + ")";
 	}
 	
 	@Override 

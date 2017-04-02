@@ -108,7 +108,7 @@ public class Workspace extends JPanel {
 	public Workspace() {
 		relationalAlgebraCodeEditor = new RSyntaxTextArea();
 		sqlCodeEditor = new RSyntaxTextArea();
-		translateButton = new JButton("Translate to SQL");
+		translateButton = new JButton("Translate");
 		executeButton = new JButton("Execute on DBMS");
 		parseTreePanel = new JPanel(new BorderLayout());
 		queryResultViewer = new QueryResultViewer();

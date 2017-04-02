@@ -40,7 +40,7 @@ public class MainWindow extends JFrame {
 	private static final int MINIMUM_HEIGHT = 500;
 	private static final int BORDER_GAP = 10;
 	
-	private static final String WELCOME_MSG = "> Welcome to JITRAX (v1.0)";
+	private static final String WELCOME_MSG = "> Welcome to JITRAX (Prototype)";
 	private static final String QUERY_TRANSLATION_MSG = "> Relational Algebra query translated to SQL.";
 	private static final String DBMS_EXECUTION_MSG = "> SQL query executed on DBMS.";
 	private static final String DBMS_ERRORS_MSG = "> The DBMS detected the following error:";
