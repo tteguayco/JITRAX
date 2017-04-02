@@ -97,8 +97,7 @@ a SQL.
 
 ## Participante CUSL 2016/2017
 
-A día de hoy, JITRAX participa en el [Concurso Universitario de Software Libre](https://www.concursosoftwarelibre.org/1617/) en su undécima edición. Además, lo hace en la categoría de 
-ocio/educación. 
+A día de hoy, JITRAX participa en el [Concurso Universitario de Software Libre](https://www.concursosoftwarelibre.org/1617/) en su undécima edición. Además, puesto que se trata de un herramienta con carácter metodológico y cuyo fin último es meramente didáctico, participa en la categoría ocio/educación.
 
 ## Licencia
 
