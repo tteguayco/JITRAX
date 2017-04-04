@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -30,12 +32,15 @@ import javax.swing.table.DefaultTableModel;
 
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.adt.Table;
+import es.ull.etsii.jitrax.gui.TablesViewer;
+import es.ull.etsii.jitrax.listeners.TablePanelListener;
+import es.ull.etsii.jitrax.gui.SelectedTableViewer;
 
 public class TablesManagerWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String WINDOW_TITLE = "Tables Manager - ";
-	private static final String SCHEMA_PANEL_DEFAULT_MESSAGE = "No tables were found";
+	private static final String SCHEMA_PANEL_DEFAULT_MESSAGE = "No tables were found.";
 	
 	private static final int WINDOW_WIDTH = 700;
 	private static final int WINDOW_HEIGHT = 500;
@@ -51,13 +56,18 @@ public class TablesManagerWindow extends JFrame {
 	private Database database;
 	private int selectedTableIndex;
 	
-	private JList tablesList;
-	private JPanel schemaPanel;
-	private JTable selectedTableContent;
-	private DefaultTableModel selectedTableContentModel;
+	//private JList<String> tablesList;
+	//private DefaultListModel<String> tablesListModel;
+	//private JPanel schemaPanel;
+	//private JTable selectedTableContent;
+	//private DefaultTableModel selectedTableContentModel;
+	
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private JPanel mainContainer;
+	
+	private TablesViewer tablesViewer;
+	private SelectedTableViewer selectedTableViewer;
 	
 	private JButton addTableButton;
 	private JButton eraseTableButton;
@@ -67,26 +77,31 @@ public class TablesManagerWindow extends JFrame {
 	public TablesManagerWindow(Database aDatabase) {
 		database = aDatabase;
 		selectedTableIndex = -1;
-		tablesList = new JList();
+		/*tablesList = new JList<String>();
+		tablesListModel = new DefaultListModel<String>();
 		selectedTableContent = new JTable();
 		selectedTableContentModel = new DefaultTableModel();
-		schemaPanel = new JPanel();
+		schemaPanel = new JPanel();*/
 		mainContainer = new JPanel(new BorderLayout());
 		leftPanel = new JPanel(new BorderLayout());
 		rightPanel = new JPanel(new BorderLayout());
 		
-		schemaPanel.setLayout(new BoxLayout(schemaPanel, BoxLayout.X_AXIS));
+		//tablesList.setModel(tablesListModel);
+		
+		selectedTableViewer = new SelectedTableViewer();
+		
+		//schemaPanel.setLayout(new BoxLayout(schemaPanel, BoxLayout.X_AXIS));
 		addTableButton = new JButton("ADD");
 		eraseTableButton = new JButton("ERASE");
 		modifyTableButton = new JButton("MODIFY");
 		okButton = new JButton("  ✔ OK  ");
-
+		
 		EmptyBorder schemaPanelPadding = new EmptyBorder(10, 10, 10, 10);
 		
-		schemaPanel.add(Box.createHorizontalStrut(SCHEMA_PANEL_GAP));
-		schemaPanel.add(new JLabel(SCHEMA_PANEL_DEFAULT_MESSAGE));
-		schemaPanel.add(Box.createHorizontalStrut(SCHEMA_PANEL_GAP));
-		selectedTableContent.setModel(selectedTableContentModel);
+		//schemaPanel.add(Box.createHorizontalStrut(SCHEMA_PANEL_GAP));
+		//schemaPanel.add(new JLabel(SCHEMA_PANEL_DEFAULT_MESSAGE));
+		//schemaPanel.add(Box.createHorizontalStrut(SCHEMA_PANEL_GAP));
+		//selectedTableContent.setModel(selectedTableContentModel);
 		
 		// Main container
 		EmptyBorder padding = new EmptyBorder(TOP_PADDING, 
@@ -112,7 +127,6 @@ public class TablesManagerWindow extends JFrame {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setMinimumSize(new Dimension(WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT));
 		//setMaximumSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
@@ -120,11 +134,19 @@ public class TablesManagerWindow extends JFrame {
 	private void buildLeftPanel() {
 		String[] tablesNames = getDatabase().getTablesNames();
 		setCommonBorder(getLeftPanel(), "Tables");
-		getTablesList().setListData(tablesNames);
-		getTablesList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		getTablesList().setLayoutOrientation(JList.VERTICAL_WRAP);
-		JScrollPane tablesListSP = new JScrollPane(getTablesList());
+		//getTablesList().setListData(tablesNames);
+		//getTablesList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		//getTablesList().setLayoutOrientation(JList.VERTICAL_WRAP);
+		
+		tablesViewer = new TablesViewer(database.getTables());
+		JScrollPane tablesListSP = new JScrollPane(tablesViewer);
 		tablesListSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+		// Listeners for the graphic tables
+		for (int i = 0; i < tablesViewer.getNumOfTables(); i++) {
+			tablesViewer.getGraphicTables().get(i).addMouseListener(
+					new TablePanelListener(tablesViewer, selectedTableViewer));
+		}
 		
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.add(getAddTableButton());
@@ -132,41 +154,22 @@ public class TablesManagerWindow extends JFrame {
 		buttonsPanel.add(getModifyTableButton());
 		getLeftPanel().add(buttonsPanel, BorderLayout.SOUTH);
 		getLeftPanel().add(tablesListSP, BorderLayout.CENTER);
-		
-		getTablesList().addListSelectionListener(new ListSelectionListener() {			
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				// Update selectedTablePanelSchema and selectedTablePanelContent
-				setSelectedTableIndex(getTablesList().getSelectedIndex());
-				updateSelectedTableSchema();
-				updateSelectedTableContent();
-			}
-		});
 	}
 	
 	private void buildRightPanel() {
-		JPanel contentTablePanel = new JPanel(new BorderLayout());
+		//setCommonBorder(selectedTableViewer, "Content");
 		
-		setCommonBorder(getSchemaPanel(), "Schema");
-		setCommonBorder(contentTablePanel, "Content");
-		
-		contentTablePanel.add(getSelectedTableContent(), BorderLayout.CENTER);
-		
-		JScrollPane schemaPanelSP = new JScrollPane(getSchemaPanel());
-		JScrollPane contentTablePanelSP = new JScrollPane(contentTablePanel);
-		schemaPanelSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane contentTablePanelSP = new JScrollPane(selectedTableViewer);
 		contentTablePanelSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 		// Remove ugly borders
-		schemaPanelSP.setViewportBorder(null);
 		contentTablePanelSP.setViewportBorder(null);
 		
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		buttonsPanel.add(getOkButton());
-		bottomPanel.add(schemaPanelSP, BorderLayout.CENTER);
 		bottomPanel.add(buttonsPanel, BorderLayout.SOUTH);
-		getRightPanel().add(contentTablePanelSP, BorderLayout.CENTER);
+		getRightPanel().add(selectedTableViewer, BorderLayout.CENTER);
 		getRightPanel().add(bottomPanel, BorderLayout.SOUTH);
 	}
 	
@@ -180,47 +183,28 @@ public class TablesManagerWindow extends JFrame {
                 Color.BLACK));
 	}
 	
-	private void updateSelectedTableSchema() {
-		
-	}
-	
-	private void updateSelectedTableContent() {
-		
-	}
-	
-	private Table getSelectedTable() {
-		return getDatabase().getTables().get(getSelectedTableIndex());
-	}
-	
-	private void setListeners() {
-		getAddTableButton().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				NewTableWindow newTableWindow = new NewTableWindow();
-				
-				
-			}
-		});
-	}
-	
 	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			System.out.println("Unsupported Lookn' Feel. Setting the default one...");
-			e.printStackTrace();
-		}
+		for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                try {
+					UIManager.setLookAndFeel(info.getClassName());
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (UnsupportedLookAndFeelException e) {
+					e.printStackTrace();
+				}
+                break;
+            }
+        }
 		
 		Database mydb = new Database("MyDB");
 		TablesManagerWindow tmWindow = new TablesManagerWindow(mydb);
 	}
-
+	
 	public Database getDatabase() {
 		return database;
 	}
@@ -228,39 +212,7 @@ public class TablesManagerWindow extends JFrame {
 	public void setDatabase(Database database) {
 		this.database = database;
 	}
-
-	public JList getTablesList() {
-		return tablesList;
-	}
-
-	public void setTablesList(JList tablesList) {
-		this.tablesList = tablesList;
-	}
-
-	public JPanel getSchemaPanel() {
-		return schemaPanel;
-	}
-
-	public void setSchemaPanel(JPanel schemaPanel) {
-		this.schemaPanel = schemaPanel;
-	}
-
-	public JTable getSelectedTableContent() {
-		return selectedTableContent;
-	}
-
-	public void setSelectedTableContent(JTable selectedTableContent) {
-		this.selectedTableContent = selectedTableContent;
-	}
-
-	public DefaultTableModel getSelectedTableContentModel() {
-		return selectedTableContentModel;
-	}
-
-	public void setSelectedTableContentModel(DefaultTableModel selectedTableContentModel) {
-		this.selectedTableContentModel = selectedTableContentModel;
-	}
-
+	
 	public JButton getAddTableButton() {
 		return addTableButton;
 	}

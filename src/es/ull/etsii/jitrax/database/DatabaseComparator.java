@@ -21,12 +21,14 @@ public class DatabaseComparator {
 	
 	private Database database;
 	private Connection dbmsConnection;
-	private ArrayList<String> updatingQueries;
+	private ArrayList<String> queriesForUpdate;
+	private ArrayList<String> tablesNamesToCreate;
 	
 	public DatabaseComparator(Database aDatabase, Connection aDbmsConnection) {
 		database = aDatabase;
 		dbmsConnection = aDbmsConnection;
-		updatingQueries = new ArrayList<String>();
+		queriesForUpdate = new ArrayList<String>();
+		tablesNamesToCreate = new ArrayList<String>();
 	}
 
 	/**
@@ -41,8 +43,8 @@ public class DatabaseComparator {
 			
 			// Getting tables on DBMS
 			ArrayList<String> dbmsTables = new ArrayList<String>();
-			HashMap<String, ArrayList<Attribute>> attributes = new HashMap<String, ArrayList<Attribute>>();
 			
+			// For each DBMS table
 			while (tablesResultSet.next()) {
 				// Getting tables
 				String tableName = tablesResultSet.getString("TABLE_NAME");
@@ -54,25 +56,23 @@ public class DatabaseComparator {
 				ResultSet attrResultSet = meta.getColumns(null, null, tableName, "%");
 				
 				// Getting the number of rows returned (number of attributes in the current table)
-				if (attrResultSet != null)   
-				{  
+				// and storing it in the 'numberOfAttributesForRemote'
+				if (attrResultSet != null) {  
 				  attrResultSet.beforeFirst();  
 				  attrResultSet.last();  
 				  numberOfAttributesForRemote = attrResultSet.getRow();
 				  attrResultSet.beforeFirst();
 				}
 				
-				// If the number of attributes differs, exit
+				// If the number of attributes differs, databases are not compatibles
 				if (currentLocalTable.getNumOfColumns() != numberOfAttributesForRemote) {
 					return false;
 				}
-				
 				// COMPARING ATTRIBUTES
 				while (attrResultSet.next()) {
 					String attrName = attrResultSet.getString("COLUMN_NAME");
 					String attrType = attrResultSet.getString("TYPE_NAME");
 					DataType attrDataType;
-					boolean primaryKey = false;
 					
 					if (attrType.contains("varchar")) {
 						attrDataType = DataType.STRING;
@@ -88,10 +88,8 @@ public class DatabaseComparator {
 						attrDataType = DataType.STRING;
 					}
 					
-					// TODO check if the attribute is primary key
-					if (!currentLocalTable.attributeExists(attrName, attrDataType, primaryKey)) {
-						//System.out.println(attrName);
-						System.out.println(attrDataType);
+					// Check if the attribute exists on the current table
+					if (!currentLocalTable.attributeExists(attrName, attrDataType)) {
 						return false;
 					}
 				}
@@ -106,7 +104,7 @@ public class DatabaseComparator {
 					countRS.next();
 					numOfRows = countRS.getInt(1);
 					
-					// Check matching between number of rows (on DBMS and local)
+					// Check matching between number of rows (on DBMS and locally)
 					if (currentLocalTable.getNumOfRows() != numOfRows) {
 						return false;
 					}
@@ -136,6 +134,7 @@ public class DatabaseComparator {
 			for (int i = 0; i < getDatabase().getNumOfTables(); i++) {
 				String localTable = getDatabase().getTables().get(i).getName().toLowerCase();
 				if (!dbmsTables.contains(localTable)) {
+					getTablesNamesToCreate().add(localTable);
 					return false;
 				}
 			}
@@ -169,5 +168,21 @@ public class DatabaseComparator {
 
 	public void setDbmsConnection(Connection dbmsConnection) {
 		this.dbmsConnection = dbmsConnection;
+	}
+
+	public ArrayList<String> getQueriesForUpdate() {
+		return queriesForUpdate;
+	}
+
+	public void setQueriesForUpdate(ArrayList<String> queriesForUpdate) {
+		this.queriesForUpdate = queriesForUpdate;
+	}
+
+	public ArrayList<String> getTablesNamesToCreate() {
+		return tablesNamesToCreate;
+	}
+
+	public void setTablesNamesToCreate(ArrayList<String> tablesNamesToCreate) {
+		this.tablesNamesToCreate = tablesNamesToCreate;
 	}
 }

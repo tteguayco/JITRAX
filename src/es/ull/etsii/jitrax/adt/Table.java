@@ -32,16 +32,25 @@ public class Table {
 		}
 	}
 	
-	public boolean attributeExists(String attrName, DataType attrDataType, boolean pk) {
+	public boolean attributeExists(String attrName, DataType attrDataType) {
 		for (int i = 0; i < getAttributes().size(); i++) {
 			if (getAttributes().get(i).getName().equalsIgnoreCase(attrName) 
-					&& getAttributes().get(i).getDataType() == attrDataType
-					/*&& getAttributes().get(i).isPrimaryKey() == pk*/) {
+					&& getAttributes().get(i).getDataType() == attrDataType) {
 				return true;
 			}
 		}
 		
 		return false;
+	}
+	
+	public Attribute getAttributeByName(String attrName) {
+		for (int i = 0; i < getAttributes().size(); i++) {
+			if (getAttributes().get(i).getName().equalsIgnoreCase(attrName)) {
+				return getAttributes().get(i);
+			}
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -56,20 +65,6 @@ public class Table {
 		
 		return columnNames;
 	}
-	
-	/**
-	 * Returns the names of the columns of this table with
-	 * the schema 'table.column'.
-	 */
-	/*public String[] getColumnsNamesWithTable() {
-		String[] columnNames = new String[getAttributes().size()];
-		
-		for (int i = 0; i < getAttributes().size(); i++) {
-			columnNames[i] = getName() + "." + getAttributes().get(i).getName();
-		}
-		
-		return columnNames;
-	}*/
 	
 	public String[][] getRowsData() {
 		String[][] rowsData = new String[getRows().size()][getAttributes().size()];
@@ -100,33 +95,13 @@ public class Table {
 	 * @return
 	 */
 	public void addRow(ArrayList<Datum> newRowData) throws DuplicatePrimaryKeyException {
-		/**
-		 * PROVISIONAL
-		 */
-		
-		// Si no existe la clave primera, insertar...
 		Row newRow = new Row(getAttributes(), newRowData);
 		getRows().add(newRow);
 	}
 	
 	public void addRow(Row newRow) throws DuplicatePrimaryKeyException {
-		/**
-		 * PROVISIONAL
-		 */
-		
 		getRows().add(newRow);
 	}
-	
-	/**
-	 * Returns true if the specified set of values already
-	 * exists as a primary key.
-	 * @return
-	 */
-	/*private boolean primaryKeyExists(ArrayList<String> values) {
-		for (int i = 0; i < getRows().size(); i++) {
-			
-		}
-	}*/
 	
 	/**
 	 * Adds a new attribute to the table. Returns false if couldn't do it

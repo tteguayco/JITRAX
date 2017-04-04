@@ -2,7 +2,10 @@ package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -15,6 +18,10 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
+
+import java.awt.event.ComponentAdapter;
 
 import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Datum;
@@ -66,8 +73,9 @@ public class SelectedTableViewer extends JPanel {
 		graphicTable.setEnabled(false);
 		graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		graphicTable.setMinimumSize(graphicTable.getPreferredScrollableViewportSize());
-		//graphicTable.setPreferredScrollableViewportSize(graphicTable.getPreferredSize());
+		graphicTable.setPreferredScrollableViewportSize(graphicTable.getPreferredSize());
 		graphicTable.setFillsViewportHeight(true);
+		graphicTable.getTableHeader().setReorderingAllowed(false);
 		
 		JScrollPane tableSP = new JScrollPane(graphicTable);
 		tableSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -77,6 +85,15 @@ public class SelectedTableViewer extends JPanel {
 		tableSP.setPreferredSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 		setMaximumSize(new Dimension(MAXIMUM_WIDTH, MAXIMUM_HEIGHT));
+		
+		addComponentListener(new ComponentAdapter() {
+		    public void componentResized(ComponentEvent e) {
+		        resizeColumnWidth();          
+		    }
+		});
+		
+		revalidate();
+		repaint();
 	}
 	
 	public void updateTable(Table aTable) {
@@ -84,7 +101,7 @@ public class SelectedTableViewer extends JPanel {
 		tableModel.setDataVector(aTable.getRowsData(), aTable.getColumnsNames());
 		tableModel.fireTableDataChanged();
 		updateTitle();
-		setMinColumnsWidth();
+		resizeColumnWidth();
 	}
 	
 	/**
@@ -93,6 +110,22 @@ public class SelectedTableViewer extends JPanel {
 	private void setMinColumnsWidth() {
 		for (int i = 0; i < graphicTable.getColumnModel().getColumnCount(); i++) {
 			graphicTable.getColumnModel().getColumn(i).setMinWidth(COL_MIN_WIDTH);
+		}
+	}
+	
+	public void resizeColumnWidth() {
+		int graphicTableWidth = COL_MIN_WIDTH * graphicTable.getColumnCount();
+		int parentWidth = graphicTable.getParent().getWidth();
+		
+		System.out.println(">> " + parentWidth);
+		System.out.println(">> " + graphicTableWidth);
+		
+		setMinColumnsWidth();
+		
+		if (parentWidth < graphicTableWidth) {
+			graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		} else {
+			graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		}
 	}
 	

@@ -17,6 +17,8 @@ import org.postgresql.util.PSQLException;
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.database.DatabaseComparator;
 import es.ull.etsii.jitrax.database.PostgreDriver;
+import es.ull.etsii.jitrax.gui.dbcreation.NewDatabaseDialog;
+import es.ull.etsii.jitrax.gui.dbcreation.TablesManagerWindow;
 import es.ull.etsii.jitrax.gui.dialogs.DBMSConnectionWindow;
 import es.ull.etsii.jitrax.gui.dialogs.ErrorsDialog;
 import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
@@ -38,7 +40,7 @@ public class ListenersSetter {
 	
 	private void setFileMenuListeners() {
 		getMainWindow().getBarMenu().getOpenDatabase().addActionListener(new OpenListener());
-		getMainWindow().getBarMenu().getNewDatabase().addActionListener(new NewListener());
+		getMainWindow().getBarMenu().getNewDatabase().addActionListener(new NewDatabaseListener());
 		getMainWindow().getBarMenu().getSaveDatabase().addActionListener(new SaveListener());
 		getMainWindow().getBarMenu().getSaveDatabaseAs().addActionListener(new SaveAsListener());
 		getMainWindow().getBarMenu().getExitOption().addActionListener(new ExitListener());
@@ -48,10 +50,22 @@ public class ListenersSetter {
 		getMainWindow().getQueryList().getSaveButton().addActionListener(new ExportationOptionListener());
 	}
 	
-	private class NewListener implements ActionListener {
+	private class NewDatabaseListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			
+			NewDatabaseDialog newDatabaseDialog = new NewDatabaseDialog();
+			newDatabaseDialog.getNextButton().addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					String newDatabaseName = newDatabaseDialog.getNewDatabaseNameField().getText();
+					if (!newDatabaseName.equals("")) {
+						Database newDatabase = new Database(newDatabaseName);
+						TablesManagerWindow tablesManagerWindow = new TablesManagerWindow(newDatabase);
+						
+					}
+				}
+			});
 		}
 	}
 	
@@ -95,7 +109,6 @@ public class ListenersSetter {
 					else {
 						showDatabasesContentsDifferDialog();
 						// TODO ask for updating the database in the dbms
-						postgreDriver.closeConnection();
 					}
 				}
 					

@@ -62,4 +62,20 @@ public class NewDatabaseDialog extends JFrame {
 		NewDatabaseDialog createDBWindow = new NewDatabaseDialog();
 		createDBWindow.setVisible(true);
 	}
+
+	public JTextField getNewDatabaseNameField() {
+		return newDatabaseNameField;
+	}
+
+	public void setNewDatabaseNameField(JTextField newDatabaseNameField) {
+		this.newDatabaseNameField = newDatabaseNameField;
+	}
+
+	public JButton getNextButton() {
+		return nextButton;
+	}
+
+	public void setNextButton(JButton nextButton) {
+		this.nextButton = nextButton;
+	}
 }

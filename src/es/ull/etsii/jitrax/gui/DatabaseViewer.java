@@ -1,39 +1,24 @@
 package es.ull.etsii.jitrax.gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 
-import es.ull.etsii.jitrax.adt.Attribute;
-import es.ull.etsii.jitrax.adt.DataType;
 import es.ull.etsii.jitrax.adt.Database;
-import es.ull.etsii.jitrax.adt.Datum;
-import es.ull.etsii.jitrax.adt.Row;
-import es.ull.etsii.jitrax.adt.Table;
-import es.ull.etsii.jitrax.exceptions.DuplicatePrimaryKeyException;
+import es.ull.etsii.jitrax.gui.dbcreation.TablesManagerWindow;
+import es.ull.etsii.jitrax.listeners.TablePanelListener;
 
 public class DatabaseViewer extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -91,11 +76,11 @@ public class DatabaseViewer extends JPanel {
 		
 		getTablesViewer().updateTables(newSelectedDatabase.getTables());
 		getSelectedTableViewer().updateTable(newSelectedDatabase.getTables().get(0));
-		updateSelectedTable(getTablesViewer().getGraphicTables().get(0));
 		
 		// Listeners for graphic tables in the db viewer
 		for (int i = 0; i < getTablesViewer().getNumOfTables(); i++) {
-			getTablesViewer().getGraphicTables().get(i).addMouseListener(new TablePanelListener());
+			getTablesViewer().getGraphicTables().get(i).addMouseListener(
+					new TablePanelListener(getTablesViewer(), getSelectedTableViewer()));
 		}
 		
 		// Update the three panels
@@ -154,33 +139,16 @@ public class DatabaseViewer extends JPanel {
 	private class AlterButtonListener implements ActionListener {
 
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			JOptionPane.showMessageDialog (null, 
-					"The ALTER functionality will be available in \n"
-					+ "upcoming versions of JITRAX.", 
-					"Not implemented yet", 
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-	}
-	
-	/**
-	 * Updates the graphic table in order to display
-	 * the new target table in the DB Viewer.
-	 * 
-	 * @param table
-	 */
-	private void updateSelectedTable(TablePanel tablePanel) {
-		// Update tablesPanel
-		getTablesViewer().changeSelectedTablePanel(tablePanel);
-		
-		// Update selected table viewer
-		getSelectedTableViewer().updateTable(tablePanel.getTable());
-	}
-	
-	private class TablePanelListener extends MouseAdapter {
-		public void mouseClicked(MouseEvent e) {
-			TablePanel targetTablePanel = ((TablePanel) e.getSource());
-			updateSelectedTable(targetTablePanel);
+		public void actionPerformed(ActionEvent e) {
+			String selectedDatabaseName = (String) getSelectedDatabaseViewer().getCombo().getSelectedItem();
+			Database selectedDatabase = getDatabases().get(selectedDatabaseName);
+			TablesManagerWindow databaseDialog = new TablesManagerWindow(selectedDatabase);
+			
+			//JOptionPane.showMessageDialog (null, 
+				//	"The ALTER functionality will be available in \n"
+					//+ "upcoming versions of JITRAX.", 
+					//"Not implemented yet", 
+					//JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 	
