@@ -143,23 +143,19 @@ public class DatabaseViewer extends JPanel {
 			String selectedDatabaseName = (String) getSelectedDatabaseViewer().getCombo().getSelectedItem();
 			Database selectedDatabase = getDatabases().get(selectedDatabaseName);
 			TablesManagerWindow tmWindow = new TablesManagerWindow(selectedDatabase);
+			int graphicTableIndex;
 			
 			//System.out.println("> " + tmWindow.getTablesViewer().getGraphicTables());
 			
 			// Mark the current selected table
 			TablePanel selectedTablePanel = getTablesViewer().getSelectedTablePanel();
-			System.out.println(">>>>> " + selectedTablePanel.getTable().getName());
+			graphicTableIndex = tmWindow.getTablesViewer().getIndexOfGraphicTable(selectedTablePanel);
 			tmWindow.updateSelectedTable(selectedTablePanel,
-					tmWindow.getTablesViewer().getIndexOfGraphicTable(selectedTablePanel));
+					graphicTableIndex);
 			
-			System.out.println(
-					tmWindow.getTablesViewer().getGraphicTables().indexOf(selectedTablePanel));
-			
-			//JOptionPane.showMessageDialog (null, 
-				//	"The ALTER functionality will be available in \n"
-					//+ "upcoming versions of JITRAX.", 
-					//"Not implemented yet", 
-					//JOptionPane.INFORMATION_MESSAGE);
+			// Move scrollbar to show selectedTablePanel
+			tmWindow.getTablesViewer().scrollRectToVisible(
+					tmWindow.getTablesViewer().getGraphicTables().get(graphicTableIndex).getBounds());
 		}
 	}
 	
