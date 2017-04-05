@@ -62,7 +62,6 @@ public class ListenersSetter {
 					if (!newDatabaseName.equals("")) {
 						Database newDatabase = new Database(newDatabaseName);
 						TablesManagerWindow tablesManagerWindow = new TablesManagerWindow(newDatabase);
-						
 					}
 				}
 			});

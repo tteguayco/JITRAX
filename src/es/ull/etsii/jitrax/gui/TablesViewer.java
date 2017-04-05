@@ -47,6 +47,19 @@ public class TablesViewer extends JPanel {
 		buildTablesPanel();
 	}
 
+	public int getIndexOfGraphicTable(TablePanel aTablePanel) {
+		if (aTablePanel != null) {
+			for (int i = 0; i < getGraphicTables().size(); i++) {
+				if (getGraphicTables().get(i).getTable().getName()
+						.equalsIgnoreCase(aTablePanel.getTable().getName())) {
+					return i;
+				}
+			}
+		}
+		
+		return -1;
+	}
+	
 	/**
 	 * Sets common settings in this panel for both constructors.
 	 */
@@ -101,6 +114,13 @@ public class TablesViewer extends JPanel {
 		
 		newSelectedPanel.select();
 		setSelectedTablePanel(newSelectedPanel);
+	}
+	
+	public void changeSelectedTablePanelByIndex(int tablePanelIndex) {
+		if (tablePanelIndex >= 0) {
+			TablePanel targetTablePanel = getGraphicTables().get(tablePanelIndex);
+			changeSelectedTablePanel(targetTablePanel);
+		}
 	}
 	
 	public int getNumOfTables() {

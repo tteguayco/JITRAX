@@ -35,6 +35,7 @@ import es.ull.etsii.jitrax.adt.Table;
 import es.ull.etsii.jitrax.gui.TablesViewer;
 import es.ull.etsii.jitrax.listeners.TablePanelListener;
 import es.ull.etsii.jitrax.gui.SelectedTableViewer;
+import es.ull.etsii.jitrax.gui.TablePanel;
 
 public class TablesManagerWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -56,12 +57,6 @@ public class TablesManagerWindow extends JFrame {
 	private Database database;
 	private int selectedTableIndex;
 	
-	//private JList<String> tablesList;
-	//private DefaultListModel<String> tablesListModel;
-	//private JPanel schemaPanel;
-	//private JTable selectedTableContent;
-	//private DefaultTableModel selectedTableContentModel;
-	
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private JPanel mainContainer;
@@ -77,31 +72,18 @@ public class TablesManagerWindow extends JFrame {
 	public TablesManagerWindow(Database aDatabase) {
 		database = aDatabase;
 		selectedTableIndex = -1;
-		/*tablesList = new JList<String>();
-		tablesListModel = new DefaultListModel<String>();
-		selectedTableContent = new JTable();
-		selectedTableContentModel = new DefaultTableModel();
-		schemaPanel = new JPanel();*/
 		mainContainer = new JPanel(new BorderLayout());
 		leftPanel = new JPanel(new BorderLayout());
 		rightPanel = new JPanel(new BorderLayout());
 		
-		//tablesList.setModel(tablesListModel);
-		
 		selectedTableViewer = new SelectedTableViewer();
 		
-		//schemaPanel.setLayout(new BoxLayout(schemaPanel, BoxLayout.X_AXIS));
 		addTableButton = new JButton("ADD");
 		eraseTableButton = new JButton("ERASE");
 		modifyTableButton = new JButton("MODIFY");
 		okButton = new JButton("  ✔ OK  ");
 		
 		EmptyBorder schemaPanelPadding = new EmptyBorder(10, 10, 10, 10);
-		
-		//schemaPanel.add(Box.createHorizontalStrut(SCHEMA_PANEL_GAP));
-		//schemaPanel.add(new JLabel(SCHEMA_PANEL_DEFAULT_MESSAGE));
-		//schemaPanel.add(Box.createHorizontalStrut(SCHEMA_PANEL_GAP));
-		//selectedTableContent.setModel(selectedTableContentModel);
 		
 		// Main container
 		EmptyBorder padding = new EmptyBorder(TOP_PADDING, 
@@ -134,9 +116,6 @@ public class TablesManagerWindow extends JFrame {
 	private void buildLeftPanel() {
 		String[] tablesNames = getDatabase().getTablesNames();
 		setCommonBorder(getLeftPanel(), "Tables");
-		//getTablesList().setListData(tablesNames);
-		//getTablesList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		//getTablesList().setLayoutOrientation(JList.VERTICAL_WRAP);
 		
 		tablesViewer = new TablesViewer(database.getTables());
 		JScrollPane tablesListSP = new JScrollPane(tablesViewer);
@@ -181,6 +160,17 @@ public class TablesManagerWindow extends JFrame {
                 TitledBorder.TOP,
                 null,
                 Color.BLACK));
+	}
+	
+	public void updateSelectedTable(TablePanel tablePanel, int tablePanelIndex) {
+		// Update tablesPanel
+		getTablesViewer().changeSelectedTablePanelByIndex(tablePanelIndex);
+		
+		// Update selected table viewer
+		getSelectedTableViewer().updateTable(tablePanel.getTable());
+		
+		revalidate();
+		repaint();
 	}
 	
 	public static void main(String[] args) {
@@ -275,5 +265,21 @@ public class TablesManagerWindow extends JFrame {
 
 	public void setOkButton(JButton okButton) {
 		this.okButton = okButton;
+	}
+
+	public TablesViewer getTablesViewer() {
+		return tablesViewer;
+	}
+
+	public void setTablesViewer(TablesViewer tablesViewer) {
+		this.tablesViewer = tablesViewer;
+	}
+
+	public SelectedTableViewer getSelectedTableViewer() {
+		return selectedTableViewer;
+	}
+
+	public void setSelectedTableViewer(SelectedTableViewer selectedTableViewer) {
+		this.selectedTableViewer = selectedTableViewer;
 	}
 }

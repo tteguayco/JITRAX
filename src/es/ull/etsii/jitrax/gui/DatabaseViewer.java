@@ -142,7 +142,18 @@ public class DatabaseViewer extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			String selectedDatabaseName = (String) getSelectedDatabaseViewer().getCombo().getSelectedItem();
 			Database selectedDatabase = getDatabases().get(selectedDatabaseName);
-			TablesManagerWindow databaseDialog = new TablesManagerWindow(selectedDatabase);
+			TablesManagerWindow tmWindow = new TablesManagerWindow(selectedDatabase);
+			
+			//System.out.println("> " + tmWindow.getTablesViewer().getGraphicTables());
+			
+			// Mark the current selected table
+			TablePanel selectedTablePanel = getTablesViewer().getSelectedTablePanel();
+			System.out.println(">>>>> " + selectedTablePanel.getTable().getName());
+			tmWindow.updateSelectedTable(selectedTablePanel,
+					tmWindow.getTablesViewer().getIndexOfGraphicTable(selectedTablePanel));
+			
+			System.out.println(
+					tmWindow.getTablesViewer().getGraphicTables().indexOf(selectedTablePanel));
 			
 			//JOptionPane.showMessageDialog (null, 
 				//	"The ALTER functionality will be available in \n"

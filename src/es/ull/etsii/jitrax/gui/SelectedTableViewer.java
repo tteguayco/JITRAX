@@ -2,15 +2,10 @@ package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -18,14 +13,9 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
 
 import java.awt.event.ComponentAdapter;
 
-import es.ull.etsii.jitrax.adt.Attribute;
-import es.ull.etsii.jitrax.adt.Datum;
-import es.ull.etsii.jitrax.adt.Row;
 import es.ull.etsii.jitrax.adt.Table;
 
 public class SelectedTableViewer extends JPanel {
@@ -116,9 +106,6 @@ public class SelectedTableViewer extends JPanel {
 	public void resizeColumnWidth() {
 		int graphicTableWidth = COL_MIN_WIDTH * graphicTable.getColumnCount();
 		int parentWidth = graphicTable.getParent().getWidth();
-		
-		System.out.println(">> " + parentWidth);
-		System.out.println(">> " + graphicTableWidth);
 		
 		setMinColumnsWidth();
 		

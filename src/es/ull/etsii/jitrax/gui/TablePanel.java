@@ -89,10 +89,12 @@ public class TablePanel extends JPanel {
 	
 	public void select() {
 		buildBorder(SELECTED_TABLE_COLOR, SELECTED_PANEL_BORDER_THICKNESS);
+		setSelected(true);
 	}
 	
 	public void unselect() {
 		buildBorder(UNSELECTED_TABLE_COLOR, UNSELECTED_PANEL_BORDER_THICKNESS);
+		setSelected(false);
 	}
 	
 	private void buildBorder(Color color, int borderThickness) {

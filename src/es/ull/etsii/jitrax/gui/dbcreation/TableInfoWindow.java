@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class NewTableWindow extends JFrame {
+public class TableInfoWindow extends JFrame {
 	private static final String WINDOW_TITLE = "New Table";
 	private static final int WINDOW_WIDTH = 200;
 	private static final int WINDOW_HEIGHT = 100;
@@ -18,7 +18,7 @@ public class NewTableWindow extends JFrame {
 	private JButton cancelButton;
 	private JButton nextButton;
 	
-	public NewTableWindow() {
+	public TableInfoWindow() {
 		newTableName = new JTextField();
 		cancelButton = new JButton(" ✘ Cancel ");
 		nextButton = new JButton(" ✔ Next ");
@@ -37,6 +37,7 @@ public class NewTableWindow extends JFrame {
 		add(buttonsPanel, BorderLayout.SOUTH);
 		
 		buildWindow();
+		pack();
 	}
 	
 	private void buildWindow() {

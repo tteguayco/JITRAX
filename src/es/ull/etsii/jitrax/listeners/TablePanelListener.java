@@ -38,6 +38,9 @@ public class TablePanelListener extends MouseAdapter {
 		}
 	}
 	
+	/**
+	 * Makes a table selected if the user clicks it.
+	 */
 	public void mouseClicked(MouseEvent e) {
 			TablePanel targetTablePanel = ((TablePanel) e.getSource());
 			updateSelectedTable(targetTablePanel);
