@@ -7,10 +7,12 @@ import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
 import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.ExprContext;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.ProjectionContext;
 
 public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<String> {
@@ -301,6 +303,18 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 				expr + ");";
 	}
 	
+	private ProjectionContext getParentProjectionIfExists(RelationalAlgebraParser.ExprContext ctx) {
+		if (ctx.getParent() instanceof RelationalAlgebraParser.ProjectionContext) {
+			return (ProjectionContext) ctx.getParent();
+		}
+		
+		else if (ctx.getParent() instanceof RelationalAlgebraParser.BracketsExprContext) {
+			return getParentProjectionIfExists((ExprContext) ctx.getParent());
+		}
+		
+		return null;
+	}
+	
 	@Override
 	public String visitProjection(RelationalAlgebraParser.ProjectionContext ctx) {
 		String translation = "SELECT " + visit(ctx.attrlist()) + " FROM " + visit(ctx.expr());
@@ -310,11 +324,13 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		 * => check if the attributes list of a projection contains
 		 * in the outer projection's attributes list.
 		 */
-		// If its parent it's a projection as well...
-		if (ctx.getParent() instanceof RelationalAlgebraParser.ProjectionContext) {
+		// If its parent it's a projection as well (ignoring brackets expressions)...
+		ProjectionContext parentProjection = getParentProjectionIfExists(ctx);
+		
+		if (parentProjection != null) {
 			RelationalAlgebraParser.ProjectionContext currentProjectAttrList = ctx;
 			RelationalAlgebraParser.ProjectionContext outerProjectAttrList = 
-					(ProjectionContext) ctx.getParent();
+					parentProjection;
 			ArrayList<String> currentProjectAttributes;
 			ArrayList<String> outerProjectAttributes;
 			
