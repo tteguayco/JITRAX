@@ -6,11 +6,14 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.analysis.CustomErrorListener;
+import es.ull.etsii.jitrax.analysis.ra.PreprocessingEvalVisitor;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraEvalVisitor;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraLexer;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser;
 
 public class RelationalAlgebraInterpreter {
+	private static final String SYNTAX_ERRORS_MSG = 
+			"> The entered Relational Algebra expression contains syntax errors:\n";
 	
 	private ANTLRInputStream input;
 	private ParseTree tree;
@@ -19,18 +22,19 @@ public class RelationalAlgebraInterpreter {
 	private CommonTokenStream tokens;
 	private RelationalAlgebraParser parser;
 	private RelationalAlgebraEvalVisitor eval;
+	private CustomErrorListener errorListener;
 	
 	private Database database;
 	private String sqlTranslation;
 	
 	public RelationalAlgebraInterpreter(Database aDatabase) {
 		database = aDatabase;
+		errorListener = new CustomErrorListener();	
 	}
 	
-	public String translate(String relationalAlgebraInput) {
-		CustomErrorListener errorListener = new CustomErrorListener();	
+	private void runSyntaxAnalysis(String relationalAlgebraInput) {
 		input = new ANTLRInputStream(relationalAlgebraInput);
-	
+		
 		lexer = new RelationalAlgebraLexer(input);
 		lexer.removeErrorListeners();
 		lexer.addErrorListener(errorListener);
@@ -38,25 +42,36 @@ public class RelationalAlgebraInterpreter {
 		tokens = new CommonTokenStream(lexer);
 		parser = new RelationalAlgebraParser(tokens);
 		parser.removeErrorListeners();
-	    parser.addErrorListener(errorListener);
-		
-	    runSyntacticAnalysis();
+	    parser.addErrorListener(errorListener);	
 	    
+	    
+	}
+	
+	private String getPreprocessedQuery(String relationalAlgebraInput) {
+		runSyntaxAnalysis(relationalAlgebraInput);
+	    tree = parser.start();
+	    
+	    PreprocessingEvalVisitor eval = new PreprocessingEvalVisitor();
+	    return eval.visit(tree);
+	}
+	
+	public String translate(String relationalAlgebraInput) {
+		String preprocessedQuery = getPreprocessedQuery(relationalAlgebraInput);
+		
+		runSyntaxAnalysis(preprocessedQuery);
+	    tree = parser.start();
+		
 	    // Semantic analysis if syntax analysis was successful
 	    if (errorListener.getSyntaxErrorsList().size() == 0) {	
 	    	runSemanticAnalysis();
 	    }
 	    
 	    else {
-	    	System.out.println("> The entered Relational Algebra expression contains syntax errors:");
+	    	System.out.println(SYNTAX_ERRORS_MSG);
 	    	errorListener.printErrors();
 	    }
 	    
 		return sqlTranslation;
-	}
-	
-	private void runSyntacticAnalysis() {
-		tree = parser.start();
 	}
 	
 	private void runSemanticAnalysis() {
@@ -65,7 +80,7 @@ public class RelationalAlgebraInterpreter {
 		
 		// Semantic errors?
 		if (eval.getErrorsList().size() > 0) {
-			System.out.println("> The entered Relational Algebra expression contains semantic errors:");
+			System.out.println(SYNTAX_ERRORS_MSG);
 			for (int i = 0; i < eval.getErrorsList().size(); i++) {
 				System.out.println(" - " + eval.getErrorsList().get(i));
 			}
