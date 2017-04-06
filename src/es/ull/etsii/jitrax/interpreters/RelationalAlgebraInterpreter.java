@@ -42,9 +42,7 @@ public class RelationalAlgebraInterpreter {
 		tokens = new CommonTokenStream(lexer);
 		parser = new RelationalAlgebraParser(tokens);
 		parser.removeErrorListeners();
-	    parser.addErrorListener(errorListener);	
-	    
-	    
+	    parser.addErrorListener(errorListener);
 	}
 	
 	private String getPreprocessedQuery(String relationalAlgebraInput) {

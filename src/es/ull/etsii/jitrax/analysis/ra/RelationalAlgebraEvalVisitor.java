@@ -305,18 +305,6 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 				expr + ");";
 	}
 	
-	private ProjectionContext getParentProjectionIfExists(RelationalAlgebraParser.ExprContext ctx) {
-		if (ctx.getParent() instanceof RelationalAlgebraParser.ProjectionContext) {
-			return (ProjectionContext) ctx.getParent();
-		}
-		
-		else if (ctx.getParent() instanceof RelationalAlgebraParser.BracketsExprContext) {
-			return getParentProjectionIfExists((ExprContext) ctx.getParent());
-		}
-		
-		return null;
-	}
-	
 	@Override
 	public String visitProjection(RelationalAlgebraParser.ProjectionContext ctx) {
 		String translation = "SELECT " + visit(ctx.attrlist()) + " FROM " + visit(ctx.expr());
@@ -326,13 +314,12 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		 * => check if the attributes list of a projection contains
 		 * in the outer projection's attributes list.
 		 */
-		// If its parent it's a projection as well (ignoring brackets expressions)...
-		ProjectionContext parentProjection = getParentProjectionIfExists(ctx);
+		// If its parent it's a projection as well...
 		
-		if (parentProjection != null) {
+		if (ctx.getParent() instanceof RelationalAlgebraParser.ProjectionContext) {
 			RelationalAlgebraParser.ProjectionContext currentProjectAttrList = ctx;
 			RelationalAlgebraParser.ProjectionContext outerProjectAttrList = 
-					parentProjection;
+					(ProjectionContext) ctx.getParent();
 			ArrayList<String> currentProjectAttributes;
 			ArrayList<String> outerProjectAttributes;
 			
@@ -356,42 +343,6 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		return translation;
 	}
 	
-	/**
-	 * Método análogo a getParentProjectionIfExists() para el caso de la selección.
-	 * @param ctx
-	 * @return
-	 */
-	private SelectionContext getChildSelectionIfExists(RelationalAlgebraParser.ExprContext ctx) {
-		// Return child selection
-		if (ctx instanceof RelationalAlgebraParser.SelectionContext) {
-			SelectionContext selectionCtx = (SelectionContext) ctx;
-			
-			if (selectionCtx.expr() instanceof SelectionContext) {
-				return (SelectionContext) selectionCtx.expr();
-			}
-			
-			else if (selectionCtx.expr() instanceof BracketsExprContext) {
-				return getChildSelectionIfExists(selectionCtx.expr());
-			}
-		}
-		
-		else if (ctx instanceof RelationalAlgebraParser.BracketsExprContext) {
-			BracketsExprContext bracketsCtx = (BracketsExprContext) ctx;
-			
-			// Return child selection
-			if (bracketsCtx.expr() instanceof RelationalAlgebraParser.SelectionContext) {
-				return (SelectionContext) bracketsCtx.expr();
-			} 
-			
-			// Visit child of a expression between brackets
-			else if (bracketsCtx.expr() instanceof RelationalAlgebraParser.BracketsExprContext) {
-				return getChildSelectionIfExists(bracketsCtx.expr());
-			}
-		}
-		
-		return null;
-	}
-	
 	@Override
 	public String visitSelection(RelationalAlgebraParser.SelectionContext ctx) {
 		String selectStatement = "";
@@ -405,13 +356,10 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		 * 
 		 * EXAMPLE: SELECTION [A = "a"] (((SELECTION [B = "b"] (R1))));
 		 */
-		SelectionContext selectionChild = getChildSelectionIfExists(ctx);
-		
-		if (selectionChild == null) {
+		if (ctx.expr() instanceof RelationalAlgebraParser.SelectionContext) {
 			selectStatement = visit(ctx.expr()) + " AND " + visit(ctx.condlist());
 		} else {
-			System.out.println(selectionChild.getText());
-			selectStatement = visit(selectionChild.expr()) + " WHERE " + visit(selectionChild.condlist());
+			selectStatement = visit(ctx.expr()) + " WHERE " + visit(ctx.condlist());
 		}
 		
 		/**
