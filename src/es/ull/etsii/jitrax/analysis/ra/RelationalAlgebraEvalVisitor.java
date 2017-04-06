@@ -12,8 +12,10 @@ import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
 import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.BracketsExprContext;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.ExprContext;
 import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.ProjectionContext;
+import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser.SelectionContext;
 
 public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<String> {
 	private static final String ALIAS_PREFIX = "q";
@@ -354,6 +356,42 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		return translation;
 	}
 	
+	/**
+	 * Método análogo a getParentProjectionIfExists() para el caso de la selección.
+	 * @param ctx
+	 * @return
+	 */
+	private SelectionContext getChildSelectionIfExists(RelationalAlgebraParser.ExprContext ctx) {
+		// Return child selection
+		if (ctx instanceof RelationalAlgebraParser.SelectionContext) {
+			SelectionContext selectionCtx = (SelectionContext) ctx;
+			
+			if (selectionCtx.expr() instanceof SelectionContext) {
+				return (SelectionContext) selectionCtx.expr();
+			}
+			
+			else if (selectionCtx.expr() instanceof BracketsExprContext) {
+				return getChildSelectionIfExists(selectionCtx.expr());
+			}
+		}
+		
+		else if (ctx instanceof RelationalAlgebraParser.BracketsExprContext) {
+			BracketsExprContext bracketsCtx = (BracketsExprContext) ctx;
+			
+			// Return child selection
+			if (bracketsCtx.expr() instanceof RelationalAlgebraParser.SelectionContext) {
+				return (SelectionContext) bracketsCtx.expr();
+			} 
+			
+			// Visit child of a expression between brackets
+			else if (bracketsCtx.expr() instanceof RelationalAlgebraParser.BracketsExprContext) {
+				return getChildSelectionIfExists(bracketsCtx.expr());
+			}
+		}
+		
+		return null;
+	}
+	
 	@Override
 	public String visitSelection(RelationalAlgebraParser.SelectionContext ctx) {
 		String selectStatement = "";
@@ -364,12 +402,16 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		 * We have to do this in order to translate a cascade of SELECTIONs 
 		 * (such as SELECT [...] (SELECT [...] (...))) to
 		 * a conjunction of condition lists (such as WHERE condlist1 AND condlist2...).
+		 * 
+		 * EXAMPLE: SELECTION [A = "a"] (((SELECTION [B = "b"] (R1))));
 		 */
-		// If expr() is not a selection node, this is the last selection node in the target subtree
-		if (ctx.expr() instanceof RelationalAlgebraParser.SelectionContext) {
+		SelectionContext selectionChild = getChildSelectionIfExists(ctx);
+		
+		if (selectionChild == null) {
 			selectStatement = visit(ctx.expr()) + " AND " + visit(ctx.condlist());
 		} else {
-			selectStatement = visit(ctx.expr()) + " WHERE " + visit(ctx.condlist());
+			System.out.println(selectionChild.getText());
+			selectStatement = visit(selectionChild.expr()) + " WHERE " + visit(selectionChild.condlist());
 		}
 		
 		/**

@@ -14,7 +14,7 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			FileDialog fileDialog = new FileDialog();
-			Database database = fileDialog.importDatabaseDialog();
+			//Database database = fileDialog.importDatabaseDialog();
 			
 			System.out.println("CONSULTA > ");
 			Scanner scanner = new Scanner(System.in);
@@ -31,14 +31,16 @@ public class Main {
 
 		    System.out.println();
 		    
-			RelationalAlgebraEvalVisitor eval = new RelationalAlgebraEvalVisitor(database);
-			eval.visit(tree);
+			//RelationalAlgebraEvalVisitor eval = new RelationalAlgebraEvalVisitor(database);
+			PreprocessingEvalVisitor eval = new PreprocessingEvalVisitor();
+		    System.out.println(eval.visit(tree));
 			
+		    /*
 			if (eval.syntaxErrors()) {
 				eval.printErrorsList();
 			} else {
 				System.out.println(eval.getSqlTranslation());
-			}
+			}*/
 		}
 		catch (Exception e){
 			e.printStackTrace();
