@@ -27,6 +27,7 @@ resultados de la consulta ejecutada.
 * Sistema de importación/exportación de consultas mediante ficheros.
 * Soporte para los siguientes operadores del Álgebra Relacional: proyección, selección, unión,
 diferencia, intersección, producto cartesiano, yunción, yunción natural y división.
+* Soporte para vistas (asignación de un alias a una consulta que permite su posterior reutilización).
 * Optimización de consultas: JITRAX es capaz de detectar cascadas de proyecciones y selecciones (véase los ficheros
 'examples/R1R2R3R4/projection_cascade.ra' y 'examples/R1R2R3R4/selection_cascade.ra') y proponer traducciones que sean más eficientes
 y legibles.
