@@ -23,11 +23,30 @@ public class Row {
 		return getData().size();
 	}
 	
+	public boolean equals(Row anOther) {
+		if (anOther.size() != this.size()) {
+			return false;
+		}
+		
+		// Comparing Data
+		for (int i = 0; i < anOther.size(); i++) {
+			if (!anOther.getDatum(i).equals(this.getDatum(i))) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public Datum getDatum(int index) {
+		return getData().get(index);
+	}
+	
 	public String toString() {
 		String toString = "";
 		
 		for (int i = 0; i < getData().size(); i++) {
-			toString += getData().get(i).getStringValue();
+			toString += getData().get(i).getStringValue() + ",";
 		}
 		
 		return toString;

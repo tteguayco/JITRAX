@@ -96,7 +96,7 @@ public class Database {
 				
 				// Add semicolon
 				if (j < getTables().get(i).getAttributes().size() - 1) {
-					toString += ";\n";
+					toString += ",\n";
 				} 
 				
 				else {
@@ -110,8 +110,19 @@ public class Database {
 			for (int j = 0; j < getTables().get(i).getRows().size(); j++) {
 				toString += "(";
 				for (int k = 0; k < getTables().get(i).getRows().get(j).size(); k++) {
-					toString += getTables().get(i).getRows().get(j).getData().get(k).getStringValue();
+					String datum = getTables().get(i).getRows().get(j).getData().get(k).getStringValue();
+					DataType dataType = getTables().get(i)
+							.getRows().get(j)
+							.getTableAttributes().get(k).getDataType();
 					
+					// Datatype (add '' if string, char or date)
+					if (dataType == DataType.STRING 
+							|| dataType == DataType.CHAR
+							|| dataType == DataType.DATE) {
+						datum = "'" + datum + "'";
+					}
+
+					toString += datum;
 					if (k < getTables().get(i).getRows().get(j).size() - 1) {
 						toString += ",";
 					}

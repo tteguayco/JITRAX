@@ -11,6 +11,8 @@ import java.util.HashMap;
 import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.DataType;
 import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.adt.Datum;
+import es.ull.etsii.jitrax.adt.Row;
 import es.ull.etsii.jitrax.adt.Table;
 
 /**
@@ -18,6 +20,7 @@ import es.ull.etsii.jitrax.adt.Table;
  * (it checks whether they have the same attributes, domains, etc).
  */
 public class DatabaseComparator {
+	private static final String NUMBER_REGEXP = "\\d+(\\.\\d+)?";
 	
 	private Database database;
 	private Connection dbmsConnection;
@@ -53,24 +56,20 @@ public class DatabaseComparator {
 	public boolean databasesAreCompatible() {	
 		// TABLES?
 		if (!localTablesAreOnDbms()) {
-			System.out.println("No coinciden: tables");
 			return false;
 		}
 		
 		// FOR EACH TABLE, ATTRIBUTES?
-		if (!databaseSchemasCoincide()) {
-			System.out.println("No coinciden: esquemas");
+		else if (!databaseSchemasCoincide()) {
 			return false;
 		}
 		
 		// CONTENTS (rows)?
-		if (!tablesContentsCoincide()) {
-			System.out.println("No coinciden: contenidos");
-			return false;
+		else if (!tablesContentsCoincide()) {
+			// Sync rows up
+			syncContents();
+			System.out.println("> Rows were synchronized.");
 		}
-			
-		// Sync rows up
-		syncContents();
 		
 		return true;
 	}
@@ -246,9 +245,121 @@ public class DatabaseComparator {
 		return true;
 	}
 	
+	private void insertDbmsRowsToLocalTable() throws SQLException {
+		tablesResultSet.beforeFirst();
+		// For each table on the DBMS
+		while (tablesResultSet.next()) {
+			String remoteTableName = tablesResultSet.getString("TABLE_NAME");
+			Table localTable = database.getTableByName(remoteTableName);
+			
+			if (localTable != null) {
+				// Getting all the rows
+				Statement st = getDbmsConnection().createStatement();
+				ResultSet rowsRS = st.executeQuery("SELECT * FROM " + 
+						remoteTableName);
+				
+				// Insert them locally if they not exist
+				ArrayList<Attribute> attrs = localTable.getAttributes();
+				ArrayList<Datum> data;
+				Row newRow = null;
+				
+				while (rowsRS.next()) {
+					data = new ArrayList<Datum>();
+					int numColumns = rowsRS.getMetaData().getColumnCount();
+			        for ( int col = 1 ; col <= numColumns ; col++ ) {
+			        	String dataValue = String.valueOf(rowsRS.getObject(col));
+			        	
+			        	// If it is not a number, add quotations marks
+			        	if (!dataValue.matches(NUMBER_REGEXP)) {
+			        		dataValue = "'" + dataValue + "'";
+			        	}
+			        	
+			        	data.add(new Datum(dataValue));
+			        }
+			        newRow = new Row(attrs, data);
+			        localTable.addRow(newRow);
+				}
+			}
+		}
+		tablesResultSet.beforeFirst();
+	}
 	
-	private void syncContents() {
+	private void insertLocalTablesRowsToDbms() throws SQLException {
+		Table auxTable;
+		Row auxRow;
+		Datum auxDatum;
+		Statement st = getDbmsConnection().createStatement();
+		String insertRowStatement = "";
 		
+		// FOR EACH TABLE
+		for (int table = 0; table < database.getTables().size(); table++) {
+			auxTable = database.getTables().get(table);
+			
+			// FOR EACH ROW
+			for (int row = 0; row < auxTable.getRows().size(); row++) {
+				// INSERT IF NOT EXISTS
+				insertRowStatement = "INSERT INTO " + auxTable.getName() + " SELECT ";
+				auxRow = auxTable.getRows().get(row);
+				
+				// FOR EACH COLUMN
+				for (int col = 0; col < auxRow.getData().size(); col++) {
+					auxDatum = auxRow.getData().get(col);
+					insertRowStatement += auxDatum.getStringValue();
+					
+					// Add comma or bracket
+					if (col < auxRow.getData().size() - 1) {
+						insertRowStatement += ", ";
+					}
+				}
+				
+				insertRowStatement += " WHERE NOT EXISTS (SELECT 1 FROM " + auxTable.getName();
+				insertRowStatement += " WHERE ";
+				
+				// FOR EACH COLUMN
+				if (auxRow.getData().size() == auxRow.getTableAttributes().size()) {
+					for (int col = 0; col < auxRow.getData().size(); col++) {
+						auxDatum = auxRow.getData().get(col);
+						String attrName = auxRow.getTableAttributes().get(col).getName();
+						
+						insertRowStatement += attrName + " = " + auxDatum.getStringValue();
+						if (col < auxRow.getData().size() - 1) {
+							insertRowStatement += " and ";
+						} else {
+							insertRowStatement += ");";
+						}
+					}
+				}
+				
+				st.executeUpdate(insertRowStatement);				
+			}
+		}
+	}
+	
+	/**
+	 * Deletes all rows for each table in the application.
+	 */
+	private void deleteLocalTablesContents() {
+		for (int i = 0; i < database.getTables().size(); i++) {
+			database.getTables().get(i).setRows(new ArrayList<Row>());
+		}
+	}
+	
+	/**
+	 * Estrategia de sincronización:
+	 *  1. Pasar las filas de la aplicación al SG.
+	 *  2. Borrar todas las fillas de cada tabla en la aplicación.
+	 *  3. Pasar todas las filas del SG a las tablas de la aplicación.
+	 */
+	private void syncContents() {
+		try {
+			insertLocalTablesRowsToDbms();
+			deleteLocalTablesContents();
+			insertDbmsRowsToLocalTable();
+		} 
+		
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public Database getDatabase() {

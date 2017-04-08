@@ -94,13 +94,23 @@ public class Table {
 	 * Adds a new row or tuple to this table.
 	 * @return
 	 */
-	public void addRow(ArrayList<Datum> newRowData) throws DuplicatePrimaryKeyException {
+	public void addRow(ArrayList<Datum> newRowData) {
 		Row newRow = new Row(getAttributes(), newRowData);
 		getRows().add(newRow);
 	}
 	
-	public void addRow(Row newRow) throws DuplicatePrimaryKeyException {
+	public void addRow(Row newRow) {
 		getRows().add(newRow);
+	}
+	
+	public void addRowIfNotExist(Row newRow) {
+		for (int i = 0; i < getRows().size(); i++) {
+			if (getRows().get(i).equals(newRow)) {
+				return;
+			}
+		}
+		
+		addRow(newRow);
 	}
 	
 	/**

@@ -10,6 +10,14 @@ public class Datum {
 		stringValue = aValue;
 	}
 	
+	public boolean equals(Datum anOther) {
+		if (anOther.getStringValue().equals(this.getStringValue())) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public String toString() {
 		String toString = "";
 		toString += getStringValue();

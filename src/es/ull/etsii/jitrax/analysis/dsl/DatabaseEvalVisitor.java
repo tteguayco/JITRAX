@@ -44,13 +44,7 @@ public class DatabaseEvalVisitor extends DatabaseBaseVisitor<Object> {
 		for (int i = 0; i < ctx.datalist().size(); i++) {
 			ArrayList<Datum> data = (ArrayList<Datum>) visit(ctx.datalist(i)); 
 			Row newRow = new Row(attrList, data);
-			
-			try {
-				newTable.addRow(newRow);
-			} catch (DuplicatePrimaryKeyException e) {
-				System.out.println("DatabaseEvalVisitor: tabla duplicada");
-				e.printStackTrace();
-			}
+			newTable.addRow(newRow);	
 		}
 	
 		return newTable;
@@ -78,7 +72,8 @@ public class DatabaseEvalVisitor extends DatabaseBaseVisitor<Object> {
 	}
 	
 	public Object visitDataList(DatabaseParser.DataListContext ctx) {
-		Datum firstDatum = new Datum (ctx.datum().getText());
+		String firstDatumValue = ctx.datum().getText();
+		Datum firstDatum = new Datum (firstDatumValue);
 		ArrayList<Datum> dataList = new ArrayList<Datum>();
 		dataList.addAll((ArrayList<Datum>) visit(ctx.datalist()));
 		dataList.add(0, firstDatum);
