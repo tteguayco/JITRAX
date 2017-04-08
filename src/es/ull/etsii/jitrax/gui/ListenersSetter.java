@@ -352,6 +352,9 @@ public class ListenersSetter {
 			else if (e.getSource() == getMainWindow().getBarMenu().getQueriesListShow()) {
 				if (((JCheckBoxMenuItem) e.getSource()).isSelected()) {
 					getMainWindow().getQueryList().setVisible(true);
+					getMainWindow().setUpHorSplitPaneHeight();
+					getMainWindow().revalidate();
+					getMainWindow().repaint();
 				} else {
 					getMainWindow().getQueryList().setVisible(false);
 				}

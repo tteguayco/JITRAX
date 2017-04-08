@@ -40,7 +40,7 @@ public class MainWindow extends JFrame {
 	private static final int MINIMUM_HEIGHT = 500;
 	private static final int BORDER_GAP = 10;
 	
-	private static final String WELCOME_MSG = "> Welcome to JITRAX (Prototype)";
+	private static final String WELCOME_MSG = "> Welcome to JITRAX (v1.0)";
 	private static final String QUERY_TRANSLATION_MSG = "> Relational Algebra query translated to SQL.";
 	private static final String DBMS_EXECUTION_MSG = "> SQL query executed on DBMS.";
 	private static final String DBMS_ERRORS_MSG = "> The DBMS detected the following error:";
@@ -57,6 +57,7 @@ public class MainWindow extends JFrame {
 	private JPanel mainContainer;
 	private QueryList queryList;
 	private PostgreDriver postgreDriver;
+	private JSplitPane horSplitPane;
 	
 	private RelationalAlgebraInterpreter raInterpreter;
 	
@@ -75,10 +76,10 @@ public class MainWindow extends JFrame {
 		rightInnerPanel.add(workspace, BorderLayout.CENTER);
 		
 		// HORIZONTAL SPLITPANE
-		JSplitPane horSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true,
+		horSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true,
 				rightInnerPanel, console);
-		horSplitPane.setResizeWeight(HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT);
 		horSplitPane.setOneTouchExpandable(true);
+		setUpHorSplitPaneHeight();
 		
 		// VERTICAL SPLITPANE
 		//JSplitPane verSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, 
@@ -110,6 +111,14 @@ public class MainWindow extends JFrame {
 		databaseViewerPanel.addDatabase(database);
 		mainContainer.setVisible(true);
 		barMenu.enableDisabledOptions();
+	}
+	
+	public void setUpHorSplitPaneHeight() {
+		horSplitPane.setResizeWeight(HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT);
+		horSplitPane.setDividerLocation(HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT);
+		horSplitPane.revalidate();
+		revalidate();
+		repaint();
 	}
 	
 	private void buildWindow() {
@@ -207,7 +216,6 @@ public class MainWindow extends JFrame {
 				}
 		        
 				getWorkspace().switchToSqlTab();
-		        
 				System.out.println(QUERY_TRANSLATION_MSG);
 			}
 			
@@ -231,7 +239,7 @@ public class MainWindow extends JFrame {
 			statements = sqlCode.split(";");
 			String views[] = new String[0];
 			if (statements.length > 1) {
-				views = Arrays.copyOfRange(statements, 0, statements.length - 2);
+				views = Arrays.copyOfRange(statements, 0, statements.length - 1);
 			}
 			String expr = statements[statements.length - 1];
 			
@@ -241,7 +249,7 @@ public class MainWindow extends JFrame {
 				
 				// Execute views
 				for (int i = 0; i < views.length; i++) {
-					postgreDriver.executeQuery(views[i]);
+					postgreDriver.executeUpdate(views[i]);
 				}
 				
 				// Execute expression
@@ -256,14 +264,12 @@ public class MainWindow extends JFrame {
 				selectedQuery.updateResultSetDataFromTableModel(
 						getWorkspace().getQueryResultViewer().getTableModel());
 				getWorkspace().updateWorkspaceFromQuery(selectedQuery);
-				
 				getWorkspace().switchToQueryResultTab();
-				
 				System.out.println(DBMS_EXECUTION_MSG);
 			}
 			
 			catch (SQLException e) {
-				System.out.println(DBMS_ERRORS_MSG);
+				System.out.println("\n" + DBMS_ERRORS_MSG);
 				System.out.println(" - " + e.getMessage());
 			}
 		}
@@ -368,5 +374,13 @@ public class MainWindow extends JFrame {
 
 	public void setPostgreDriver(PostgreDriver postgreDriver) {
 		this.postgreDriver = postgreDriver;
+	}
+
+	public JSplitPane getHorSplitPane() {
+		return horSplitPane;
+	}
+
+	public void setHorSplitPane(JSplitPane horSplitPane) {
+		this.horSplitPane = horSplitPane;
 	}
 }

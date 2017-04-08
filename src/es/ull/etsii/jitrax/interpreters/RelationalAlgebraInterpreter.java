@@ -13,7 +13,7 @@ import es.ull.etsii.jitrax.analysis.ra.RelationalAlgebraParser;
 
 public class RelationalAlgebraInterpreter {
 	private static final String SYNTAX_ERRORS_MSG = 
-			"> The entered Relational Algebra expression contains syntax errors:\n";
+			"> The entered Relational Algebra expression contains syntax errors:";
 	
 	private ANTLRInputStream input;
 	private ParseTree tree;
@@ -56,7 +56,7 @@ public class RelationalAlgebraInterpreter {
 	    }
 	    
 	    else {
-	    	System.out.println(SYNTAX_ERRORS_MSG);
+	    	System.out.println("\n" + SYNTAX_ERRORS_MSG);
 	    	errorListener.printErrors();
 	    }
 	    
@@ -77,7 +77,7 @@ public class RelationalAlgebraInterpreter {
 		    }
 		    
 		    else {
-		    	System.out.println(SYNTAX_ERRORS_MSG);
+		    	System.out.println("\n" + SYNTAX_ERRORS_MSG);
 		    	errorListener.printErrors();
 		    }
 		}
@@ -91,7 +91,7 @@ public class RelationalAlgebraInterpreter {
 		
 		// Semantic errors?
 		if (eval.getErrorsList().size() > 0) {
-			System.out.println(SYNTAX_ERRORS_MSG);
+			System.out.println("\n" + SYNTAX_ERRORS_MSG);
 			for (int i = 0; i < eval.getErrorsList().size(); i++) {
 				System.out.println(" - " + eval.getErrorsList().get(i));
 			}

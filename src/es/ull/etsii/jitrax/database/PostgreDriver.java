@@ -159,7 +159,7 @@ public class PostgreDriver {
 	}
 	
 	public void dropTable(Table aTable) {
-		String dropTableStatement = "DROP TABLE " + aTable.getName();
+		String dropTableStatement = "DROP TABLE " + aTable.getName() + " CASCADE";
 		
 		try {
 			Statement statement = connection.createStatement();
@@ -201,6 +201,11 @@ public class PostgreDriver {
 	public void executeQuery(String query) throws SQLException {
 		Statement statement = connection.createStatement();
 		queryResultSet = statement.executeQuery(query);
+	}
+	
+	public void executeUpdate(String query) throws SQLException {
+		Statement statement = connection.createStatement();
+		statement.executeUpdate(query);
 	}
 	
 	public String getResultSetString() throws SQLException {
