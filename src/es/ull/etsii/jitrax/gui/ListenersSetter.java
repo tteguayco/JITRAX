@@ -102,14 +102,25 @@ public class ListenersSetter {
 					int choice = showOverwritingQuestionDialog();
 					
 					if (choice == JOptionPane.YES_OPTION) {
-						dbComparator.overwriteDatabaseOnDbms();
+						
+						try {
+							dbComparator.overwriteDatabaseOnDbms();
+						}
+						 catch (SQLException e) {
+							 // A common error would be: the user does not have enough
+							 // permissions to overwrite. 
+							 ArrayList<String> errors = new ArrayList<String>();
+							 errors.add(e.getMessage());
+							 ErrorsDialog errorsDialog = new ErrorsDialog(errors);
+						 }
+						
 						mainWindow.addDatabase(importedDatabase);
 						System.out.println("> Database '" + importedDatabase.getName() +
 								"' was overwritten on DBMS.");
 					}
 		
 					// Check schemas and contents
-					else {
+					else if (choice == JOptionPane.NO_OPTION) {
 						if (dbComparator.databasesAreCompatible()) {
 							mainWindow.addDatabase(importedDatabase);
 							System.out.println("> Database '" + importedDatabase.getName() +
@@ -302,9 +313,9 @@ public class ListenersSetter {
 		
 		choice = JOptionPane.showConfirmDialog(null, 
 				"Do you want to overwrite the database which exists on the DBMS? "
-				+ "\n\nNOTE: If you select 'No', JITRAX will compare the databases' schemas\n"
+				+ "\n\nNOTE: If you don't, JITRAX will compare the databases' schemas\n"
 				+ "and if they coincide, the contents (rows) will be "
-				+ "synchronized. \nOtherwise, you won't be able to re-use this database.",
+				+ "synchronized for \neach table. Otherwise, you won't be able to re-use this database.",
 				"Database Overwriting", JOptionPane.YES_NO_OPTION);
 		
 		return choice;

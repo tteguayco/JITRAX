@@ -80,17 +80,20 @@ public class DatabaseComparator {
 	 * on the application. This means:
 	 * 	- DROP all the tables in the database on the DBMS
 	 *  - CREATE all the tables on the application again on the DBMS.
+	 * @throws SQLException 
 	 */
-	public void overwriteDatabaseOnDbms() {
+	public void overwriteDatabaseOnDbms() throws SQLException {
 		Table auxTable;
 		PostgreDriver dbmsDriver = database.getPostgreDriver();
 		
-		// For each table of the current DB, drop and create
+		// dROP TABLES
 		for (int i = 0; i < database.getTables().size(); i++) {
 			auxTable = database.getTables().get(i);
 			dbmsDriver.dropTable(auxTable);
-			dbmsDriver.createTable(auxTable);
 		}
+		
+		// SET UP DATABASE AGAIN (create tables and insert rows)
+		dbmsDriver.setUpDatabase(database);
 	}
 	
 	public boolean localTablesAreOnDbms() {
