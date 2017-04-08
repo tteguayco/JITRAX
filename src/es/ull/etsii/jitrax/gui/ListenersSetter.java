@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.DefaultComboBoxModel;
 
 import org.postgresql.util.PSQLException;
 
@@ -75,6 +76,11 @@ public class ListenersSetter {
 			Database importedDatabase = fileDialog.importDatabaseDialog();
 			
 			if (importedDatabase != null) {
+				
+				if (databaseAlreadyExists(importedDatabase.getName())) {
+					showDatabaseAlreadyExistsDialog();
+					return;
+				}
 			
 				// Assign a PostgreDriver to the new database
 				importedDatabase.setPostgreDriver(postgreDriver);
@@ -292,6 +298,20 @@ public class ListenersSetter {
 		}
 	}
 	
+	private boolean databaseAlreadyExists(String aDatabaseName) {
+		int databaseIndex = ((DefaultComboBoxModel) getMainWindow()
+				.getDatabaseViewerPanel()
+				.getSelectedDatabaseViewer()
+				.getCombo()
+				.getModel()).getIndexOf(aDatabaseName);
+				
+		if (databaseIndex < 0) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 	private void showRequiredFieldsDialog() {
 		JOptionPane.showMessageDialog(null,"All the fields are required.",
 				"Warning", JOptionPane.INFORMATION_MESSAGE);
@@ -319,6 +339,12 @@ public class ListenersSetter {
 				"Database Overwriting", JOptionPane.YES_NO_OPTION);
 		
 		return choice;
+	}
+	
+	private void showDatabaseAlreadyExistsDialog() {
+		JOptionPane.showMessageDialog(null, "A database with the same name you have "
+				+ "specified already exists in the environment.",
+				"Database already exists", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	public MainWindow getMainWindow() {
