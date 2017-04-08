@@ -443,10 +443,8 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 				String leftRelationName = visit(ctx.expr(0));
 				String rightRelationName = visit(ctx.expr(1));
 				
-				division += "SELECT " + divisionSchema + " ";
-				division += "FROM " + leftRelationName + "\n";
-				division += "WHERE (" + rightRelationSchema + ")";
-				division += "\nIN (SELECT " + rightRelationSchema + " FROM " + rightRelationName +")\n";
+				division += "SELECT " + divisionSchema + "\n";
+				division += "FROM " + leftRelationName + " NATURAL JOIN "  + rightRelationName + "\n";
 				division += "GROUP BY " + divisionSchema + "\n";
 				division += "HAVING COUNT(*) = (SELECT COUNT(*) FROM " + rightRelationName + ")";
 				
