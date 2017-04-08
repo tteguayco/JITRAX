@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBoxMenuItem;
 
 import org.postgresql.util.PSQLException;
 
@@ -49,6 +50,8 @@ public class ListenersSetter {
 		getMainWindow().getBarMenu().getExportRelAlgQuery().addActionListener(new ExportationOptionListener());
 		getMainWindow().getBarMenu().getExportSqlQuery().addActionListener(new ExportationOptionListener());
 		getMainWindow().getQueryList().getSaveButton().addActionListener(new ExportationOptionListener());
+		getMainWindow().getBarMenu().getRaCodeHighLighting().addActionListener(new HighlightingEnabler());
+		getMainWindow().getBarMenu().getSqlCodeHighLighting().addActionListener(new HighlightingEnabler());
 	}
 	
 	private class NewDatabaseListener implements ActionListener {
@@ -295,6 +298,36 @@ public class ListenersSetter {
 					fileDialog.exportFile("Export SQL Query", sqlQuery, ".sql");
 				}
 			}
+		}
+	}
+	
+	private class HighlightingEnabler implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == getMainWindow().getBarMenu().getRaCodeHighLighting()) {
+				if (((JCheckBoxMenuItem) e.getSource()).isSelected()) {
+					getMainWindow().getWorkspace().enableSyntaxEditingRaEditor();
+				} else {
+					getMainWindow().getWorkspace().disableSyntaxEditingRaEditor();
+				}
+			}
+			
+			else if (e.getSource() == getMainWindow().getBarMenu().getSqlCodeHighLighting()) {
+				if (((JCheckBoxMenuItem) e.getSource()).isSelected()) {
+					getMainWindow().getWorkspace().enableSyntaxEditingSqlEditor();
+				} else {
+					getMainWindow().getWorkspace().disableSyntaxEditingSqlEditor();
+				}
+			}
+		}
+	}
+	
+	private class ViewsHidder implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
 		}
 	}
 	

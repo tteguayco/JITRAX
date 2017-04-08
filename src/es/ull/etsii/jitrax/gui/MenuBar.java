@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -25,7 +26,7 @@ import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
 public class MenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
 	
-	private static final String DOC_URL = "";
+	private static final String DOC_URL = "https://github.com/tteguayco/JITRAX#quick-start";
 	private static final String SOURCE_CODE_URL = "https://github.com/tteguayco/JITRAX";
 	
 	private JMenu fileMenu;
@@ -45,6 +46,13 @@ public class MenuBar extends JMenuBar {
 	private JMenuItem exportRelAlgQuery;
 	private JMenuItem exportSqlQuery;
 	private JMenuItem exitOption;
+	
+	private JCheckBoxMenuItem raCodeHighLighting;
+	private JCheckBoxMenuItem sqlCodeHighLighting;
+	private JCheckBoxMenuItem consoleShow;
+	private JCheckBoxMenuItem workspaceShow;
+	private JCheckBoxMenuItem dbViewerShow;
+	private JCheckBoxMenuItem queriesListShow;
 	
 	private JMenuItem onlineDocumentationOption;
 	private JMenuItem sourceCodeOption;
@@ -121,8 +129,28 @@ public class MenuBar extends JMenuBar {
 		
 		ButtonGroup buttonGroup = new ButtonGroup();
 		
+		JMenu codeHMenu = new JMenu("Code highlighting");
+		raCodeHighLighting = new JCheckBoxMenuItem("Relational Algebra", true);
+		sqlCodeHighLighting = new JCheckBoxMenuItem("SQL", true);
+		
+		codeHMenu.add(raCodeHighLighting);
+		codeHMenu.add(sqlCodeHighLighting);
+		
+		JMenu showMenu = new JMenu("Show");
+		consoleShow = new JCheckBoxMenuItem("Console", true);
+		workspaceShow = new JCheckBoxMenuItem("Workspace", true);
+		dbViewerShow = new JCheckBoxMenuItem("DB Viewer", true);
+		queriesListShow = new JCheckBoxMenuItem("Query List", true);
+		
+		showMenu.add(consoleShow);
+		showMenu.add(workspaceShow);
+		showMenu.add(dbViewerShow);
+		showMenu.add(queriesListShow);
+		
 		setViewMenu(new JMenu("View"));
 		getViewMenu().setMnemonic(KeyEvent.VK_V);
+		getViewMenu().add(codeHMenu);
+		getViewMenu().add(showMenu);
 	}
 	
 	private void buildLanguageMenu() {
@@ -345,5 +373,53 @@ public class MenuBar extends JMenuBar {
 
 	public void setExportSqlQuery(JMenuItem exportSqlQuery) {
 		this.exportSqlQuery = exportSqlQuery;
+	}
+
+	public JCheckBoxMenuItem getRaCodeHighLighting() {
+		return raCodeHighLighting;
+	}
+
+	public void setRaCodeHighLighting(JCheckBoxMenuItem raCodeHighLighting) {
+		this.raCodeHighLighting = raCodeHighLighting;
+	}
+
+	public JCheckBoxMenuItem getSqlCodeHighLighting() {
+		return sqlCodeHighLighting;
+	}
+
+	public void setSqlCodeHighLighting(JCheckBoxMenuItem sqlCodeHighLighting) {
+		this.sqlCodeHighLighting = sqlCodeHighLighting;
+	}
+
+	public JCheckBoxMenuItem getConsoleShow() {
+		return consoleShow;
+	}
+
+	public void setConsoleShow(JCheckBoxMenuItem consoleShow) {
+		this.consoleShow = consoleShow;
+	}
+
+	public JCheckBoxMenuItem getWorkspaceShow() {
+		return workspaceShow;
+	}
+
+	public void setWorkspaceShow(JCheckBoxMenuItem workspaceShow) {
+		this.workspaceShow = workspaceShow;
+	}
+
+	public JCheckBoxMenuItem getDbViewerShow() {
+		return dbViewerShow;
+	}
+
+	public void setDbViewerShow(JCheckBoxMenuItem dbViewerShow) {
+		this.dbViewerShow = dbViewerShow;
+	}
+
+	public JCheckBoxMenuItem getQueriesListShow() {
+		return queriesListShow;
+	}
+
+	public void setQueriesListShow(JCheckBoxMenuItem queriesListShow) {
+		this.queriesListShow = queriesListShow;
 	}
 }

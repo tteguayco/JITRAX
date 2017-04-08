@@ -327,6 +327,22 @@ public class Workspace extends JPanel {
 		getSQLCodeEditor().setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
 	}
 	
+	public void enableSyntaxEditingRaEditor() {
+		setSyntaxHighlightingForRelationalAlgebra();
+	}
+	
+	public void disableSyntaxEditingRaEditor() {
+		getRelationalAlgebraCodeEditor().setSyntaxEditingStyle(null);
+	}
+	
+	public void enableSyntaxEditingSqlEditor() {
+		setSyntaxHighlightingForSQL();
+	}
+	
+	public void disableSyntaxEditingSqlEditor() {
+		getSqlCodeEditor().setSyntaxEditingStyle(null);
+	}
+	
 	private void updateSqlCaretPositionLabel(int pos) {
 		getSqlEditorCaretPositionLabel().setText("Position: " + pos);
 	}
