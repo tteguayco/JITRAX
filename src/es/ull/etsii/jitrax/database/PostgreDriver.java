@@ -158,6 +158,17 @@ public class PostgreDriver {
 		}
 	}
 	
+	public void dropTable(Table aTable) {
+		String dropTableStatement = "DROP TABLE " + aTable.getName();
+		
+		try {
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(dropTableStatement);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void insertRow(Row row, Table table) {
 		Datum auxDatum;
 		String insertRowStatement = "INSERT INTO " + table.getName() + " VALUES(";

@@ -94,21 +94,33 @@ public class ListenersSetter {
 				else {
 					// Switch to the existing database
 					postgreDriver.switchDatabase(importedDatabase.getName());
-					
-					// Compare them
+					// Initialize comparator
 					DatabaseComparator dbComparator = new DatabaseComparator(
 							importedDatabase, postgreDriver.getConnection());
 					
-					if (dbComparator.databasesAreCompatible()) {
+					// Ask for overwriting
+					int choice = showOverwritingQuestionDialog();
+					
+					if (choice == JOptionPane.YES_OPTION) {
+						dbComparator.overwriteDatabaseOnDbms();
 						mainWindow.addDatabase(importedDatabase);
 						System.out.println("> Database '" + importedDatabase.getName() +
-								"' was retrieved from DBMS.");
+								"' was overwritten on DBMS.");
 					}
-					
+		
+					// Check schemas and contents
 					else {
-						showDatabasesContentsDifferDialog();
-						// TODO ask for updating the database in the dbms
+						if (dbComparator.databasesAreCompatible()) {
+							mainWindow.addDatabase(importedDatabase);
+							System.out.println("> Database '" + importedDatabase.getName() +
+									"' was retrieved from DBMS.");
+						}
+						
+						else {
+							showDatabasesTablesSchemasDiffers();
+						}
 					}
+		
 				}
 					
 			}
@@ -274,15 +286,28 @@ public class ListenersSetter {
 				"Warning", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
-	private void showDatabasesContentsDifferDialog() {
-		JOptionPane.showMessageDialog(null, "A database exists on the DBMS whose content differs "
-				+ "from the content of the specified database.",
+	private void showDatabasesTablesSchemasDiffers() {
+		JOptionPane.showMessageDialog(null, "A database exists on the DBMS whose schema differs\n"
+				+ "from the schema of the specified database.",
 				"Error", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	private void showFileTooLongDialog() {
 		JOptionPane.showMessageDialog(null, "The specified file exceeds the size limit",
 				"File too long", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	private int showOverwritingQuestionDialog() {
+		int choice = 0;
+		
+		choice = JOptionPane.showConfirmDialog(null, 
+				"Do you want to overwrite the database which exists on the DBMS? "
+				+ "\n\nNOTE: If you select 'No', JITRAX will compare the databases' schemas\n"
+				+ "and if they coincide, the contents (rows) will be "
+				+ "synchronized. \nOtherwise, you won't be able to re-use this database.",
+				"Database Overwriting", JOptionPane.YES_NO_OPTION);
+		
+		return choice;
 	}
 	
 	public MainWindow getMainWindow() {
