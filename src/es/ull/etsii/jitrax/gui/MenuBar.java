@@ -50,7 +50,6 @@ public class MenuBar extends JMenuBar {
 	private JCheckBoxMenuItem raCodeHighLighting;
 	private JCheckBoxMenuItem sqlCodeHighLighting;
 	private JCheckBoxMenuItem consoleShow;
-	private JCheckBoxMenuItem workspaceShow;
 	private JCheckBoxMenuItem dbViewerShow;
 	private JCheckBoxMenuItem queriesListShow;
 	
@@ -138,14 +137,12 @@ public class MenuBar extends JMenuBar {
 		
 		JMenu showMenu = new JMenu("Show");
 		consoleShow = new JCheckBoxMenuItem("Console", true);
-		workspaceShow = new JCheckBoxMenuItem("Workspace", true);
 		dbViewerShow = new JCheckBoxMenuItem("DB Viewer", true);
 		queriesListShow = new JCheckBoxMenuItem("Query List", true);
 		
-		showMenu.add(consoleShow);
-		showMenu.add(workspaceShow);
 		showMenu.add(dbViewerShow);
 		showMenu.add(queriesListShow);
+		showMenu.add(consoleShow);
 		
 		setViewMenu(new JMenu("View"));
 		getViewMenu().setMnemonic(KeyEvent.VK_V);
@@ -208,7 +205,7 @@ public class MenuBar extends JMenuBar {
 			}
 		}
 	}
-	public void enableFileOptions() {
+	public void enableDisabledOptions() {
 		getSaveDatabase().setEnabled(true);
 		getSaveDatabaseAs().setEnabled(true);
 		getImportOption().setEnabled(true);
@@ -397,14 +394,6 @@ public class MenuBar extends JMenuBar {
 
 	public void setConsoleShow(JCheckBoxMenuItem consoleShow) {
 		this.consoleShow = consoleShow;
-	}
-
-	public JCheckBoxMenuItem getWorkspaceShow() {
-		return workspaceShow;
-	}
-
-	public void setWorkspaceShow(JCheckBoxMenuItem workspaceShow) {
-		this.workspaceShow = workspaceShow;
 	}
 
 	public JCheckBoxMenuItem getDbViewerShow() {

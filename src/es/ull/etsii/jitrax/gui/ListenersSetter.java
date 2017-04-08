@@ -52,6 +52,9 @@ public class ListenersSetter {
 		getMainWindow().getQueryList().getSaveButton().addActionListener(new ExportationOptionListener());
 		getMainWindow().getBarMenu().getRaCodeHighLighting().addActionListener(new HighlightingEnabler());
 		getMainWindow().getBarMenu().getSqlCodeHighLighting().addActionListener(new HighlightingEnabler());
+		getMainWindow().getBarMenu().getConsoleShow().addActionListener(new ViewsHidder());
+		getMainWindow().getBarMenu().getDbViewerShow().addActionListener(new ViewsHidder());
+		getMainWindow().getBarMenu().getQueriesListShow().addActionListener(new ViewsHidder());
 	}
 	
 	private class NewDatabaseListener implements ActionListener {
@@ -327,7 +330,32 @@ public class ListenersSetter {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// CONSOLE VIEW
+			if (e.getSource() == getMainWindow().getBarMenu().getConsoleShow()) {
+				if (((JCheckBoxMenuItem) e.getSource()).isSelected()) {
+					getMainWindow().getConsole().setVisible(true);
+				} else {
+					getMainWindow().getConsole().setVisible(false);
+				}
+			}
 			
+			// DB VIEWER VIEW
+			else if (e.getSource() == getMainWindow().getBarMenu().getDbViewerShow()) {
+				if (((JCheckBoxMenuItem) e.getSource()).isSelected()) {
+					getMainWindow().getDatabaseViewerPanel().setVisible(true);
+				} else {
+					getMainWindow().getDatabaseViewerPanel().setVisible(false);
+				}
+			}
+			
+			// QUERIES LIST
+			else if (e.getSource() == getMainWindow().getBarMenu().getQueriesListShow()) {
+				if (((JCheckBoxMenuItem) e.getSource()).isSelected()) {
+					getMainWindow().getQueryList().setVisible(true);
+				} else {
+					getMainWindow().getQueryList().setVisible(false);
+				}
+			}
 		}
 	}
 	
