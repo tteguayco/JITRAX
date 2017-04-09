@@ -29,6 +29,8 @@ public class MenuBar extends JMenuBar {
 	private static final String DOC_URL = "https://github.com/tteguayco/JITRAX#quick-start";
 	private static final String SOURCE_CODE_URL = "https://github.com/tteguayco/JITRAX";
 	
+	private Workspace workspace;
+	
 	private JMenu fileMenu;
 	private JMenu editMenu;
 	private JMenu viewMenu;
@@ -47,6 +49,14 @@ public class MenuBar extends JMenuBar {
 	private JMenuItem exportSqlQuery;
 	private JMenuItem exitOption;
 	
+	private JMenuItem undoOption;
+	private JMenuItem redoOption;
+	private JMenuItem cutOption;
+	private JMenuItem copyOption;
+	private JMenuItem pasteOption;
+	private JMenuItem deleteOption;
+	private JMenuItem selectAllOption;
+	
 	private JCheckBoxMenuItem raCodeHighLighting;
 	private JCheckBoxMenuItem sqlCodeHighLighting;
 	private JCheckBoxMenuItem consoleShow;
@@ -60,6 +70,8 @@ public class MenuBar extends JMenuBar {
 	private JRadioButtonMenuItem englishRadioButton;
 	
 	public MenuBar(Workspace aWorkspace) {
+		workspace = aWorkspace;
+		
 		buildFileMenu();
 		buildEditMenu();
 		buildViewMenu();
@@ -122,6 +134,47 @@ public class MenuBar extends JMenuBar {
 	private void buildEditMenu() {
 		editMenu = new JMenu("Edit");
 		editMenu.setMnemonic(KeyEvent.VK_E);
+		
+		undoOption = new JMenuItem("Undo");
+		undoOption.setMnemonic(KeyEvent.VK_Z);
+		redoOption = new JMenuItem("Redo");
+		redoOption.setMnemonic(KeyEvent.VK_Y);
+		cutOption = new JMenuItem("Cut");
+		cutOption.setMnemonic(KeyEvent.VK_X);
+		copyOption = new JMenuItem("Copy");
+		copyOption.setMnemonic(KeyEvent.VK_C);
+		pasteOption = new JMenuItem("Paste");
+		pasteOption.setMnemonic(KeyEvent.VK_P);
+		deleteOption = new JMenuItem("Delete");
+		deleteOption.setMnemonic(KeyEvent.VK_DELETE);
+		selectAllOption = new JMenuItem("Select All");
+		selectAllOption.setMnemonic(KeyEvent.VK_A);
+		
+		getEditMenu().add(undoOption);
+		getEditMenu().add(redoOption);
+		getEditMenu().add(new JSeparator());
+		getEditMenu().add(cutOption);
+		getEditMenu().add(copyOption);
+		getEditMenu().add(pasteOption);
+		getEditMenu().add(deleteOption);
+		getEditMenu().add(new JSeparator());
+		getEditMenu().add(selectAllOption);
+		
+		undoOption.addActionListener(new UndoListener());
+		redoOption.addActionListener(new RedoListener());
+		cutOption.addActionListener(new CutListener());
+		copyOption.addActionListener(new CopyListener());
+		pasteOption.addActionListener(new PasteListener());
+		deleteOption.addActionListener(new DeleteListener());
+		selectAllOption.addActionListener(new SelectAllListener());
+		
+		undoOption.setEnabled(false);
+		redoOption.setEnabled(false);
+		cutOption.setEnabled(false);
+		copyOption.setEnabled(false);
+		pasteOption.setEnabled(false);
+		deleteOption.setEnabled(false);
+		selectAllOption.setEnabled(false);
 	}
 	
 	private void buildViewMenu() {
@@ -205,11 +258,76 @@ public class MenuBar extends JMenuBar {
 			}
 		}
 	}
+	
+	private class UndoListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			getWorkspace().getRelationalAlgebraCodeEditor().undoLastAction();;
+		}
+	}
+	
+	private class RedoListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			getWorkspace().getRelationalAlgebraCodeEditor().redoLastAction();
+		}
+	}
+	
+	private class CutListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			getWorkspace().getRelationalAlgebraCodeEditor().cut();
+		}
+	}
+	
+	private class CopyListener implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			getWorkspace().getRelationalAlgebraCodeEditor().copy();
+		}
+	}
+	
+	private class PasteListener implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			getWorkspace().getRelationalAlgebraCodeEditor().paste();
+		}
+	}
+	
+	private class DeleteListener implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			//getWorkspace().getRelationalAlgebraCodeEditor().dele();
+		}
+	}
+	
+	private class SelectAllListener implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			getWorkspace().getRelationalAlgebraCodeEditor().selectAll();
+		}
+	}
+	
 	public void enableDisabledOptions() {
 		getSaveDatabase().setEnabled(true);
 		getSaveDatabaseAs().setEnabled(true);
 		getImportOption().setEnabled(true);
 		getExportOption().setEnabled(true);
+		
+		getUndoOption().setEnabled(true);
+		getRedoOption().setEnabled(true);
+		getCutOption().setEnabled(true);
+		getCopyOption().setEnabled(true);
+		getPasteOption().setEnabled(true);
+		getDeleteOption().setEnabled(true);
+		getSelectAllOption().setEnabled(true);
 	}
 	
 	public JMenu getFileMenu() {
@@ -410,5 +528,69 @@ public class MenuBar extends JMenuBar {
 
 	public void setQueriesListShow(JCheckBoxMenuItem queriesListShow) {
 		this.queriesListShow = queriesListShow;
+	}
+
+	public Workspace getWorkspace() {
+		return workspace;
+	}
+
+	public void setWorkspace(Workspace workspace) {
+		this.workspace = workspace;
+	}
+
+	public JMenuItem getUndoOption() {
+		return undoOption;
+	}
+
+	public void setUndoOption(JMenuItem undoOption) {
+		this.undoOption = undoOption;
+	}
+
+	public JMenuItem getRedoOption() {
+		return redoOption;
+	}
+
+	public void setRedoOption(JMenuItem redoOption) {
+		this.redoOption = redoOption;
+	}
+
+	public JMenuItem getCutOption() {
+		return cutOption;
+	}
+
+	public void setCutOption(JMenuItem cutOption) {
+		this.cutOption = cutOption;
+	}
+
+	public JMenuItem getCopyOption() {
+		return copyOption;
+	}
+
+	public void setCopyOption(JMenuItem copyOption) {
+		this.copyOption = copyOption;
+	}
+
+	public JMenuItem getPasteOption() {
+		return pasteOption;
+	}
+
+	public void setPasteOption(JMenuItem pasteOption) {
+		this.pasteOption = pasteOption;
+	}
+
+	public JMenuItem getDeleteOption() {
+		return deleteOption;
+	}
+
+	public void setDeleteOption(JMenuItem deleteOption) {
+		this.deleteOption = deleteOption;
+	}
+
+	public JMenuItem getSelectAllOption() {
+		return selectAllOption;
+	}
+
+	public void setSelectAllOption(JMenuItem selectAllOption) {
+		this.selectAllOption = selectAllOption;
 	}
 }

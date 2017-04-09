@@ -11,7 +11,7 @@ TABLE Flight(Number: Integer,
 (3, 'Florida', 'Paris', '5pm', '12pm');
 (4, 'Memphis', 'London', '4am', '11am');
 
-TABLE Pilot(CompanyID: Integer, Name: Char, ExperienceLevel: Integer)
+TABLE Pilot(CompanyID: Integer, Name: String, ExperienceLevel: Integer)
 =>
 (3, 'Doe', 75);
 (4, 'Swiss', 67);
