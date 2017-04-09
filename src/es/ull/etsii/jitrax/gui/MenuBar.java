@@ -303,7 +303,11 @@ public class MenuBar extends JMenuBar {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//getWorkspace().getRelationalAlgebraCodeEditor().dele();
+			if (getWorkspace().getRelationalAlgebraCodeEditor().getSelectedText() != null) {
+				getWorkspace().getRelationalAlgebraCodeEditor().setText(
+						getWorkspace().getRelationalAlgebraCodeEditor().getText().replace(
+								getWorkspace().getRelationalAlgebraCodeEditor().getSelectedText(), ""));
+			}
 		}
 	}
 	
