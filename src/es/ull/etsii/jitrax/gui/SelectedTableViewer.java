@@ -19,7 +19,7 @@ import java.awt.event.ComponentAdapter;
 
 import es.ull.etsii.jitrax.adt.Table;
 
-public class SelectedTableViewer extends JPanel {
+public class SelectedTableViewer extends GraphicTable {
 	private static final long serialVersionUID = 1L;
 	
 	private static final int MINIMUM_WIDTH = 290;
@@ -32,7 +32,6 @@ public class SelectedTableViewer extends JPanel {
 	private static final int COL_MIN_WIDTH = 100;
 	
 	private Table table;
-	private JTable graphicTable;
 	private DefaultTableModel tableModel;
 	
 	public SelectedTableViewer() {
@@ -79,7 +78,7 @@ public class SelectedTableViewer extends JPanel {
 		
 		addComponentListener(new ComponentAdapter() {
 		    public void componentResized(ComponentEvent e) {
-		        resizeColumnWidth();          
+		        resizeColumnWidth(COL_MIN_WIDTH);          
 		    }
 		});
 		
@@ -92,29 +91,7 @@ public class SelectedTableViewer extends JPanel {
 		tableModel.setDataVector(aTable.getRowsData(), aTable.getColumnsNames());
 		tableModel.fireTableDataChanged();
 		updateTitle();
-		resizeColumnWidth();
-	}
-	
-	/**
-	 * Sets a minimum width for all table's columns.
-	 */
-	private void setMinColumnsWidth() {
-		for (int i = 0; i < graphicTable.getColumnModel().getColumnCount(); i++) {
-			graphicTable.getColumnModel().getColumn(i).setMinWidth(COL_MIN_WIDTH);
-		}
-	}
-	
-	public void resizeColumnWidth() {
-		int graphicTableWidth = COL_MIN_WIDTH * graphicTable.getColumnCount();
-		int parentWidth = graphicTable.getParent().getWidth();
-		
-		setMinColumnsWidth();
-		
-		if (parentWidth < graphicTableWidth) {
-			graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		} else {
-			graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		}
+		resizeColumnWidth(COL_MIN_WIDTH);
 	}
 	
 	/**

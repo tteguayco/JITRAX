@@ -2,6 +2,8 @@ package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,12 +16,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class QueryResultViewer extends JPanel {
+public class QueryResultViewer extends GraphicTable {
 	private static final int COL_MIN_WIDTH = 150;
 	private static String EMPTY_RESULT_MSG = "Empty relation as a result.";
 	
 	private ResultSet resultSet;
-	private JTable graphicTable;
 	private DefaultTableModel tableModel;
 	private JLabel emptyResultLabel;
 	private JPanel mainContainer;
@@ -27,7 +28,6 @@ public class QueryResultViewer extends JPanel {
 	
 	public QueryResultViewer() {
 		resultSet = null;
-		graphicTable = new JTable();
 		tableModel = new DefaultTableModel();
 		emptyResultLabel = new JLabel(EMPTY_RESULT_MSG);
 		mainContainer = new JPanel();
@@ -40,23 +40,20 @@ public class QueryResultViewer extends JPanel {
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		tableSP.setBorder(BorderFactory.createEmptyBorder());
 		
-		graphicTable.setFillsViewportHeight(false);
+		graphicTable.setFillsViewportHeight(true);
 	
-		graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		//graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		graphicTable.setEnabled(false);
+		
+		addComponentListener(new ComponentAdapter() {
+		    public void componentResized(ComponentEvent e) {
+		        resizeColumnWidth(COL_MIN_WIDTH);          
+		    }
+		});
 		
 		mainContainer.add(tableSP);
 		setLayout(new GridLayout(1,1));
 		add(tableSP);
-	}
-	
-	/**
-	 * Sets a minimum width for all table's columns.
-	 */
-	private void setMinColumnsWidth() {
-		for (int i = 0; i < graphicTable.getColumnModel().getColumnCount(); i++) {
-			graphicTable.getColumnModel().getColumn(i).setMinWidth(COL_MIN_WIDTH);
-		}
 	}
 	
 	public void updateTableData(ResultSet resultSet) throws SQLException {
@@ -90,11 +87,14 @@ public class QueryResultViewer extends JPanel {
 		
 		tableModel.setDataVector(rowsDataAsArray, columnNamesAsArray);
 		tableModel.fireTableDataChanged();
-		setMinColumnsWidth();
+		resizeColumnWidth(COL_MIN_WIDTH);
 		
 		if (tableModel.getColumnCount() <= 0) {
-			System.out.println("> " + EMPTY_RESULT_MSG);
+			System.out.println("\n> " + EMPTY_RESULT_MSG);
 		}
+		
+		revalidate();
+		repaint();
 	}
 
 	public ResultSet getResultSet() {

@@ -2,6 +2,7 @@ package es.ull.etsii.jitrax.gui;
 
 import java.awt.Desktop;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URI;
@@ -16,6 +17,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -129,6 +131,17 @@ public class MenuBar extends JMenuBar {
 		saveDatabaseAs.setEnabled(false);
 		importOption.setEnabled(false);
 		exportOption.setEnabled(false);
+		
+		KeyStroke ctrlN = KeyStroke.getKeyStroke(
+				KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+		KeyStroke ctrlO = KeyStroke.getKeyStroke(
+				KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+		KeyStroke ctrlS = KeyStroke.getKeyStroke(
+				KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+		
+		newDatabase.setAccelerator(ctrlN);
+		openDatabase.setAccelerator(ctrlO);
+		saveDatabase.setAccelerator(ctrlS);
 	}
 	
 	private void buildEditMenu() {
@@ -175,6 +188,28 @@ public class MenuBar extends JMenuBar {
 		pasteOption.setEnabled(false);
 		deleteOption.setEnabled(false);
 		selectAllOption.setEnabled(false);
+		
+		KeyStroke ctrlZ = KeyStroke.getKeyStroke(
+				KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+		KeyStroke ctrlY = KeyStroke.getKeyStroke(
+				KeyEvent.VK_Y, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+		KeyStroke ctrlX = KeyStroke.getKeyStroke(
+				KeyEvent.VK_X, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+		KeyStroke ctrlC = KeyStroke.getKeyStroke(
+				KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+		KeyStroke ctrlV = KeyStroke.getKeyStroke(
+				KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+		KeyStroke ctrlA = KeyStroke.getKeyStroke(
+				KeyEvent.VK_A, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+		KeyStroke ctrlF = KeyStroke.getKeyStroke(
+				KeyEvent.VK_F, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+		
+		undoOption.setAccelerator(ctrlZ);
+		redoOption.setAccelerator(ctrlY);
+		cutOption.setAccelerator(ctrlX);
+		copyOption.setAccelerator(ctrlC);
+		pasteOption.setAccelerator(ctrlV);
+		selectAllOption.setAccelerator(ctrlA);
 	}
 	
 	private void buildViewMenu() {
