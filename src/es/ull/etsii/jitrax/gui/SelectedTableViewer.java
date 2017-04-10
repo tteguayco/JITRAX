@@ -52,6 +52,10 @@ public class SelectedTableViewer extends GraphicTable {
 		graphicTable.setModel(tableModel);
 	}
 	
+	public void makeEditable() {
+		graphicTable.setEnabled(true);
+	}
+	
 	/**
 	 * Creates a customized JTable with the table's information.
 	 */
@@ -60,6 +64,10 @@ public class SelectedTableViewer extends GraphicTable {
 		markOddRows();
 		
 		setLayout(new BorderLayout());
+		
+		graphicTable.setFocusable(true);
+		graphicTable.setColumnSelectionAllowed(true);
+		graphicTable.setRowSelectionAllowed(true);
 		
 		JScrollPane tableSP = new JScrollPane(graphicTable);
 		tableSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -103,6 +111,11 @@ public class SelectedTableViewer extends GraphicTable {
                 getTable().getName(),
                 TitledBorder.CENTER,
                 TitledBorder.TOP));
+	}
+	
+	public void addEmptyRow() {
+		((DefaultTableModel) graphicTable.getModel()).addRow(new Object[] {});
+		((DefaultTableModel) graphicTable.getModel()).fireTableDataChanged();
 	}
 	
 	public Table getTable() {

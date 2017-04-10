@@ -109,12 +109,15 @@ public class Workspace extends JPanel {
 		relationalAlgebraCodeEditor = new RSyntaxTextArea();
 		sqlCodeEditor = new RSyntaxTextArea();
 		translateButton = new JButton("Translate");
-		executeButton = new JButton("Execute on DBMS");
+		executeButton = new JButton("Execute");
 		parseTreePanel = new JPanel(new BorderLayout());
 		queryResultViewer = new QueryResultViewer();
 		formattedSqlCodeCheck = new JCheckBox("Display SQL code formatted");
 		raEditorCaretPositionLabel = new JLabel("Position: 0");
 		sqlEditorCaretPositionLabel = new JLabel("Position 0");
+		
+		translateButton.setToolTipText("Translate RA query to SQL language");
+		executeButton.setToolTipText("Execute this SQL query on your DBMS");
 		
 		sqlFormatter = new BasicFormatterImpl();
 		

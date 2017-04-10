@@ -135,8 +135,6 @@ public class DatabaseViewer extends JPanel {
 			TablesManagerWindow tmWindow = new TablesManagerWindow(selectedDatabase);
 			int graphicTableIndex;
 			
-			//System.out.println("> " + tmWindow.getTablesViewer().getGraphicTables());
-			
 			// Mark the current selected table
 			TablePanel selectedTablePanel = getTablesViewer().getSelectedTablePanel();
 			graphicTableIndex = tmWindow.getTablesViewer().getIndexOfGraphicTable(selectedTablePanel);

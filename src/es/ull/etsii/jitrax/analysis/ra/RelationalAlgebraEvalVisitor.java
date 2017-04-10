@@ -204,18 +204,6 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	}
 	
 	private boolean isFromExpression(ParserRuleContext ctx) {
-		// NON-FROM EXPRESSIONS: Projection, Selection, Division, 
-		// Union, Difference and Intersection
-		/*if (ctx instanceof RelationalAlgebraParser.ProjectionContext
-				|| ctx instanceof RelationalAlgebraParser.SelectionContext
-				|| ctx instanceof RelationalAlgebraParser.DivisionContext
-				|| ctx instanceof RelationalAlgebraParser.UnionContext
-				|| ctx instanceof RelationalAlgebraParser.DifferenceContext
-				|| ctx instanceof RelationalAlgebraParser.IntersectionContext) {
-			// debug line
-			return false;
-		}*/
-		
 		// FROM EXPRESSIONS: Cartesian product, natural join, join
 		// PLUS: a single relation
 		if (ctx instanceof RelationalAlgebraParser.CartesianProductContext

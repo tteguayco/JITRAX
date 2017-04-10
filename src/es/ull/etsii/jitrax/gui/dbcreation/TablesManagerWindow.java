@@ -67,7 +67,12 @@ public class TablesManagerWindow extends JFrame {
 	private JButton addTableButton;
 	private JButton eraseTableButton;
 	private JButton modifyTableButton;
-	private JButton okButton;
+	private JButton applyButton;
+	
+	private JButton newRowButton;
+	private JButton removeRowButton;
+	private JButton newColumnButton;
+	private JButton removeColumnButton;
 	
 	public TablesManagerWindow(Database aDatabase) {
 		database = aDatabase;
@@ -77,11 +82,20 @@ public class TablesManagerWindow extends JFrame {
 		rightPanel = new JPanel(new BorderLayout());
 		
 		selectedTableViewer = new SelectedTableViewer();
+		selectedTableViewer.makeEditable();
 		
 		addTableButton = new JButton("ADD");
 		eraseTableButton = new JButton("ERASE");
 		modifyTableButton = new JButton("MODIFY");
-		okButton = new JButton("  ✔ OK  ");
+		applyButton = new JButton("  ✔ APPLY  ");
+		applyButton.setToolTipText("Apply changes on DBMS");
+		
+		newRowButton = new JButton("+ ROW");
+		removeRowButton = new JButton("− ROW");
+		newColumnButton = new JButton("+ COLUMN");
+		removeColumnButton = new JButton("− COLUMN");
+		
+		newRowButton.addActionListener(new NewRowListener());
 		
 		EmptyBorder schemaPanelPadding = new EmptyBorder(10, 10, 10, 10);
 		
@@ -136,11 +150,18 @@ public class TablesManagerWindow extends JFrame {
 	}
 	
 	private void buildRightPanel() {
-		//setCommonBorder(selectedTableViewer, "Content");
+		JPanel tableButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		
+		// Buttons
+		tableButtonPanel.add(newRowButton);
+		tableButtonPanel.add(removeRowButton);
+		tableButtonPanel.add(newColumnButton);
+		tableButtonPanel.add(removeColumnButton);
+		
+		selectedTableViewer.add(tableButtonPanel, BorderLayout.SOUTH);
 		
 		JScrollPane contentTablePanelSP = new JScrollPane(selectedTableViewer);
 		contentTablePanelSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		
 		// Remove ugly borders
 		contentTablePanelSP.setViewportBorder(null);
 		
@@ -193,6 +214,22 @@ public class TablesManagerWindow extends JFrame {
 		
 		Database mydb = new Database("MyDB");
 		TablesManagerWindow tmWindow = new TablesManagerWindow(mydb);
+	}
+	
+	private class NewRowListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			selectedTableViewer.addEmptyRow();
+		}
+	}
+	
+	private class RemoveRowListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+		}
 	}
 	
 	public Database getDatabase() {
@@ -260,11 +297,11 @@ public class TablesManagerWindow extends JFrame {
 	}
 
 	public JButton getOkButton() {
-		return okButton;
+		return applyButton;
 	}
 
 	public void setOkButton(JButton okButton) {
-		this.okButton = okButton;
+		this.applyButton = okButton;
 	}
 
 	public TablesViewer getTablesViewer() {

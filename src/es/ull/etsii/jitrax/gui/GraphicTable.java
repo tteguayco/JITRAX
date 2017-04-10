@@ -2,10 +2,12 @@ package es.ull.etsii.jitrax.gui;
 
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
 
 public class GraphicTable extends JPanel {
-	
 	private static final long serialVersionUID = 1L;
+	
 	protected JTable graphicTable;
 	
 	public GraphicTable() {
@@ -17,6 +19,18 @@ public class GraphicTable extends JPanel {
 		graphicTable.setPreferredScrollableViewportSize(graphicTable.getPreferredSize());
 		graphicTable.setFillsViewportHeight(true);
 		graphicTable.getTableHeader().setReorderingAllowed(false);
+		graphicTable.setColumnSelectionAllowed(true);
+		graphicTable.setRowSelectionAllowed(true);
+		graphicTable.setRowSelectionAllowed(true);
+		//(ListSelectionModel.SINGLE_SELECTION);
+	}
+	
+	public GraphicTable(GraphicTable aGraphicTable) {
+		graphicTable = new JTable(aGraphicTable.getGraphicTable().getModel());
+	}
+	
+	public void disableCellsCurrentCells() {
+		
 	}
 	
 	/**
