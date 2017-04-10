@@ -17,7 +17,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class QueryResultViewer extends GraphicTable {
-	private static final int COL_MIN_WIDTH = 150;
+	private static final int COL_MIN_WIDTH = 100;
 	private static String EMPTY_RESULT_MSG = "Empty relation as a result.";
 	
 	private ResultSet resultSet;
@@ -32,17 +32,14 @@ public class QueryResultViewer extends GraphicTable {
 		emptyResultLabel = new JLabel(EMPTY_RESULT_MSG);
 		mainContainer = new JPanel();
 		
-		graphicTable.setModel(tableModel);
-		
 		setLayout(new BorderLayout());
 		tableSP = new JScrollPane(graphicTable,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		tableSP.setBorder(BorderFactory.createEmptyBorder());
 		
+		graphicTable.setModel(tableModel);
 		graphicTable.setFillsViewportHeight(true);
-	
-		//graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		graphicTable.setEnabled(false);
 		
 		addComponentListener(new ComponentAdapter() {

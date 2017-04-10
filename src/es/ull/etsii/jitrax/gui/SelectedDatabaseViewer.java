@@ -1,5 +1,6 @@
 package es.ull.etsii.jitrax.gui;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -9,10 +10,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -38,12 +41,12 @@ public class SelectedDatabaseViewer extends JPanel {
 	private static final int NROWS = 2;
 	private static final int NCOLS = 1;
 	
-	private JComboBox<String> dbComboBox;
+	private JComboBox<Database> dbComboBox;
 	private JButton alterButton;
 	private JButton removeButton;
 	
-	public SelectedDatabaseViewer(HashMap<String, Database> databases) {
-		dbComboBox = new JComboBox<String>();
+	public SelectedDatabaseViewer() {
+		dbComboBox = new JComboBox<Database>();
 		alterButton = new JButton("ALTER");
 		removeButton = new JButton("REMOVE");
 		
@@ -52,8 +55,6 @@ public class SelectedDatabaseViewer extends JPanel {
 								LEFT_PADDING,
 								BOTTOM_PADDING,
 								RIGHT_PADDING));
-		
-		updateComboBox(databases);
 		
 		// ComboBox settings
 		dbComboBox.setPreferredSize(new Dimension(COMBOBOX_WIDTH, COMBOBOX_HEIGHT));
@@ -76,29 +77,20 @@ public class SelectedDatabaseViewer extends JPanel {
 		setMaximumSize(new Dimension(MAXIMUM_WIDTH, MAXIMUM_HEIGHT));
 	}
 	
-	public void addDatabase(String databaseName) {
-		getCombo().addItem(databaseName);
-		getCombo().setSelectedItem(databaseName);
-	}
-	
-	/**
-	 * Fills the combobox with the list of databases.
-	 * @param databases
-	 */
-	public void updateComboBox(HashMap<String, Database> databases) {
-		Iterator it = databases.entrySet().iterator();
-		getCombo().removeAllItems();
-	    
-		while (it.hasNext()) {
-	        Map.Entry pair = (Map.Entry)it.next();
-	        getCombo().addItem(databases.get(pair.getKey()).getName());
-	        it.remove();
-	    }
+	public void addDatabase(Database newDatabase) {
+		getCombo().addItem(newDatabase);
+		getCombo().setSelectedItem(newDatabase);
 	}
 
+	public Database getSelectedDatabase() {
+		return (Database) dbComboBox.getSelectedItem();
+	}
+	
 	private boolean containsDatabase(String aDatabaseName) {
-		for (int i = 0; i < getCombo().getModel().getSize(); i++) {
-			if (getCombo().getModel().getElementAt(i).equalsIgnoreCase(aDatabaseName)) {
+		ComboBoxModel<Database> model = dbComboBox.getModel();
+		
+		for (int i = 0; i < model.getSize(); i++) {
+			if (((Database) model.getElementAt(i)).getName().equalsIgnoreCase(aDatabaseName)) {
 				return true;
 			}
 		}
@@ -106,11 +98,11 @@ public class SelectedDatabaseViewer extends JPanel {
 		return false;
 	}
 	
-	public JComboBox<String> getCombo() {
+	public JComboBox<Database> getCombo() {
 		return dbComboBox;
 	}
 
-	public void setCombo(JComboBox<String> dbComboBox) {
+	public void setCombo(JComboBox<Database> dbComboBox) {
 		this.dbComboBox = dbComboBox;
 	}
 

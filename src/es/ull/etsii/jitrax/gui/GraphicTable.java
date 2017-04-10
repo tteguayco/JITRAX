@@ -5,10 +5,18 @@ import javax.swing.JTable;
 
 public class GraphicTable extends JPanel {
 	
+	private static final long serialVersionUID = 1L;
 	protected JTable graphicTable;
 	
 	public GraphicTable() {
 		graphicTable = new JTable();
+		
+		graphicTable.setEnabled(false);
+		graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		graphicTable.setMinimumSize(graphicTable.getPreferredScrollableViewportSize());
+		graphicTable.setPreferredScrollableViewportSize(graphicTable.getPreferredSize());
+		graphicTable.setFillsViewportHeight(true);
+		graphicTable.getTableHeader().setReorderingAllowed(false);
 	}
 	
 	/**
@@ -18,6 +26,9 @@ public class GraphicTable extends JPanel {
 		for (int i = 0; i < graphicTable.getColumnModel().getColumnCount(); i++) {
 			graphicTable.getColumnModel().getColumn(i).setMinWidth(colMinWidth);
 		}
+		
+		graphicTable.revalidate();
+		graphicTable.repaint();
 	}
 	
 	protected void resizeColumnWidth(int colMinWidth) {
@@ -25,9 +36,6 @@ public class GraphicTable extends JPanel {
 		int parentWidth = graphicTable.getParent().getWidth();
 		
 		setMinColumnsWidth(colMinWidth);
-		
-		System.out.println("graphicTableWidth: " + graphicTableWidth);
-		System.out.println("parentWidth: " + parentWidth);
 		
 		if (parentWidth < graphicTableWidth) {
 			graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

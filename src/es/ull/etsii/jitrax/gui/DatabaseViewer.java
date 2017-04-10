@@ -27,16 +27,12 @@ public class DatabaseViewer extends JPanel {
 	private static final String PANEL_TITLE = "DB Viewer";
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
-	private HashMap<String, Database> databases;
-	
 	private SelectedDatabaseViewer selectedDatabaseViewer;
 	private TablesViewer tablesViewer;
 	private SelectedTableViewer selectedTableViewer;
 	
 	public DatabaseViewer() {
-		databases = new HashMap<String, Database>();
-
-		selectedDatabaseViewer = new SelectedDatabaseViewer(databases);
+		selectedDatabaseViewer = new SelectedDatabaseViewer();
 		tablesViewer = new TablesViewer();
 		selectedTableViewer = new SelectedTableViewer();
 		
@@ -63,16 +59,11 @@ public class DatabaseViewer extends JPanel {
 	 * @param database
 	 */
 	public void addDatabase(Database database) {
-		// Add new database
-		getDatabases().put(database.getName(), database);
-		
-		// Update GUI Components
-		getSelectedDatabaseViewer().addDatabase(database.getName());
-		updateSelectedDatabase(database.getName());
+		getSelectedDatabaseViewer().addDatabase(database);
 	}
 	
-	private void updateSelectedDatabase(String newSelectedDatabaseName) {
-		Database newSelectedDatabase = getDatabases().get(newSelectedDatabaseName);
+	private void updateSelectedDatabase() {
+		Database newSelectedDatabase = getSelectedDatabaseViewer().getSelectedDatabase();
 		
 		getTablesViewer().updateTables(newSelectedDatabase.getTables());
 		getSelectedTableViewer().updateTable(newSelectedDatabase.getTables().get(0));
@@ -100,9 +91,10 @@ public class DatabaseViewer extends JPanel {
 			
 			// If the values changes
 			if (e.getStateChange() == ItemEvent.SELECTED) {
-				String selectedDatabaseName = 
-						(String) getSelectedDatabaseViewer().getCombo().getSelectedItem();
-				updateSelectedDatabase(selectedDatabaseName);
+				Database selectedDatabase = 
+						(Database) getSelectedDatabaseViewer().getCombo().getSelectedItem();
+				getSelectedDatabaseViewer().getCombo().setSelectedItem(selectedDatabase);
+				updateSelectedDatabase();
 		    }
 		}
 	}
@@ -110,20 +102,19 @@ public class DatabaseViewer extends JPanel {
 	private class RemoveButtonListener implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {
-			JComboBox<String> databasesCombo = getSelectedDatabaseViewer().getCombo();
+			JComboBox<Database> databasesCombo = getSelectedDatabaseViewer().getCombo();
 			// There must be at least one database
 			if (databasesCombo.getItemCount() > 1) {
-				String databaseToRemoveName = 
-						(String) getSelectedDatabaseViewer().getCombo().getSelectedItem();
+				Database databaseToRemove = (Database)
+						getSelectedDatabaseViewer().getCombo().getSelectedItem();
 				// Confirm deletion
 				int dialogResult = JOptionPane.showConfirmDialog (null, 
-						"Are you sure you want to remove the database " + databaseToRemoveName + "?",
+						"Are you sure you want to remove the database " + databaseToRemove.getName() + "?",
 						"Confirm Deletion",
 						JOptionPane.YES_NO_OPTION);
 				
 				if(dialogResult == JOptionPane.YES_OPTION){
-					getDatabases().remove(databaseToRemoveName);
-					getSelectedDatabaseViewer().updateComboBox(getDatabases());
+					databasesCombo.removeItem((Database) databaseToRemove);
 				}
 			}
 			
@@ -140,8 +131,7 @@ public class DatabaseViewer extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String selectedDatabaseName = (String) getSelectedDatabaseViewer().getCombo().getSelectedItem();
-			Database selectedDatabase = getDatabases().get(selectedDatabaseName);
+			Database selectedDatabase = (Database) getSelectedDatabaseViewer().getCombo().getSelectedItem();
 			TablesManagerWindow tmWindow = new TablesManagerWindow(selectedDatabase);
 			int graphicTableIndex;
 			
@@ -160,16 +150,7 @@ public class DatabaseViewer extends JPanel {
 	}
 	
 	public Database getSelectedDatabase() {
-		String databaseName = (String) selectedDatabaseViewer.getCombo().getSelectedItem();
-		return databases.get(databaseName);
-	}
-	
-	public HashMap<String, Database> getDatabases() {
-		return databases;
-	}
-
-	public void setDatabases(HashMap<String, Database> databases) {
-		this.databases = databases;
+		return (Database) getSelectedDatabaseViewer().getCombo().getSelectedItem();
 	}
 
 	public SelectedDatabaseViewer getSelectedDatabaseViewer() {

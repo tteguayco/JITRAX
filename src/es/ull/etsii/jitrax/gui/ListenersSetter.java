@@ -208,7 +208,7 @@ public class ListenersSetter {
 
 		public void actionPerformed(ActionEvent e) {
 			Database currentDatabase = getMainWindow().getDatabaseViewerPanel().getSelectedDatabase();
-			String currentDatabaseString = currentDatabase.toString();
+			String currentDatabaseString = currentDatabase.toDSL();
 			
 			// Save As if there is not a lastSavingLocation
 			if (getLastSavingLocation().equals("")) {
@@ -235,7 +235,7 @@ public class ListenersSetter {
 		public void actionPerformed(ActionEvent e) {
 			FileDialog fileDialog = new FileDialog();
 			Database currentDatabase = getMainWindow().getDatabaseViewerPanel().getSelectedDatabase();
-			String currentDatabaseString = currentDatabase.toString();
+			String currentDatabaseString = currentDatabase.toDSL();
 			fileDialog.exportFile("Save Database", currentDatabaseString, ".db");
 			setLastSavingLocation(fileDialog.getLastSavingLocation());
 		}

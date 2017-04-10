@@ -47,7 +47,7 @@ public class SelectedTableViewer extends GraphicTable {
 	}
 	
 	private void initializeGuiComponents() {
-		graphicTable = new JTable();
+		//graphicTable = new JTable();
 		tableModel = new DefaultTableModel();
 		graphicTable.setModel(tableModel);
 	}
@@ -60,12 +60,6 @@ public class SelectedTableViewer extends GraphicTable {
 		markOddRows();
 		
 		setLayout(new BorderLayout());
-		graphicTable.setEnabled(false);
-		graphicTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		graphicTable.setMinimumSize(graphicTable.getPreferredScrollableViewportSize());
-		graphicTable.setPreferredScrollableViewportSize(graphicTable.getPreferredSize());
-		graphicTable.setFillsViewportHeight(true);
-		graphicTable.getTableHeader().setReorderingAllowed(false);
 		
 		JScrollPane tableSP = new JScrollPane(graphicTable);
 		tableSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);

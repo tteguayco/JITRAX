@@ -82,6 +82,10 @@ public class Database {
 	}
 	
 	public String toString() {
+		return getName();
+	}
+	
+	public String toDSL() {
 		String toString = "";
 		
 		toString += "DATABASE " + getName() + ";\n";
