@@ -304,6 +304,7 @@ public class MenuBar extends JMenuBar {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			getWorkspace().switchToRelationalAlgebraTab();
 			getWorkspace().getRelationalAlgebraCodeEditor().undoLastAction();;
 		}
 	}
@@ -312,6 +313,7 @@ public class MenuBar extends JMenuBar {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			getWorkspace().switchToRelationalAlgebraTab();
 			getWorkspace().getRelationalAlgebraCodeEditor().redoLastAction();
 		}
 	}
@@ -320,6 +322,7 @@ public class MenuBar extends JMenuBar {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			getWorkspace().switchToRelationalAlgebraTab();
 			getWorkspace().getRelationalAlgebraCodeEditor().cut();
 		}
 	}
@@ -328,6 +331,7 @@ public class MenuBar extends JMenuBar {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			getWorkspace().switchToRelationalAlgebraTab();
 			getWorkspace().getRelationalAlgebraCodeEditor().copy();
 		}
 	}
@@ -336,6 +340,7 @@ public class MenuBar extends JMenuBar {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			getWorkspace().switchToRelationalAlgebraTab();
 			getWorkspace().getRelationalAlgebraCodeEditor().paste();
 		}
 	}
@@ -345,6 +350,7 @@ public class MenuBar extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (getWorkspace().getRelationalAlgebraCodeEditor().getSelectedText() != null) {
+				getWorkspace().switchToRelationalAlgebraTab();
 				getWorkspace().getRelationalAlgebraCodeEditor().setText(
 						getWorkspace().getRelationalAlgebraCodeEditor().getText().replace(
 								getWorkspace().getRelationalAlgebraCodeEditor().getSelectedText(), ""));
@@ -356,6 +362,7 @@ public class MenuBar extends JMenuBar {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			getWorkspace().switchToRelationalAlgebraTab();
 			getWorkspace().getRelationalAlgebraCodeEditor().selectAll();
 		}
 	}
