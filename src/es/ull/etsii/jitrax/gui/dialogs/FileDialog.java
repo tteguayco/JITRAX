@@ -105,15 +105,16 @@ public class FileDialog {
 	 * @param content
 	 * @param extension
 	 */
-	public void exportFile(String dialogTitle, String content, String extension) {
+	public void exportFile(String dialogTitle, String content, String defaultFileName) {
 		JFileChooser fileChooser = new JFileChooser();
 		PrintWriter printWriter;
 		String filePath;
 		int userSelection;
 		
 		fileChooser.setDialogTitle(dialogTitle);
+		fileChooser.setSelectedFile(new File(defaultFileName));	
 		userSelection = fileChooser.showSaveDialog(null);
-		
+	
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 			filePath = fileChooser.getSelectedFile().getAbsolutePath();
 			
@@ -145,7 +146,7 @@ public class FileDialog {
 			} 
 			
 			catch (FileNotFoundException e1) {
-				String newFilePath = filePath + extension;
+				String newFilePath = filePath;
 				new File(newFilePath);
 				setLastSavingLocation(newFilePath);
 			}

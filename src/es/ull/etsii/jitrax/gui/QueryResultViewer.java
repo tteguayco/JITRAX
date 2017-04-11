@@ -93,6 +93,49 @@ public class QueryResultViewer extends GraphicTable {
 		revalidate();
 		repaint();
 	}
+	
+	public boolean isEmpty() {
+		if (tableModel.getColumnCount() <= 0) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Returns the content of the this result table viewer 
+	 * as CSV (Comma Separated Values).
+	 * @return
+	 */
+	public String toCSV() {
+		String csv = "";
+		
+		// Columns names
+		for (int i = 0; i < tableModel.getColumnCount(); i++) {
+			csv += tableModel.getColumnName(i);
+			if (i < tableModel.getColumnCount() - 1) {
+				csv += ", ";
+			} else {
+				csv += "\n";
+			}
+		}
+		
+		// Rows
+		for (int i = 0; i < tableModel.getRowCount(); i++) {
+			for (int j = 0; j < tableModel.getColumnCount(); j++) {
+				csv += (String) tableModel.getValueAt(i, j);
+				
+				// Add comma
+				if (j < tableModel.getColumnCount() - 1) {
+					csv += ", ";
+				} else {
+					csv += "\n";
+				}
+			}
+		}
+		
+		return csv;
+	}
 
 	public ResultSet getResultSet() {
 		return resultSet;

@@ -49,6 +49,8 @@ public class MenuBar extends JMenuBar {
 	private JMenuItem importRelAlgQuery;
 	private JMenuItem exportRelAlgQuery;
 	private JMenuItem exportSqlQuery;
+	private JMenuItem exportParseTree;
+	private JMenuItem exportQueryResultTable;
 	private JMenuItem exitOption;
 	
 	private JMenuItem undoOption;
@@ -111,8 +113,12 @@ public class MenuBar extends JMenuBar {
 		exportOption = new JMenu("Export");
 		exportRelAlgQuery = new JMenuItem("Relational Algebra Query");
 		exportSqlQuery = new JMenuItem("SQL Query");
+		exportParseTree = new JMenuItem("Parse Tree (.png)");
+		exportQueryResultTable = new JMenuItem("Result Table (.csv)");
 		exportOption.add(exportRelAlgQuery);
 		exportOption.add(exportSqlQuery);
+		exportOption.add(exportParseTree);
+		exportOption.add(exportQueryResultTable);
 		
 		exitOption = new JMenuItem("Exit");
 		
@@ -359,6 +365,7 @@ public class MenuBar extends JMenuBar {
 		getSaveDatabaseAs().setEnabled(true);
 		getImportOption().setEnabled(true);
 		getExportOption().setEnabled(true);
+		getEditMenu().setEnabled(true);
 		
 		getUndoOption().setEnabled(true);
 		getRedoOption().setEnabled(true);
@@ -631,5 +638,21 @@ public class MenuBar extends JMenuBar {
 
 	public void setSelectAllOption(JMenuItem selectAllOption) {
 		this.selectAllOption = selectAllOption;
+	}
+
+	public JMenuItem getExportParseTree() {
+		return exportParseTree;
+	}
+
+	public void setExportParseTree(JMenuItem exportParseTree) {
+		this.exportParseTree = exportParseTree;
+	}
+
+	public JMenuItem getExportQueryResultTable() {
+		return exportQueryResultTable;
+	}
+
+	public void setExportQueryResultTable(JMenuItem exportQueryResultTable) {
+		this.exportQueryResultTable = exportQueryResultTable;
 	}
 }

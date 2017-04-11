@@ -13,7 +13,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 
+import org.antlr.v4.gui.TreeViewer;
 import org.postgresql.util.PSQLException;
 
 import es.ull.etsii.jitrax.adt.Database;
@@ -50,6 +52,8 @@ public class ListenersSetter {
 		getMainWindow().getBarMenu().getExportRelAlgQuery().addActionListener(new ExportationOptionListener());
 		getMainWindow().getBarMenu().getExportSqlQuery().addActionListener(new ExportationOptionListener());
 		getMainWindow().getQueryList().getSaveButton().addActionListener(new ExportationOptionListener());
+		getMainWindow().getBarMenu().getExportQueryResultTable().addActionListener(new ExportationOptionListener());
+		getMainWindow().getBarMenu().getExportParseTree().addActionListener(new ExportationOptionListener());
 		getMainWindow().getBarMenu().getRaCodeHighLighting().addActionListener(new HighlightingEnabler());
 		getMainWindow().getBarMenu().getSqlCodeHighLighting().addActionListener(new HighlightingEnabler());
 		getMainWindow().getBarMenu().getConsoleShow().addActionListener(new ViewsHidder());
@@ -283,13 +287,15 @@ public class ListenersSetter {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			String fileName = (String) getMainWindow().getQueryList().getSelectedQuery().getName();
+			
 			// Export RA query?
 			if (e.getSource() == getMainWindow().getBarMenu().getExportRelAlgQuery()
 					|| e.getSource() == getMainWindow().getQueryList().getSaveButton()) {
 				String raQuery = getMainWindow().getWorkspace().getRelationalAlgebraCodeEditor().getText();
 				
 				if (raQuery.length() > 0) {
-					fileDialog.exportFile("Export Relational Algebra Query", raQuery, ".ra");
+					fileDialog.exportFile("Export Relational Algebra Query", raQuery, fileName + ".ra");
 				}	
 			}
 			
@@ -298,7 +304,24 @@ public class ListenersSetter {
 				String sqlQuery = getMainWindow().getWorkspace().getSQLCodeEditor().getText();
 				
 				if (sqlQuery.length() > 0) {
-					fileDialog.exportFile("Export SQL Query", sqlQuery, ".sql");
+					fileDialog.exportFile("Export SQL Query", sqlQuery, fileName + ".sql");
+				}
+			}
+			
+			else if (e.getSource() == getMainWindow().getBarMenu().getExportParseTree()) {
+				JFileChooser fileChooser = new JFileChooser();
+				TreeViewer treeViewer = getMainWindow().getWorkspace().getParseTreeViewer();
+				
+				//treeViewer.sav
+			}
+			
+			else if (e.getSource() == getMainWindow().getBarMenu().getExportQueryResultTable()) {
+				QueryResultViewer queryResultViewer = getMainWindow().getWorkspace().getQueryResultViewer();
+				if (queryResultViewer != null) {
+					if (!queryResultViewer.isEmpty()) {
+						String content = queryResultViewer.toCSV();
+						fileDialog.exportFile("Export Result Table", content, fileName + ".csv");
+					}
 				}
 			}
 		}

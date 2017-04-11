@@ -101,6 +101,7 @@ public class Workspace extends JPanel {
 	private JCheckBox formattedSqlCodeCheck;
 	private JLabel raEditorCaretPositionLabel;
 	private JLabel sqlEditorCaretPositionLabel;
+	private TreeViewer parseTreeViewer;
 	
 	private BasicFormatterImpl sqlFormatter;
 	private Query selectedQuery;
@@ -225,7 +226,7 @@ public class Workspace extends JPanel {
 		tabbedPane.add("Relational Algebra", raPanel);
 		tabbedPane.addTab("SQL", sqlPanel);
 		tabbedPane.addTab("Parse Tree", parseTreePanel);
-		tabbedPane.addTab("Query Result", queryResultViewer);
+		tabbedPane.addTab("Result Table", queryResultViewer);
 		tabbedPane.setFocusable(false);
 		tabbedPane.setEnabledAt(SQL_TAB_INDEX, false);
 		tabbedPane.setEnabledAt(PARSE_TREE_TAB_INDEX, false);
@@ -280,16 +281,17 @@ public class Workspace extends JPanel {
 		getTabbedPane().setSelectedIndex(QUERY_RESULT_TAB_INDEX);
 	}
 	
-	public void setParseTreeViewer(TreeViewer parseTree) {
+	public void setParseTreeViewer(TreeViewer aParseTree) {
+		parseTreeViewer = aParseTree;
 		JSlider scaleSlider = new JSlider();
 		scaleSlider.setMinimum(PARSE_TREE_MIN_VAL);
 		scaleSlider.setMaximum(PARSE_TREE_MAX_VAL);
 		
 		// JSlider only has integer values
 		scaleSlider.setValue((int) (PARSE_TREE_DEFAULT_SCALE / PARSE_TREE_SLIDER_FACTOR)); 
-		parseTree.setScale(PARSE_TREE_DEFAULT_SCALE);
+		aParseTree.setScale(PARSE_TREE_DEFAULT_SCALE);
 		
-		JScrollPane parseTreeSP = new JScrollPane(parseTree);
+		JScrollPane parseTreeSP = new JScrollPane(aParseTree);
 		parseTreeSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		parseTreeSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		
@@ -301,7 +303,7 @@ public class Workspace extends JPanel {
 			public void stateChanged(ChangeEvent e) {
 				double scaleValue = 
 						((double) scaleSlider.getValue()) * PARSE_TREE_SLIDER_FACTOR;
-				parseTree.setScale(scaleValue);
+				aParseTree.setScale(scaleValue);
 			}
 		});
 	}
@@ -631,5 +633,9 @@ public class Workspace extends JPanel {
 
 	public void setSelectedQuery(Query selectedQuery) {
 		this.selectedQuery = selectedQuery;
+	}
+
+	public TreeViewer getParseTreeViewer() {
+		return parseTreeViewer;
 	}
 }
