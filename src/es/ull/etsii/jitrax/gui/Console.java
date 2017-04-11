@@ -41,12 +41,12 @@ public class Console extends JPanel {
 	private static final int FONT_SIZE = 14;
 	private static final int NROWS = 12;
 	
-	private JEditorPane console;
+	private JTextArea console;
 	private JButton clearButton;
 	private JButton exportButton;
 	
 	public Console() {
-		console = new JEditorPane();
+		console = new JTextArea();
 		clearButton = new JButton("Clear");
 		exportButton = new JButton("Export");
 		
@@ -63,8 +63,10 @@ public class Console extends JPanel {
 		console.setEditable(false);
 		JScrollPane sp = new JScrollPane(console);
 		sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		console.setSelectedTextColor(Color.GRAY);
+		console.setLineWrap(true);
+		console.setWrapStyleWord(true);
 		
 		// Automatic down scrolling
 		DefaultCaret caret = (DefaultCaret) getConsole().getCaret();
@@ -86,11 +88,11 @@ public class Console extends JPanel {
 		getConsole().setText(currentText + newMessage);
 	}
 
-	public JEditorPane getConsole() {
+	public JTextArea getConsole() {
 		return console;
 	}
 
-	public void setConsole(JEditorPane console) {
+	public void setConsole(JTextArea console) {
 		this.console = console;
 	}
 
