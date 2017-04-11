@@ -1,0 +1,6 @@
+PROJECT [Course, Section] (
+	Course *
+	(PROJECT [InstructorID] (
+		SELECT [name = "Bailes"] (
+			(Instructor))))
+);

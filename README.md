@@ -11,7 +11,7 @@ consulta, se utiliza una técnica mucho más ingeniosa: traducir las expresiones
 a expresiones equivalentes en SQL y ejecutar estas últimas sobre un Sistema Gestor de PostgreSQL. ¿No es 
 genial? ;-)
 
-![alt tag](https://cloud.githubusercontent.com/assets/20015750/24585701/bfc3bde0-1788-11e7-8ad0-8095920f8dcc.png)
+![alt tag](https://cloud.githubusercontent.com/assets/20015750/24921090/8ccf6ce4-1ee1-11e7-9e47-402ad233ee6d.png)
 
 ## Características
 
