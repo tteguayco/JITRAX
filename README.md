@@ -28,9 +28,8 @@ resultados de la consulta ejecutada.
 * Soporte para los siguientes operadores del Álgebra Relacional: proyección, selección, unión,
 diferencia, intersección, producto cartesiano, yunción, yunción natural y división.
 * Soporte para vistas (asignación de un alias a una consulta que permite su posterior reutilización).
-* Optimización de consultas: JITRAX es capaz de detectar cascadas de proyecciones y selecciones (véase los ficheros
-'examples/R1R2R3R4/projection_cascade.ra' y 'examples/R1R2R3R4/selection_cascade.ra') y proponer traducciones que sean más eficientes
-y legibles.
+* Optimización de consultas: JITRAX es capaz de detectar cascadas de proyecciones y selecciones (véase los ficheros 'examples/R1R2R3R4/projection_cascade.ra' y 'examples/R1R2R3R4/selection_cascade.ra') y proponer traducciones que sean más eficientes y legibles.
+* Mecanismo de sincronización con PostgreSQL: la discrepancia que pueda existir entre el contenido de la base de datos alojada en el Sistema Gestor de PostgreSQL y el de la base de datos con la que el usuario trabaja en el entorno puede derivar en un problema. Es por ello que JITRAX implementa un mecanismo de sincronización que pretende que la base de datos que hay en PostgreSQL sea exactamente igual que la que hay especificada en la aplicación. En la guía de usuario que está pediente de elaboración se comentará con más detalle cómo funciona esta característica.
 
 ## Prototipo
 
@@ -40,13 +39,8 @@ pendientes:
 
 * Creación de bases de datos desde el propio entorno gráfico (de momento sólo es posible especificarlas
 mediante fichero).
-* Mecanismo de sincronización con la base de datos en PostgreSQL: ¿qué ocurre si el usuario especifica una 
-base de datos en la aplicación que ya existe en el SG pero los contenidos de ambas difieren? Tendría que 
-entrar en escena un mecanismo que haga que los contenidos de ambas bases de datos (el que se encuentra 
-especificada en la aplicación y la del Sistema Gestor) sean compatibles. Además, podría darse el caso en el que el usuario quiera traerse una base de datos ya existente en el SG con la que quiera trabajar.
 * Formato multidioma: se ha decidido que el idioma de la primera versión de JITRAX sea el inglés, pero en el
 futuro se espera incorporar soporte para más idiomas. 
-* Menús de 'Edit' y 'View': aún se encuentran sin ninguna funcionalidad en este prototipo.
 
 ## Instalación
 
