@@ -221,7 +221,8 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		// Union, Difference and Intersection
 		if (!isFromExpression(ctx)) {
 			if ((ctx.getParent() instanceof RelationalAlgebraParser.StartContext)
-					|| ctx.getParent() instanceof RelationalAlgebraParser.BracketsExprContext) {
+					|| ctx.getParent() instanceof RelationalAlgebraParser.BracketsExprContext
+						|| ctx.getParent() instanceof RelationalAlgebraParser.ViewContext) {
 				return translation;
 			}
 			
