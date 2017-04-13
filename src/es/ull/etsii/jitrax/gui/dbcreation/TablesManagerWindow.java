@@ -7,12 +7,16 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -71,8 +75,6 @@ public class TablesManagerWindow extends JFrame {
 	
 	private JButton newRowButton;
 	private JButton removeRowButton;
-	private JButton newColumnButton;
-	private JButton removeColumnButton;
 	
 	public TablesManagerWindow(Database aDatabase) {
 		database = aDatabase;
@@ -90,10 +92,10 @@ public class TablesManagerWindow extends JFrame {
 		applyButton = new JButton("  ✔ APPLY  ");
 		applyButton.setToolTipText("Apply changes on DBMS");
 		
-		newRowButton = new JButton("+ ROW");
-		removeRowButton = new JButton("− ROW");
-		newColumnButton = new JButton("+ COLUMN");
-		removeColumnButton = new JButton("− COLUMN");
+		newRowButton = new JButton("➕");
+		removeRowButton = new JButton("➖");
+		newRowButton.setToolTipText("Add new row");
+		removeRowButton.setToolTipText("Remove selected rows");
 		
 		newRowButton.addActionListener(new NewRowListener());
 		
@@ -155,10 +157,8 @@ public class TablesManagerWindow extends JFrame {
 		// Buttons
 		tableButtonPanel.add(newRowButton);
 		tableButtonPanel.add(removeRowButton);
-		tableButtonPanel.add(newColumnButton);
-		tableButtonPanel.add(removeColumnButton);
 		
-		selectedTableViewer.add(tableButtonPanel, BorderLayout.SOUTH);
+		selectedTableViewer.add(tableButtonPanel, BorderLayout.NORTH);
 		
 		JScrollPane contentTablePanelSP = new JScrollPane(selectedTableViewer);
 		contentTablePanelSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -171,6 +171,18 @@ public class TablesManagerWindow extends JFrame {
 		bottomPanel.add(buttonsPanel, BorderLayout.SOUTH);
 		getRightPanel().add(selectedTableViewer, BorderLayout.CENTER);
 		getRightPanel().add(bottomPanel, BorderLayout.SOUTH);
+	}
+	
+	private void updateSelectionRowColumn() {
+		int numOfCheckBoxes = selectedTableViewer.getTableModel().getRowCount();
+		ArrayList<JComboBox> checkboxesColumn = new ArrayList<JComboBox>();
+		
+		// Creating comboboxes
+		for (int i = 0; i < numOfCheckBoxes; i++) {
+			checkboxesColumn.add(new JComboBox());
+		}
+		
+		//selectedTableViewer.getTableModel().addColumn("", checkboxesColumn));
 	}
 	
 	private void setCommonBorder(JPanel aPanel, String name) {

@@ -3,6 +3,7 @@ package es.ull.etsii.jitrax.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.print.PrintException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
@@ -308,13 +310,14 @@ public class ListenersSetter {
 				}
 			}
 			
+			// Export Parse Tree
 			else if (e.getSource() == getMainWindow().getBarMenu().getExportParseTree()) {
-				JFileChooser fileChooser = new JFileChooser();
+				FileDialog fileDialog = new FileDialog();
 				TreeViewer treeViewer = getMainWindow().getWorkspace().getParseTreeViewer();
-				
-				//treeViewer.sav
+				fileDialog.exportParseTree("Export Parse Tree", treeViewer, fileName + ".png");
 			}
 			
+			// Export Result Table
 			else if (e.getSource() == getMainWindow().getBarMenu().getExportQueryResultTable()) {
 				QueryResultViewer queryResultViewer = getMainWindow().getWorkspace().getQueryResultViewer();
 				if (queryResultViewer != null) {

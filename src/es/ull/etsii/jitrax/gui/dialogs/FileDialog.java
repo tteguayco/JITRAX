@@ -12,9 +12,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import javax.print.PrintException;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import org.antlr.v4.gui.TreeViewer;
 
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.database.DatabaseFileLoader;
@@ -106,8 +109,55 @@ public class FileDialog {
 	 * @param extension
 	 */
 	public void exportFile(String dialogTitle, String content, String defaultFileName) {
-		JFileChooser fileChooser = new JFileChooser();
 		PrintWriter printWriter;
+		
+		try {
+			String filePath = getExportationFileChooser(dialogTitle, defaultFileName);
+			
+			if (filePath != null) {
+				printWriter = new PrintWriter(filePath);
+				printWriter.print(content);
+				printWriter.close();
+				showSuccessfulExportationWarning();
+			} else {
+				showExportationUnknownError();
+			}
+		} 
+		
+		catch (FileNotFoundException e1) {
+			showExportationUnknownError();
+		}
+	}
+	
+	/**
+	 * Exports the specified TreeViewer to a chosen file in a PNG format.
+	 * @param dialogTitle
+	 * @param treeViewer
+	 * @param defaultFileName
+	 */
+	public void exportParseTree(String dialogTitle, TreeViewer treeViewer, String defaultFileName) {
+		if (treeViewer != null) {
+			String filePath = getExportationFileChooser("Export Parse Tree", defaultFileName);
+			
+			try {
+				if (filePath != null) {
+					treeViewer.save(filePath);
+					showSuccessfulExportationWarning();
+				}
+			} catch (IOException | PrintException e1) {
+				showExportationUnknownError();
+			}
+		}
+	}
+	
+	/**
+	 * Returns the file path selected through the file chooser.
+	 * @param dialogTitle
+	 * @param defaultFileName
+	 * @return
+	 */
+	public String getExportationFileChooser(String dialogTitle, String defaultFileName) {
+		JFileChooser fileChooser = new JFileChooser();
 		String filePath;
 		int userSelection;
 		
@@ -135,38 +185,40 @@ public class FileDialog {
 						br.close();
 						
 						if (response != JOptionPane.YES_OPTION) {
-							return;
+							return null;
+						} else {
+							return filePath;
 						}
 					}
-				} catch (HeadlessException e1) {
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					e1.printStackTrace();
+					
+					else {
+						br.close();
+						return filePath;
+					}
+					
+				} catch (Exception e1) {
+					return null;
 				}
 			} 
 			
 			catch (FileNotFoundException e1) {
-				String newFilePath = filePath;
-				new File(newFilePath);
-				setLastSavingLocation(newFilePath);
+				return filePath;
 			}
-			
-			try {
-				printWriter = new PrintWriter(filePath);
-				printWriter.print(content);
-				printWriter.close();
-				showSuccessfulExportationWarning();
-			} 
-			
-			catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			} 
+		}
+		
+		else {
+			return null;
 		}
 	}
 	
 	private void showSuccessfulExportationWarning() {
 		JOptionPane.showMessageDialog(null, "Content successfully exported.",
 				"Warning", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	private void showExportationUnknownError() {
+		JOptionPane.showMessageDialog(null, "An error ocurred while exporting the file.",
+				"Error", JOptionPane.ERROR_MESSAGE);
 	}
 
 	public String getLastSavingLocation() {

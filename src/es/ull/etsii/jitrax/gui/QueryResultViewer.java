@@ -113,10 +113,12 @@ public class QueryResultViewer extends GraphicTable {
 		// Columns names
 		for (int i = 0; i < tableModel.getColumnCount(); i++) {
 			csv += tableModel.getColumnName(i);
+			
+			// Add comma
 			if (i < tableModel.getColumnCount() - 1) {
 				csv += ", ";
 			} else {
-				csv += "\n";
+				csv += "\n\n";
 			}
 		}
 		
