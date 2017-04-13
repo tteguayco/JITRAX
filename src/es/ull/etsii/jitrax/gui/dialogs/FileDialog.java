@@ -119,8 +119,6 @@ public class FileDialog {
 				printWriter.print(content);
 				printWriter.close();
 				showSuccessfulExportationWarning();
-			} else {
-				showExportationUnknownError();
 			}
 		} 
 		
