@@ -235,9 +235,17 @@ public class TablesManagerWindow extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// select table
-			TableEditor tableEditor = new TableEditor(null);
-			tableEditor.setVisible(true);
+			// ADD NEW TABLE
+			if (e.getSource() == getAddTableButton()) {
+				TableEditor tableEditor = new TableEditor(null, TableEditorMode.CREATION);
+				tableEditor.setVisible(true);
+			}
+			
+			// MODIFY EXISTING TABLE
+			else if (e.getSource() == getModifyTableButton()) {
+				TableEditor tableEditor = new TableEditor(null, TableEditorMode.MODIFICATION);
+				tableEditor.setVisible(true);
+			}
 		}
 	}
 	

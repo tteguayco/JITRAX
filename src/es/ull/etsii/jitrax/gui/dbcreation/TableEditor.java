@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -41,15 +42,16 @@ public class TableEditor extends JFrame {
 	
 	private static final int CENTER_TOP_PADDING = 10;
 	private static final int CENTER_LEFT_PADDING = 10;
-	private static final int CENTER_BOTTOM_PADDING = 10;
+	private static final int CENTER_BOTTOM_PADDING = 0;
 	private static final int CENTER_RIGHT_PADDING = 10;
 	
 	private static final int TEXTFIELD_WIDTH = 100;
 	private static final int TEXTFIELD_HEIGHT = 30;
-	private static final int ATTRLIST_WIDTH = 130;
+	private static final int ATTRLIST_WIDTH = 150;
 	private static final int ATTRLIST_HEIGHT = 150;
 	
 	private Table table;
+	private TableEditorMode mode;
 	
 	private JPanel mainContainer;
 	private JPanel centerPanel;
@@ -60,12 +62,14 @@ public class TableEditor extends JFrame {
 	private JTextField newAttrName;
 	private JComboBox<DataType> newAttrType;
 	private JList<Attribute> attrList;
-	private DefaultListModel defaultListModel;
+	private DefaultListModel<Attribute> defaultListModel;
 	private JButton addAttrButton;
 	private JButton eraseAttrButton;
+	private JButton okButton;
 	
-	public TableEditor(Table aTable) {
+	public TableEditor(Table aTable, TableEditorMode aMode) {
 		table = aTable;
+		mode = aMode;
 		
 		mainContainer = new JPanel();
 		centerPanel = new JPanel();
@@ -76,16 +80,15 @@ public class TableEditor extends JFrame {
 		newAttrName = new JTextField();
 		newAttrType = new JComboBox<DataType>(DataType.values());
 		attrList = new JList<Attribute>();
-		defaultListModel = new DefaultListModel();
+		defaultListModel = new DefaultListModel<Attribute>();
 		attrList.setModel(defaultListModel);
 	
 		newAttrName.setPreferredSize(new Dimension(TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT));
 		newAttrType.setPreferredSize(new Dimension(TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT));
 		
-		attrList.setPreferredSize(new Dimension(ATTRLIST_WIDTH, ATTRLIST_HEIGHT));
-		
 		addAttrButton = new JButton("ADD");
 		eraseAttrButton = new JButton("ERASE");
+		okButton = new JButton("OK");
 		
 		setLayout(new BorderLayout());
 		
@@ -107,12 +110,30 @@ public class TableEditor extends JFrame {
 		addPaddingToMainContainer();
 		add(mainContainer, BorderLayout.CENTER);
 		
+		JPanel okButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		okButtonPanel.add(okButton);
+		mainContainer.add(okButtonPanel, BorderLayout.SOUTH);
+		
 		// Add some padding
 		centerPanel.setBorder(new EmptyBorder(CENTER_TOP_PADDING,
 				CENTER_LEFT_PADDING, CENTER_BOTTOM_PADDING, CENTER_RIGHT_PADDING));
 		
+		setOkButtonText();
+		
 		buildWindow();
 		pack();
+	}
+	
+	private void setOkButtonText() {
+		if (mode == TableEditorMode.CREATION) {
+			okButton.setText("✔ CREATE");
+			okButton.setToolTipText("Create table");
+		} 
+		
+		else if (mode == TableEditorMode.MODIFICATION) {
+			okButton.setText("✔ APPLY");
+			okButton.setToolTipText("Apply changes");
+		}
 	}
 	
 	private void addPaddingToMainContainer() {
@@ -127,9 +148,13 @@ public class TableEditor extends JFrame {
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.add(eraseAttrButton);
 		
+		JScrollPane sp = new JScrollPane(attrList);
+		sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		sp.setPreferredSize(new Dimension(ATTRLIST_WIDTH, ATTRLIST_HEIGHT));
+		
 		attrListPanel.setBorder(BorderFactory.createTitledBorder(ATTR_LIST_TITLE));
 		attrListPanel.setLayout(new BorderLayout());
-		attrListPanel.add(attrList, BorderLayout.CENTER);
+		attrListPanel.add(sp, BorderLayout.CENTER);
 		attrListPanel.add(buttonsPanel, BorderLayout.SOUTH);
 	}
 	
@@ -169,11 +194,17 @@ public class TableEditor extends JFrame {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setLocationRelativeTo(null);
 		setResizable(false);
+		
+		if (mode == TableEditorMode.CREATION) {
+			setTitle(getTitle() + " - Create new table");
+		} else if (mode == TableEditorMode.MODIFICATION) {
+			setTitle(getTitle() + " - Modify existing table");
+		}
 	}
 	
 	public static void main(String args[]) {
 		Table table = new Table("Prueba", new ArrayList<Attribute>());
-		TableEditor tableEditor = new TableEditor(null);
+		TableEditor tableEditor = new TableEditor(null, TableEditorMode.CREATION);
 		tableEditor.setVisible(true);
 	}
 
@@ -189,7 +220,8 @@ public class TableEditor extends JFrame {
 			
 			// Name specified or whitespaces?
 			if (!name.equals("") && !isWhitespace) {
-				System.out.println("no whitespace");
+				Attribute newAttr = new Attribute(name, type);
+				defaultListModel.addElement((Attribute) newAttr); 
 			}
 			
 			else {
