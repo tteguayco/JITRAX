@@ -1,8 +1,11 @@
 package es.ull.etsii.jitrax.gui.dbcreation;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -13,9 +16,11 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Table;
@@ -28,10 +33,21 @@ public class TableEditor extends JFrame {
 	
 	private static final int WINDOW_WIDTH = 400;
 	private static final int WINDOW_HEIGHT = 200;
+	
 	private static final int TOP_PADDING = 10;
 	private static final int LEFT_PADDING = 20;
 	private static final int BOTTOM_PADDING = 10;
 	private static final int RIGHT_PADDING = 20;
+	
+	private static final int CENTER_TOP_PADDING = 10;
+	private static final int CENTER_LEFT_PADDING = 10;
+	private static final int CENTER_BOTTOM_PADDING = 10;
+	private static final int CENTER_RIGHT_PADDING = 10;
+	
+	private static final int TEXTFIELD_WIDTH = 100;
+	private static final int TEXTFIELD_HEIGHT = 30;
+	private static final int ATTRLIST_WIDTH = 130;
+	private static final int ATTRLIST_HEIGHT = 150;
 	
 	private Table table;
 	
@@ -63,6 +79,11 @@ public class TableEditor extends JFrame {
 		defaultListModel = new DefaultListModel();
 		attrList.setModel(defaultListModel);
 	
+		newAttrName.setPreferredSize(new Dimension(TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT));
+		newAttrType.setPreferredSize(new Dimension(TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT));
+		
+		attrList.setPreferredSize(new Dimension(ATTRLIST_WIDTH, ATTRLIST_HEIGHT));
+		
 		addAttrButton = new JButton("ADD");
 		eraseAttrButton = new JButton("ERASE");
 		
@@ -86,7 +107,12 @@ public class TableEditor extends JFrame {
 		addPaddingToMainContainer();
 		add(mainContainer, BorderLayout.CENTER);
 		
+		// Add some padding
+		centerPanel.setBorder(new EmptyBorder(CENTER_TOP_PADDING,
+				CENTER_LEFT_PADDING, CENTER_BOTTOM_PADDING, CENTER_RIGHT_PADDING));
+		
 		buildWindow();
+		pack();
 	}
 	
 	private void addPaddingToMainContainer() {
@@ -111,13 +137,13 @@ public class TableEditor extends JFrame {
 		attrEditorPanel.setLayout(new BorderLayout());
 		attrEditorPanel.setBorder(BorderFactory.createTitledBorder(NEW_ATTR_TITLE));
 		
-		JPanel namePanel = new JPanel(new BorderLayout());
-		namePanel.add(new JLabel("Name: "), BorderLayout.WEST);
-		namePanel.add(newAttrName, BorderLayout.CENTER);
+		JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		namePanel.add(new JLabel("Name: "));
+		namePanel.add(newAttrName);
 		
-		JPanel typePanel = new JPanel(new BorderLayout());
-		typePanel.add(new JLabel("Type: "), BorderLayout.WEST);
-		typePanel.add(newAttrType, BorderLayout.CENTER);
+		JPanel typePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		typePanel.add(new JLabel("Type: "));
+		typePanel.add(newAttrType);
 		
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -129,6 +155,8 @@ public class TableEditor extends JFrame {
 		
 		attrEditorPanel.add(mainPanel, BorderLayout.CENTER);
 		attrEditorPanel.add(buttonsPanel, BorderLayout.SOUTH);
+		
+		addAttrButton.addActionListener(new AddAttrListener());
 	}
 	
 	private void resetAttrEditorPanel() {
@@ -140,12 +168,136 @@ public class TableEditor extends JFrame {
 		setTitle(WINDOW_TITLE);
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setLocationRelativeTo(null);
+		setResizable(false);
 	}
 	
 	public static void main(String args[]) {
 		Table table = new Table("Prueba", new ArrayList<Attribute>());
 		TableEditor tableEditor = new TableEditor(null);
 		tableEditor.setVisible(true);
+	}
+
+	private class AddAttrListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// Getting name and type for the new attribute
+			String name = getNewAttrName().getText().trim();
+			DataType type = (DataType) getNewAttrType().getSelectedItem();
+			
+			boolean isWhitespace = name.matches(".*\\s+.*");
+			
+			// Name specified or whitespaces?
+			if (!name.equals("") && !isWhitespace) {
+				System.out.println("no whitespace");
+			}
+			
+			else {
+				showAttrNameNotValidDialog();
+			}
+		}
+	}
+	
+	private void showAttrNameNotValidDialog() {
+		JOptionPane.showMessageDialog(null, "The name specified for the attribute you are trying \n"
+				+ "to add is empty or contains whitespaces.",
+				"Attribute name not valid", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public Table getTable() {
+		return table;
+	}
+
+	public void setTable(Table table) {
+		this.table = table;
+	}
+
+	public JPanel getMainContainer() {
+		return mainContainer;
+	}
+
+	public void setMainContainer(JPanel mainContainer) {
+		this.mainContainer = mainContainer;
+	}
+
+	public JPanel getCenterPanel() {
+		return centerPanel;
+	}
+
+	public void setCenterPanel(JPanel centerPanel) {
+		this.centerPanel = centerPanel;
+	}
+
+	public JPanel getAttrListPanel() {
+		return attrListPanel;
+	}
+
+	public void setAttrListPanel(JPanel attrListPanel) {
+		this.attrListPanel = attrListPanel;
+	}
+
+	public JPanel getAttrEditorPanel() {
+		return attrEditorPanel;
+	}
+
+	public void setAttrEditorPanel(JPanel attrEditorPanel) {
+		this.attrEditorPanel = attrEditorPanel;
+	}
+
+	public JTextField getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(JTextField tableName) {
+		this.tableName = tableName;
+	}
+
+	public JTextField getNewAttrName() {
+		return newAttrName;
+	}
+
+	public void setNewAttrName(JTextField newAttrName) {
+		this.newAttrName = newAttrName;
+	}
+
+	public JComboBox<DataType> getNewAttrType() {
+		return newAttrType;
+	}
+
+	public void setNewAttrType(JComboBox<DataType> newAttrType) {
+		this.newAttrType = newAttrType;
+	}
+
+	public JList<Attribute> getAttrList() {
+		return attrList;
+	}
+
+	public void setAttrList(JList<Attribute> attrList) {
+		this.attrList = attrList;
+	}
+
+	public DefaultListModel getDefaultListModel() {
+		return defaultListModel;
+	}
+
+	public void setDefaultListModel(DefaultListModel defaultListModel) {
+		this.defaultListModel = defaultListModel;
+	}
+
+	public JButton getAddAttrButton() {
+		return addAttrButton;
+	}
+
+	public void setAddAttrButton(JButton addAttrButton) {
+		this.addAttrButton = addAttrButton;
+	}
+
+	public JButton getEraseAttrButton() {
+		return eraseAttrButton;
+	}
+
+	public void setEraseAttrButton(JButton eraseAttrButton) {
+		this.eraseAttrButton = eraseAttrButton;
 	}
 	
 }

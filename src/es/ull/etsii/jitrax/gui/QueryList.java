@@ -68,9 +68,6 @@ public class QueryList extends JPanel {
 		queryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		queryList.setRowSelectionInterval(0, 0);
 		
-		//listModel.addRow(new Object[] { new Query("query1")});
-		//listModel.fireTableDataChanged();
-		
 		setLayout(new BorderLayout());
 		JScrollPane sp = new JScrollPane(queryList);
 		JPanel buttonsPanel = new JPanel();
@@ -142,7 +139,7 @@ public class QueryList extends JPanel {
 
 		/**
 		 * Cada vez que el usuario cambie el nombre de una consulta,
-		 * lo que se debe modificar el atributo nombre de ESA consulta 
+		 * lo que se debe modificar es el atributo 'nombre' de ESA consulta 
 		 * (no lo que se hace por defecto: sustituir un objeto de tipo
 		 * 'Query' por una String en la queryList)
 		 */
