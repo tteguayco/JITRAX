@@ -2,6 +2,8 @@ package es.ull.etsii.jitrax.gui.dbcreation;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -48,7 +50,7 @@ public class TableInfoWindow extends JFrame {
 		setVisible(true);
 		setResizable(false);
 	}
-
+	
 	public JTextField getNewTableName() {
 		return newTableName;
 	}

@@ -31,7 +31,7 @@ public class Attribute {
 	
 	public String toString() {
 		String toString = "";	
-		toString += "(" + getName() + ": " + getDataType() + ")";
+		toString += getName() + " (" + getDataType() + ")";
 	
 		return toString;
 	}

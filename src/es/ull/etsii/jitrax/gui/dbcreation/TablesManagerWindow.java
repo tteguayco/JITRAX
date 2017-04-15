@@ -97,6 +97,9 @@ public class TablesManagerWindow extends JFrame {
 		newRowButton.setToolTipText("Add new row");
 		removeRowButton.setToolTipText("Remove selected rows");
 		
+		
+		// Setting up listeners
+		addTableButton.addActionListener(new TableEditorSetterUp());
 		newRowButton.addActionListener(new NewRowListener());
 		
 		EmptyBorder schemaPanelPadding = new EmptyBorder(10, 10, 10, 10);
@@ -226,6 +229,16 @@ public class TablesManagerWindow extends JFrame {
 		
 		Database mydb = new Database("MyDB");
 		TablesManagerWindow tmWindow = new TablesManagerWindow(mydb);
+	}
+	
+	private class TableEditorSetterUp implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// select table
+			TableEditor tableEditor = new TableEditor(null);
+			tableEditor.setVisible(true);
+		}
 	}
 	
 	private class NewRowListener implements ActionListener {

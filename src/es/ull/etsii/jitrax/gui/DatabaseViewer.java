@@ -48,8 +48,8 @@ public class DatabaseViewer extends JPanel {
 		add(Box.createVerticalStrut(EXTRA_GAP_SIZE));
 		add(selectedTableViewer);
 		
-		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
-		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
+		//LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
+		setBorder(BorderFactory.createTitledBorder(/*lineBorderPanel,*/ PANEL_TITLE));
 		
 		setListeners();
 	}

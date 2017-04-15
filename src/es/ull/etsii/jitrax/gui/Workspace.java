@@ -238,7 +238,7 @@ public class Workspace extends JPanel {
 		setMinimumSize(new Dimension(FRAME_MIN_WIDTH, FRAME_MIN_HEIGHT));
 		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
-		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
+		setBorder(BorderFactory.createTitledBorder(/*lineBorderPanel,*/ PANEL_TITLE));
 	}
 	
 	public void enableSqlTab() {

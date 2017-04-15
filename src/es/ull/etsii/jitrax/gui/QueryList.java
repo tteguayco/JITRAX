@@ -31,7 +31,7 @@ public class QueryList extends JPanel {
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	private static final String DEFAULT_QUERY_PREFIX = "query";
 	
-	private static final int CELL_WIDTH = 170;
+	private static final int CELL_WIDTH = 180;
 	private static final int CELL_HEIGHT = 30;
 	
 	private JTable queryList;
@@ -86,7 +86,7 @@ public class QueryList extends JPanel {
 		add(buttonsPanel, BorderLayout.NORTH);
 		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
-		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
+		setBorder(BorderFactory.createTitledBorder(/*lineBorderPanel,*/ PANEL_TITLE));
 	}
 	
 	private void addQuery(String queryName) {
