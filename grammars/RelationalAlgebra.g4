@@ -84,3 +84,12 @@ STRING:			'"' (.)*? '"' | '\'' (.)*? '\'';
 IDENTIFIER:  	[a-zA-Z]+([0-9] | [a-zA-Z] | '_')* ('.' ([a-zA-Z]+([0-9] | [a-zA-Z] | '_'))*)?;
 NUMBER:    		[0-9]+;
 WHITESPACES:   	[ \t\r\n]+ -> skip;
+
+// COMMENTS
+COMMENT
+    :   '/*' .*? '*/' -> channel(HIDDEN)
+    ;
+
+LINE_COMMENT
+    :   '//' ~[\r\n]* -> channel(HIDDEN)
+    ;

@@ -19,7 +19,8 @@ public class DatabaseParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, DATABASE=7, TABLE=8, STRING=9, 
-		CHAR=10, INT=11, FLOAT=12, DATE=13, STRING_VAL=14, NUMBER=15, ID=16, WHITESPACES=17;
+		CHAR=10, INT=11, FLOAT=12, DATE=13, STRING_VAL=14, NUMBER=15, ID=16, WHITESPACES=17, 
+		COMMENT=18, LINE_COMMENT=19;
 	public static final int
 		RULE_start = 0, RULE_database = 1, RULE_table = 2, RULE_attrlist = 3, 
 		RULE_datalist = 4, RULE_attribute = 5, RULE_datum = 6, RULE_datatype = 7;
@@ -33,7 +34,8 @@ public class DatabaseParser extends Parser {
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, "DATABASE", "TABLE", "STRING", 
-		"CHAR", "INT", "FLOAT", "DATE", "STRING_VAL", "NUMBER", "ID", "WHITESPACES"
+		"CHAR", "INT", "FLOAT", "DATE", "STRING_VAL", "NUMBER", "ID", "WHITESPACES", 
+		"COMMENT", "LINE_COMMENT"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -673,7 +675,7 @@ public class DatabaseParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\23K\4\2\t\2\4\3\t"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\25K\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\3\2\3\2\3\3\3\3\3\3"+
 		"\3\3\6\3\31\n\3\r\3\16\3\32\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3"+
 		"\4\6\4(\n\4\r\4\16\4)\5\4,\n\4\3\5\3\5\3\5\3\5\3\5\5\5\63\n\5\3\6\3\6"+

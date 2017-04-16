@@ -1,7 +1,11 @@
 package es.ull.etsii.jitrax.analysis.ra;
 
-public class PreprocessingEvalVisitor extends RelationalAlgebraBaseVisitor<String> {
+/**
+ * Cleaning redundant parentheses, comments, etc
+ */
 
+public class PreprocessingEvalVisitor extends RelationalAlgebraBaseVisitor<String> {
+	
 	public String visitStart(RelationalAlgebraParser.StartContext ctx) {
 		String preprocessedQuery = "";
 		

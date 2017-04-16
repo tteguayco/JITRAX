@@ -47,7 +47,7 @@ public class TableEditor extends JFrame {
 	
 	private static final int TEXTFIELD_WIDTH = 100;
 	private static final int TEXTFIELD_HEIGHT = 30;
-	private static final int ATTRLIST_WIDTH = 150;
+	private static final int ATTRLIST_WIDTH = 170;
 	private static final int ATTRLIST_HEIGHT = 150;
 	
 	private Table table;
@@ -186,7 +186,7 @@ public class TableEditor extends JFrame {
 	
 	private void resetAttrEditorPanel() {
 		newAttrName.setText("");
-		newAttrType.setSelectedItem(DataType.STRING);
+		newAttrType.setSelectedItem(DataType.CHAR);
 	}
 	
 	private void buildWindow() {
@@ -221,7 +221,8 @@ public class TableEditor extends JFrame {
 			// Name specified or whitespaces?
 			if (!name.equals("") && !isWhitespace) {
 				Attribute newAttr = new Attribute(name, type);
-				defaultListModel.addElement((Attribute) newAttr); 
+				defaultListModel.addElement((Attribute) newAttr);
+				resetAttrEditorPanel();
 			}
 			
 			else {

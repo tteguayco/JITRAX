@@ -7,7 +7,7 @@ start:
 ;
 
 database:
-	DATABASE ID ';' table+				# databaseCreation
+	DATABASE ID ';' table+					# databaseCreation
 ;
 
 table:
@@ -17,7 +17,7 @@ table:
 
 attrlist:													
 	attribute								# singleAttribute
-	| attribute ';' attrlist				# attributeList
+	| attribute ',' attrlist				# attributeList
 ;
 
 datalist:
@@ -26,7 +26,7 @@ datalist:
 ;
 
 attribute:
-	ID ':' datatype	(',' PK)?				# attributeValue
+	ID ':' datatype							# attributeValue
 ;
 
 datum:
@@ -50,8 +50,16 @@ CHAR:		'CHAR' | 'Char' | 'char';
 INT:		'INTEGER' | 'Integer' | 'integer' | 'INT' | 'int';
 FLOAT:		'FLOAT' | 'Float' | 'float';
 DATE:		'DATE' | 'Date' | 'date';
-PK:			'PK' | 'pk' | 'Primary Key';
 STRING_VAL: 	'\'' ([a-zA-Z]| [0-9] | '@' | '_' | '-' | '+' | '*' | '/' | '.')* '\'';
 NUMBER:			[0-9]+ ('.' | [0-9])*;
 ID:				([a-zA-Z])+([a-zA-Z]| [0-9] | '@' | '_' | '-' | '+' | '*' | '/' | '.')*;
 WHITESPACES:   	[ \t\r\n]+ -> skip;
+
+// COMMENTS
+COMMENT
+    :   '/*' .*? '*/' -> channel(HIDDEN)
+    ;
+
+LINE_COMMENT
+    :   '//' ~[\r\n]* -> channel(HIDDEN)
+    ;

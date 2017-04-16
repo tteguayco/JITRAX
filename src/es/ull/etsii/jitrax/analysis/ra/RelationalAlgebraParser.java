@@ -22,7 +22,8 @@ public class RelationalAlgebraParser extends Parser {
 		SELECTION=9, UNION=10, DIFFERENCE=11, CARTESIAN_PRODUCT=12, INTERSECTION=13, 
 		NATURAL_JOIN=14, JOIN=15, DIVISION=16, RENAME=17, AS=18, EQUAL=19, NOT_EQUAL=20, 
 		GREATER_THAN=21, GREATER_EQUAL=22, LESS_THAN=23, LESS_EQUAL=24, BOOLEAN_AND=25, 
-		BOOLEAN_OR=26, BOOLEAN_NOT=27, STRING=28, IDENTIFIER=29, NUMBER=30, WHITESPACES=31;
+		BOOLEAN_OR=26, BOOLEAN_NOT=27, STRING=28, IDENTIFIER=29, NUMBER=30, WHITESPACES=31, 
+		COMMENT=32, LINE_COMMENT=33;
 	public static final int
 		RULE_start = 0, RULE_view = 1, RULE_expr = 2, RULE_attrlist = 3, RULE_condlist = 4, 
 		RULE_comparator = 5, RULE_compared = 6, RULE_relation = 7, RULE_attribute = 8;
@@ -41,7 +42,8 @@ public class RelationalAlgebraParser extends Parser {
 		"UNION", "DIFFERENCE", "CARTESIAN_PRODUCT", "INTERSECTION", "NATURAL_JOIN", 
 		"JOIN", "DIVISION", "RENAME", "AS", "EQUAL", "NOT_EQUAL", "GREATER_THAN", 
 		"GREATER_EQUAL", "LESS_THAN", "LESS_EQUAL", "BOOLEAN_AND", "BOOLEAN_OR", 
-		"BOOLEAN_NOT", "STRING", "IDENTIFIER", "NUMBER", "WHITESPACES"
+		"BOOLEAN_NOT", "STRING", "IDENTIFIER", "NUMBER", "WHITESPACES", "COMMENT", 
+		"LINE_COMMENT"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -1289,7 +1291,7 @@ public class RelationalAlgebraParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3!\u009b\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3#\u009b\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\3\2\3\2"+
 		"\3\2\7\2\30\n\2\f\2\16\2\33\13\2\3\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\4\3"+
 		"\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4"+
