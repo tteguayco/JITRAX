@@ -182,11 +182,11 @@ public class TableEditor extends JFrame {
 		attrEditorPanel.add(buttonsPanel, BorderLayout.SOUTH);
 		
 		addAttrButton.addActionListener(new AddAttrListener());
+		newAttrName.addActionListener(new AddAttrListener());
 	}
 	
 	private void resetAttrEditorPanel() {
 		newAttrName.setText("");
-		newAttrType.setSelectedItem(DataType.CHAR);
 	}
 	
 	private void buildWindow() {
