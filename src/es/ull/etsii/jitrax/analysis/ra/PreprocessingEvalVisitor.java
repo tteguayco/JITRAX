@@ -37,10 +37,6 @@ public class PreprocessingEvalVisitor extends RelationalAlgebraBaseVisitor<Strin
 		return ctx.IDENTIFIER().getText() + " = " + visit(ctx.expr()) + ";";
 	}
 	
-	@Override public String visitRenameTable(RelationalAlgebraParser.RenameTableContext ctx) { 
-		return "RENAME " + visit(ctx.relation(0)) + " AS " + visit(ctx.relation(1)); 
-	}
-	
 	@Override public String visitUnion(RelationalAlgebraParser.UnionContext ctx) { 
 		return visit(ctx.expr(0)) + " UNION " + visit(ctx.expr(1)); 
 	}
@@ -48,9 +44,7 @@ public class PreprocessingEvalVisitor extends RelationalAlgebraBaseVisitor<Strin
 	@Override public String visitDivision(RelationalAlgebraParser.DivisionContext ctx) { 
 		return visit(ctx.expr(0)) + " DIVISION " + visit(ctx.expr(1));
 	}
-	
-	@Override public String visitRenameSchema(RelationalAlgebraParser.RenameSchemaContext ctx) { return visitChildren(ctx); }
-	
+
 	@Override public String visitCartesianProduct(RelationalAlgebraParser.CartesianProductContext ctx) { 
 		return visit(ctx.expr(0)) + " PRODUCT " + visit(ctx.expr(1)); 
 	}

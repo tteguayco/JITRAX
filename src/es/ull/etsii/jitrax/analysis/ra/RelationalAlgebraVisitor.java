@@ -25,33 +25,12 @@ public interface RelationalAlgebraVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitViewAssignment(RelationalAlgebraParser.ViewAssignmentContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code renameTable}
-	 * labeled alternative in {@link RelationalAlgebraParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRenameTable(RelationalAlgebraParser.RenameTableContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code union}
-	 * labeled alternative in {@link RelationalAlgebraParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitUnion(RelationalAlgebraParser.UnionContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code division}
 	 * labeled alternative in {@link RelationalAlgebraParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitDivision(RelationalAlgebraParser.DivisionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code renameSchema}
-	 * labeled alternative in {@link RelationalAlgebraParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRenameSchema(RelationalAlgebraParser.RenameSchemaContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code cartesianProduct}
 	 * labeled alternative in {@link RelationalAlgebraParser#expr}.
@@ -101,6 +80,13 @@ public interface RelationalAlgebraVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitProjection(RelationalAlgebraParser.ProjectionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code union}
+	 * labeled alternative in {@link RelationalAlgebraParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUnion(RelationalAlgebraParser.UnionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code join}
 	 * labeled alternative in {@link RelationalAlgebraParser#expr}.

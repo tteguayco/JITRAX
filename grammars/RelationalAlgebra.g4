@@ -19,8 +19,6 @@ expr:	relation														# relationFromExpr
     |   expr INTERSECTION expr											# intersection
     |   expr JOIN expr '[' condlist ']'									# join
     |   expr DIVISION expr												# division
-    |   RENAME relation AS relation										# renameTable
-    |   RENAME relation '(' attrlist ')' AS relation '(' attrlist ')' 	# renameSchema
 ;
 
 attrlist:   attribute										# attributeFromAttrlist
@@ -58,13 +56,11 @@ PROJECTION:			'PROJECTION'   	     | 'projection' 		| 'PROJECT'			| 'project';
 SELECTION:			'SELECTION'    	     | 'selection' 			| 'SELECT'			| 'select';
 UNION:				'UNION'        	     | 'union'				| 'U';
 DIFFERENCE:			'DIFFERENCE'   	     | 'difference'			| '-';
-CARTESIAN_PRODUCT:	'CARTESIAN PRODUCT'  | 'cartesian product'	| 'PRODUCT'  		| 'product'	| 'X' 	| 'x';
+CARTESIAN_PRODUCT:	'CARTESIAN PRODUCT'  | 'cartesian product'	| 'PRODUCT'  		| 'product'		| 'X' 	| 'x';
 INTERSECTION: 		'INTERSECTION' 	     | 'intersection'		| 'INTERSECT'		| 'intersect' 	| '∩';
-NATURAL_JOIN:		'NATURAL JOIN' 	     | 'NJOIN' 				| 'natural join' 	| 'njoin'	| '*';
+NATURAL_JOIN:		'NATURAL JOIN' 	     | 'NJOIN' 				| 'natural join' 	| 'njoin'		| '*';
 JOIN:				'JOIN'		    	 | 'join'				| 'Y'	  			| 'y';
 DIVISION:			'DIVISION'	    	 | 'division'			| '÷'		        | '/';
-RENAME:				'RENAME'	    	 | 'rename' 			| 'REN' 			| 'ren';
-AS:					'AS'		    	 | 'as';
 
 // COMPARISON OPERATORS
 EQUAL:			'=';
@@ -79,17 +75,12 @@ BOOLEAN_AND: 	'AND' | 'and' | '&' | '^';
 BOOLEAN_OR:  	'OR'  | 'or'  | '|' | 'v';
 BOOLEAN_NOT:	'NOT' | 'not' | '~';
 
-// IDENTIFIER OPTIONALLY LIKE 'TABLE.ATTR'
 STRING:			'"' (.)*? '"' | '\'' (.)*? '\'';
-IDENTIFIER:  	[a-zA-Z]+([0-9] | [a-zA-Z] | '_')* ('.' ([a-zA-Z]+([0-9] | [a-zA-Z] | '_'))*)?;
+// IDENTIFIER OPTIONALLY LIKE 'TABLE.ATTR'
+IDENTIFIER:  	[a-zA-Z]+([0-9] | [a-zA-Z] | '_')* ('.' ([a-zA-Z]+([0-9] | [a-zA-Z] | '_')*)+ )?;
 NUMBER:    		[0-9]+;
 WHITESPACES:   	[ \t\r\n]+ -> skip;
 
 // COMMENTS
-COMMENT
-    :   '/*' .*? '*/' -> channel(HIDDEN)
-    ;
-
-LINE_COMMENT
-    :   '//' ~[\r\n]* -> channel(HIDDEN)
-    ;
+COMMENT:   		'/*' .*? '*/' -> channel(HIDDEN);
+LINE_COMMENT:   '//' ~[\r\n]* -> channel(HIDDEN);

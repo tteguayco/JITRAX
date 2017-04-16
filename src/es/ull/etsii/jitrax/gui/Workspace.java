@@ -127,6 +127,8 @@ public class Workspace extends JPanel {
 		relationalAlgebraCodeEditor.setFont(new Font(raCurrentFontName, 
 													DEFAULT_RA_FONT_STYLE, 
 													DEFAULT_RA_FONT_SIZE));
+		relationalAlgebraCodeEditor.setLineWrap(true);
+		relationalAlgebraCodeEditor.setWrapStyleWord(true);
 		
 		String sqlCurrentFontName = sqlCodeEditor.getFont().getName();
 		sqlCodeEditor.setFont(new Font(sqlCurrentFontName, 
@@ -134,6 +136,8 @@ public class Workspace extends JPanel {
 				DEFAULT_SQL_FONT_SIZE));
 		sqlCodeEditor.setCaretColor(SQL_CARET_COLOR);
 		sqlCodeEditor.setEditable(false);
+		sqlCodeEditor.setLineWrap(true);
+		sqlCodeEditor.setWrapStyleWord(true);
 		
 		// Buttons
 		translateButton.setMargin(new Insets(BUTTON_MARGIN_TOP, 

@@ -101,13 +101,6 @@ public class RelationalAlgebraTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("÷", Token.RESERVED_WORD);
 		tokenMap.put("/", Token.RESERVED_WORD);
 		
-		tokenMap.put("RENAME", Token.RESERVED_WORD);
-		tokenMap.put("rename", Token.RESERVED_WORD);
-		tokenMap.put("REN", Token.RESERVED_WORD);
-		
-		tokenMap.put("AS", Token.RESERVED_WORD);
-		tokenMap.put("as", Token.RESERVED_WORD);
-		
 		tokenMap.put("AND", Token.RESERVED_WORD);
 		tokenMap.put("and", Token.RESERVED_WORD);
 		tokenMap.put("&", Token.RESERVED_WORD);
