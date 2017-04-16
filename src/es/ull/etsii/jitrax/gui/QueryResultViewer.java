@@ -64,7 +64,16 @@ public class QueryResultViewer extends GraphicTable {
 			String[] rowData = new String[numColumns];
 			for (int i = 1 ; i <= numColumns ; i++) {
 				if (!columnNamesAreFilled) {
-					columnNames.add(resultSet.getMetaData().getColumnName(i));
+					String columnName = resultSet.getMetaData().getColumnName(i);
+					
+					// Append tableName if exists
+					String tableName = resultSet.getMetaData().getTableName(i);
+					tableName.trim();
+					if (!tableName.equals("")) {
+						columnName = tableName + "." + columnName;
+					}
+					
+					columnNames.add(columnName);
 				}
 				rowData[i-1] = String.valueOf(resultSet.getObject(i));
 	        }
@@ -118,7 +127,7 @@ public class QueryResultViewer extends GraphicTable {
 			if (i < tableModel.getColumnCount() - 1) {
 				csv += ", ";
 			} else {
-				csv += "\n\n";
+				csv += "\n";
 			}
 		}
 		
