@@ -2,6 +2,7 @@ package es.ull.etsii.jitrax.analysis.ra;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,12 +25,14 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	Database database;
 	ArrayList<String> errors;
 	int subqueryCounter;
+	private HashMap<String, RelationalAlgebraParser.ExprContext> views;
 
 	public RelationalAlgebraEvalVisitor(Database aDatabase) {
 		 sqlTranslation = "";
 		 database = aDatabase;
 		 errors = new ArrayList<String>();
 		 subqueryCounter = 1;
+		 views = new HashMap<String, RelationalAlgebraParser.ExprContext>();
 	}
 	
 	public ArrayList<String> getErrorsList() {
@@ -113,7 +116,13 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 				return new ArrayList<Attribute>(database.getTableByName(tableName).getAttributes());
 			}
 			catch (NullPointerException e) {
-				appendError("TABLE NOT FOUND (" + tableName + ")");
+				// Could it be a view?
+				String viewName = tableName;
+				if (views.containsKey(viewName)) {
+					return expressionSchema(views.get(viewName));
+				} else {
+					appendError("TABLE OR VIEW NOT FOUND (" + tableName + ")");
+				}
 			}
 		}
 		
@@ -289,6 +298,9 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitViewAssignment(RelationalAlgebraParser.ViewAssignmentContext ctx) {
 		String expr = visit(ctx.expr());
 		expr = preppendSelectStarIfNeeded(ctx.expr(), expr);
+		
+		// Save the view
+		views.put(ctx.IDENTIFIER().getText(), ctx.expr());
 		
 		return "CREATE OR REPLACE VIEW " + ctx.IDENTIFIER().getText() + " AS (" +
 				expr + ");";
