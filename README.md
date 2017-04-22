@@ -42,19 +42,25 @@ mediante fichero).
 * Formato multidioma: se ha decidido que el idioma de la primera versión de JITRAX sea el inglés, pero en el
 futuro se espera incorporar soporte para más idiomas. 
 
-## Instalación
+## Ejecución
 
 Antes de disfrutar de las bondades de JITRAX, instala [PostgreSQL](https://www.postgresql.org/download/). 
 
-En el directorio 'prototype' se encuentra el fichero ejecutable del prototipo (jitrax_prototype.jar). Una vez lo hayas descargado, sitúate desde una terminal en el mismo directorio que este fichero .JAR y ejecuta lo siguiente:
+Con PostgreSQL instalado, tocaría ahora construir el fichero ejecutable mediante el uso de **Apache Ant** (Apache License 2.0). Para ello, sitúate desde un terminal en el directorio raíz del proyecto y ejecuta lo siguiente:
 
 ```sh
-java -jar jitrax_prototype.jar
+ant build-jar
+```
+
+Ya estás listo para ejecutar JITRAX:
+
+```sh
+ant run
 ```
 
 ## 'Quick start'
 
-¿Ya has ejecutado el fichero .JAR? Para comenzar a trastear con JITRAX, dirígete a File > Open y selecciona
+¿Ya has ejecutado el proyecto? Para comenzar a trastear con JITRAX, dirígete a 'File > Open' y selecciona
 aquel fichero que contenga la especificación de la base de datos con la que quieras empezar a trabajar (en el directorio 'examples' de este proyecto dispones de algunos ejemplos). 
 
 NOTA: antes de poder seleccionar el fichero de la base de datos, necesitas establecer conexión con el SG de 

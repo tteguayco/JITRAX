@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="JITRAX">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="JITRAX.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/antlr-4.6-complete.jar"/>
+        <pathelement location="lib/rsyntaxtextarea-3.0.0-SNAPSHOT-javadoc.jar"/>
+        <pathelement location="lib/rsyntaxtextarea-3.0.0-SNAPSHOT-sources.jar"/>
+        <pathelement location="lib/rsyntaxtextarea-3.0.0-SNAPSHOT.jar"/>
+        <pathelement location="lib/postgresql-42.0.0.jre6.jar"/>
+        <pathelement location="lib/hibernate-core-4.3.9.Final.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="JITRAX.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target name="MainWindow">
+        <java classname="es.ull.etsii.jitrax.gui.MainWindow" failonerror="true" fork="yes">
+            <classpath refid="JITRAX.classpath"/>
+        </java>
+    </target>
+    <target name="NewDatabaseDialog">
+        <java classname="es.ull.etsii.jitrax.gui.dbcreation.NewDatabaseDialog" failonerror="true" fork="yes">
+            <classpath refid="JITRAX.classpath"/>
+        </java>
+    </target>
+    <target name="TablesManagerWindow">
+        <java classname="es.ull.etsii.jitrax.gui.dbcreation.TablesManagerWindow" failonerror="true" fork="yes">
+            <classpath refid="JITRAX.classpath"/>
+        </java>
+    </target>
+    <target name="Main">
+        <java classname="es.ull.etsii.jitrax.analysis.ra.Main" failonerror="true" fork="yes">
+            <classpath refid="JITRAX.classpath"/>
+        </java>
+    </target>
+    <target name="DBMSConnectionWindow">
+        <java classname="es.ull.etsii.jitrax.gui.dialogs.DBMSConnectionWindow" failonerror="true" fork="yes">
+            <classpath refid="JITRAX.classpath"/>
+        </java>
+    </target>
+    <target name="TableEditor">
+        <java classname="es.ull.etsii.jitrax.gui.dbcreation.TableEditor" failonerror="true" fork="yes">
+            <classpath refid="JITRAX.classpath"/>
+        </java>
+    </target>
+    <target name="StarterWindow">
+        <java classname="es.ull.etsii.jitrax.gui.StarterWindow" failonerror="true" fork="yes">
+            <classpath refid="JITRAX.classpath"/>
+        </java>
+    </target>
+  	<property name="projectHome" location="."/>
+  	  <target name="build-jar">
+  	    <jar destfile="${projectHome}/build/jar/JITRAX.jar" basedir="${projectHome}/bin">
+  	    	<zipgroupfileset includes="*.jar" dir="lib"/>
+  	    	<manifest>
+  	    	        <attribute name="Main-Class" value="es.ull.etsii.jitrax.gui.MainWindow"/>
+  	    	</manifest>
+  	    </jar>
+	</target> 
+  	<target name="run">
+        <java jar="build/jar/JITRAX.jar" fork="true"/>
+  	</target>
+</project>
