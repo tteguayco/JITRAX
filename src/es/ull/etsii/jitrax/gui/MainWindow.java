@@ -1,9 +1,12 @@
 package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -35,14 +38,14 @@ import es.ull.etsii.jitrax.interpreters.RelationalAlgebraInterpreter;
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final int FRAME_WIDTH = 1000;
-	private static final int FRAME_HEIGHT = 600;
+	private static final int FRAME_HEIGHT = 550;
 	private static final int MINIMUM_WIDTH = 800;
 	private static final int MINIMUM_HEIGHT = 500;
-	private static final int BORDER_GAP = 10;
+	private static final int BORDER_GAP = 20;
 	
 	private static final String WELCOME_MSG = "> Welcome to JITRAX (v1.0)";
 	private static final String QUERY_TRANSLATION_MSG = "> Relational Algebra query translated to SQL.";
-	private static final String DBMS_EXECUTION_MSG = "> SQL query executed on DBMS.";
+	private static final String DBMS_EXECUTION_MSG = "> Relational Algebra query executed on DBMS.";
 	private static final String DBMS_ERRORS_MSG = "> The DBMS detected the following error:";
 	
 	private static final double HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT = 0.55d;
@@ -100,6 +103,14 @@ public class MainWindow extends JFrame {
 		setJMenuBar(barMenu);
 		setListeners();
 		buildWindow();
+		
+		// Make relational algebra code editor focused
+		addWindowFocusListener(new WindowAdapter() {
+		    public void windowGainedFocus(WindowEvent e) {
+		    	getRootPane().setDefaultButton(getWorkspace().getExecuteButton());
+		        getWorkspace().getRelationalAlgebraCodeEditor().requestFocusInWindow();
+		    }
+		});
 		
 		/**
 		 * Redirect System.out to the console in the GUI.
@@ -175,102 +186,106 @@ public class MainWindow extends JFrame {
 	}
 	
 	private void setListeners() {
-		getWorkspace().getTranslateButton().addActionListener(new TranslationListener());
 		getWorkspace().getExecuteButton().addActionListener(new ExecutionListener());
 		getWorkspace().getRelationalAlgebraCodeEditor().getDocument()
 			.addDocumentListener(new RelationalAlgebraEditorListener());
 		getQueryList().getQueryList().getSelectionModel().addListSelectionListener((new QueryExchanger()));
 	}
 	
-	private class TranslationListener implements ActionListener {
-
-		public void actionPerformed(ActionEvent e) {
-			if (getWorkspace().getRelationalAlgebraCodeEditor().getText().equals("")) {
-				return;
+	private boolean translateToSql() {
+		if (getWorkspace().getRelationalAlgebraCodeEditor().getText().equals("")) {
+			return false;
+		}
+		
+		String sqlTranslation;
+		Database currentDatabase = getDatabaseViewerPanel().getSelectedDatabase();
+		String raInput = getWorkspace().getRelationalAlgebraCodeEditor().getText();
+		RelationalAlgebraInterpreter interpreter = new RelationalAlgebraInterpreter(currentDatabase);
+		
+		sqlTranslation = interpreter.translate(raInput);
+		
+		// Successful translation
+		if (sqlTranslation != null) {
+			// Show ParseTree
+			Parser parser = interpreter.getParser();
+			ParseTree tree = interpreter.getTree();
+			TreeViewer treeViewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+			
+	        // Save information into query
+	        Query selectedQuery = getQueryList().getSelectedQuery();
+	        selectedQuery.setSqlTranslation(sqlTranslation);
+	        selectedQuery.setTreeViewer(treeViewer);
+	        
+	        // Update workspace fields
+	        try {
+				getWorkspace().updateWorkspaceFromQuery(selectedQuery);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
 			}
 			
-			String sqlTranslation;
-			Database currentDatabase = getDatabaseViewerPanel().getSelectedDatabase();
-			String raInput = getWorkspace().getRelationalAlgebraCodeEditor().getText();
-			RelationalAlgebraInterpreter interpreter = new RelationalAlgebraInterpreter(currentDatabase);
+			return true;
+		}
+		
+		else {
+			return false;
+		}
+	}
+	
+	private boolean executeTranslationOnDbms() {
+		Database currentDatabase = getDatabaseViewerPanel().getSelectedDatabase();
+		PostgreDriver postgreDriver = currentDatabase.getPostgreDriver();
+		String sqlCode = getWorkspace().getSqlCodeEditor().getText();
+		String statements[];
+		ResultSet resultSet;
+		
+		// Break the translation into views and the single expression
+		statements = sqlCode.split(";");
+		String views[] = new String[0];
+		if (statements.length > 1) {
+			views = Arrays.copyOfRange(statements, 0, statements.length - 1);
+		}
+		String expr = statements[statements.length - 1];
+		
+		try {
+			// Change to current Database
+			postgreDriver.switchDatabase(currentDatabase.getName());
 			
-			sqlTranslation = interpreter.translate(raInput);
-			
-			// Successful translation
-			if (sqlTranslation != null) {
-				// Show ParseTree
-				Parser parser = interpreter.getParser();
-				ParseTree tree = interpreter.getTree();
-				TreeViewer treeViewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-				
-		        // Save information into query
-		        Query selectedQuery = getQueryList().getSelectedQuery();
-		        selectedQuery.setSqlTranslation(sqlTranslation);
-		        selectedQuery.setTreeViewer(treeViewer);
-		        
-		        // Update workspace fields
-		        try {
-					getWorkspace().updateWorkspaceFromQuery(selectedQuery);
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-		        
-				getWorkspace().switchToSqlTab();
-				System.out.println(QUERY_TRANSLATION_MSG);
+			// Execute views
+			for (int i = 0; i < views.length; i++) {
+				postgreDriver.executeUpdate(views[i]);
 			}
 			
-			// Errors...
-			else {
-				
-			}
+			// Execute expression
+			postgreDriver.executeQuery(expr);
+			
+			// Send the result table to the Result Viewer
+			resultSet = postgreDriver.getQueryResultSet();
+			getWorkspace().getQueryResultViewer().updateTableData(resultSet);
+			
+			// Save the query's information
+			Query selectedQuery = getQueryList().getSelectedQuery();
+			selectedQuery.updateResultSetDataFromTableModel(
+					getWorkspace().getQueryResultViewer().getTableModel());
+			getWorkspace().updateWorkspaceFromQuery(selectedQuery);
+			System.out.println(DBMS_EXECUTION_MSG);
+			
+			return true;
+		}
+		
+		catch (SQLException e) {
+			System.out.println("\n" + DBMS_ERRORS_MSG);
+			System.out.println(" - " + e.getMessage());
+			return false;
 		}
 	}
 	
 	private class ExecutionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent evt) {
-			Database currentDatabase = getDatabaseViewerPanel().getSelectedDatabase();
-			PostgreDriver postgreDriver = currentDatabase.getPostgreDriver();
-			String sqlCode = getWorkspace().getSqlCodeEditor().getText();
-			String statements[];
-			ResultSet resultSet;
-			
-			// Break the translation into views and the single expression
-			statements = sqlCode.split(";");
-			String views[] = new String[0];
-			if (statements.length > 1) {
-				views = Arrays.copyOfRange(statements, 0, statements.length - 1);
-			}
-			String expr = statements[statements.length - 1];
-			
-			try {
-				// Change to current Database
-				postgreDriver.switchDatabase(currentDatabase.getName());
-				
-				// Execute views
-				for (int i = 0; i < views.length; i++) {
-					postgreDriver.executeUpdate(views[i]);
-				}
-				
-				// Execute expression
-				postgreDriver.executeQuery(expr);
-				
-				// Send the result table to the Result Viewer
-				resultSet = postgreDriver.getQueryResultSet();
-				getWorkspace().getQueryResultViewer().updateTableData(resultSet);
-				
-				// Save the query's information
-				Query selectedQuery = getQueryList().getSelectedQuery();
-				selectedQuery.updateResultSetDataFromTableModel(
-						getWorkspace().getQueryResultViewer().getTableModel());
-				getWorkspace().updateWorkspaceFromQuery(selectedQuery);
+			// Translation successful?
+			if (translateToSql()) {
+				executeTranslationOnDbms();
 				getWorkspace().switchToQueryResultTab();
-				System.out.println(DBMS_EXECUTION_MSG);
-			}
-			
-			catch (SQLException e) {
-				System.out.println("\n" + DBMS_ERRORS_MSG);
-				System.out.println(" - " + e.getMessage());
 			}
 		}
 	}

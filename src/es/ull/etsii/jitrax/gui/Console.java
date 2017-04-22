@@ -78,7 +78,7 @@ public class Console extends JPanel {
 		add(sp);
 		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
-		setBorder(BorderFactory.createTitledBorder(/*lineBorderPanel,*/ PANEL_TITLE));
+		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
 	}
 	
 	public void appendMessage(String newMessage) {

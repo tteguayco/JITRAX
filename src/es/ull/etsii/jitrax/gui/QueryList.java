@@ -83,7 +83,7 @@ public class QueryList extends JPanel {
 		add(buttonsPanel, BorderLayout.NORTH);
 		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
-		setBorder(BorderFactory.createTitledBorder(/*lineBorderPanel,*/ PANEL_TITLE));
+		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
 	}
 	
 	private void addQuery(String queryName) {
