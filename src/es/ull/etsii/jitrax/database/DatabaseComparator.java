@@ -83,7 +83,7 @@ public class DatabaseComparator {
 	 */
 	public void overwriteDatabaseOnDbms() throws SQLException {
 		Table auxTable;
-		PostgreDriver dbmsDriver = database.getPostgreDriver();
+		DbmsDriver dbmsDriver = database.getDbmsDriver();
 		
 		// dROP TABLES
 		for (int i = 0; i < database.getTables().size(); i++) {

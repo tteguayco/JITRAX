@@ -21,7 +21,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class DBMSConnectionWindow extends JDialog {
 	private static final String WINDOW_TITLE = "DBMS Connection";
-	private static final String[] DBMS_LIST = { "PostgreSQL" };
+	private static final String[] DBMS_LIST = { "PostgreSQL", "MySQL" };
 	private static final String DEFAULT_HOSTNAME = "127.0.0.1";
 	private static final String DEFAULT_PORT = "5432";
 	private static final String DEFAULT_USERNAME = "postgres";
@@ -108,6 +108,22 @@ public class DBMSConnectionWindow extends JDialog {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
 		setResizable(false);
+	}
+	
+	public boolean postgreIsSelected() {
+		if (((String) getDbmsList().getSelectedItem()).equals("PostgreSQL")) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean mysqlIsSelected() {
+		if (((String) getDbmsList().getSelectedItem()).equals("MySQL")) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	public JComboBox<String> getDbmsList() {

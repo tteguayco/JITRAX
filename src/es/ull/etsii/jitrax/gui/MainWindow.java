@@ -32,7 +32,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.adt.Query;
-import es.ull.etsii.jitrax.database.PostgreDriver;
+import es.ull.etsii.jitrax.database.DbmsDriver;
 import es.ull.etsii.jitrax.interpreters.RelationalAlgebraInterpreter;
 
 public class MainWindow extends JFrame {
@@ -41,7 +41,7 @@ public class MainWindow extends JFrame {
 	private static final int FRAME_HEIGHT = 550;
 	private static final int MINIMUM_WIDTH = 800;
 	private static final int MINIMUM_HEIGHT = 500;
-	private static final int BORDER_GAP = 20;
+	private static final int BORDER_GAP = 15;
 	
 	private static final String WELCOME_MSG = "> Welcome to JITRAX (v1.0)";
 	private static final String QUERY_TRANSLATION_MSG = "> Relational Algebra query translated to SQL.";
@@ -59,7 +59,7 @@ public class MainWindow extends JFrame {
 	private DatabaseViewer databaseViewerPanel;
 	private JPanel mainContainer;
 	private QueryList queryList;
-	private PostgreDriver postgreDriver;
+	private DbmsDriver dbmsDriver;
 	private JSplitPane horSplitPane;
 	
 	private RelationalAlgebraInterpreter raInterpreter;
@@ -107,7 +107,6 @@ public class MainWindow extends JFrame {
 		// Make relational algebra code editor focused
 		addWindowFocusListener(new WindowAdapter() {
 		    public void windowGainedFocus(WindowEvent e) {
-		    	getRootPane().setDefaultButton(getWorkspace().getExecuteButton());
 		        getWorkspace().getRelationalAlgebraCodeEditor().requestFocusInWindow();
 		    }
 		});
@@ -233,7 +232,7 @@ public class MainWindow extends JFrame {
 	
 	private boolean executeTranslationOnDbms() {
 		Database currentDatabase = getDatabaseViewerPanel().getSelectedDatabase();
-		PostgreDriver postgreDriver = currentDatabase.getPostgreDriver();
+		DbmsDriver postgreDriver = currentDatabase.getDbmsDriver();
 		String sqlCode = getWorkspace().getSqlCodeEditor().getText();
 		String statements[];
 		ResultSet resultSet;
@@ -383,12 +382,12 @@ public class MainWindow extends JFrame {
 		this.queryList = queryList;
 	}
 
-	public PostgreDriver getPostgreDriver() {
-		return postgreDriver;
+	public DbmsDriver getDbmsDriver() {
+		return dbmsDriver;
 	}
 
-	public void setPostgreDriver(PostgreDriver postgreDriver) {
-		this.postgreDriver = postgreDriver;
+	public void setDbmsDriver(DbmsDriver postgreDriver) {
+		this.dbmsDriver = postgreDriver;
 	}
 
 	public JSplitPane getHorSplitPane() {

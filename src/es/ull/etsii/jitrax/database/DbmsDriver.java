@@ -12,31 +12,19 @@ import es.ull.etsii.jitrax.adt.Datum;
 import es.ull.etsii.jitrax.adt.Row;
 import es.ull.etsii.jitrax.adt.Table;
 
-public class PostgreDriver {
-	private static final String DEFAULT_HOSTNAME = "localhost";
-	private static final String DEFAULT_PORT 	 = "5432"; 
-	private static final String DEFAULT_USERNAME = "postgres";
-	private static final String DEFAULT_PASSWORD = "postgres";
+public class DbmsDriver {
+	protected String dbmsPrefix;
+	protected String hostname;
+	protected String port;
+	protected String username;
+	protected String password;
 	
-	private String hostname;
-	private String port;
-	private String username;
-	private String password;
+	protected Connection connection;
+	protected ResultSet queryResultSet;
 	
-	private Connection connection;
-	private ResultSet queryResultSet;
-	
-	public PostgreDriver() throws SQLException {
-		hostname = DEFAULT_HOSTNAME;
-		port = DEFAULT_PORT;
-		username = DEFAULT_USERNAME;
-		password = DEFAULT_PASSWORD;
-		
-		String url = makeUrlConnection(hostname, port, "");
-		connection = DriverManager.getConnection(url, username, password);
-	}
-	
-	public PostgreDriver(String aHostname, String aPort, String anUsername, String aPassword) throws SQLException {
+	public DbmsDriver(String aDbmsPrefix, String aHostname, String aPort, 
+			String anUsername, String aPassword) throws SQLException {
+		dbmsPrefix = aDbmsPrefix;
 		hostname = aHostname;
 		port = aPort;
 		username = anUsername;
@@ -47,7 +35,7 @@ public class PostgreDriver {
 	}
 	
 	private String makeUrlConnection(String hostname, String port, String databaseName) {
-		return "jdbc:postgresql://" + hostname + ":" + port + "/" + databaseName;
+		return "jdbc:" + dbmsPrefix + "://" + hostname + ":" + port + "/" + databaseName;
 	}
 	
 	public void closeConnection() throws SQLException {
@@ -55,7 +43,7 @@ public class PostgreDriver {
 	}
 	
 	/**
-	 * Switches to an existing database in PostgreSQL.
+	 * Switches to an existing database on the DBMS.
 	 * @param databaseName
 	 * @throws SQLException
 	 */
@@ -66,7 +54,7 @@ public class PostgreDriver {
 	}
 	
 	/**
-	 * Returns true if the specified database already exists in PostgreSQL.
+	 * Returns true if the specified database already exists on the DBMS.
 	 * @param aDatabaseName
 	 * @return
 	 */

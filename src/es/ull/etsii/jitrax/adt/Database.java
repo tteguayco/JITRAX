@@ -6,14 +6,14 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.UUID;
 
-import es.ull.etsii.jitrax.database.PostgreDriver;
+import es.ull.etsii.jitrax.database.DbmsDriver;
 import es.ull.etsii.jitrax.exceptions.DuplicateTableException;
 
 public class Database {
 
 	private String name;
 	private ArrayList<Table> tables;
-	private PostgreDriver postgreDriver;
+	private DbmsDriver dbmsDriver;
 	
 	/**
 	 * @param name name for the database.
@@ -163,19 +163,19 @@ public class Database {
 		this.name = name;
 	}
 
-	public PostgreDriver getPostgreDriver() {
-		return postgreDriver;
-	}
-
-	public void setPostgreDriver(PostgreDriver postgreDriver) {
-		this.postgreDriver = postgreDriver;
-	}
-
 	public ArrayList<Table> getTables() {
 		return tables;
 	}
 
 	public void setTables(ArrayList<Table> tables) {
 		this.tables = tables;
+	}
+
+	public DbmsDriver getDbmsDriver() {
+		return dbmsDriver;
+	}
+
+	public void setDbmsDriver(DbmsDriver dbmsDriver) {
+		this.dbmsDriver = dbmsDriver;
 	}
 }

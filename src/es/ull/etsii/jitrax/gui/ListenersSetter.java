@@ -22,7 +22,9 @@ import org.postgresql.util.PSQLException;
 
 import es.ull.etsii.jitrax.adt.Database;
 import es.ull.etsii.jitrax.database.DatabaseComparator;
-import es.ull.etsii.jitrax.database.PostgreDriver;
+import es.ull.etsii.jitrax.database.DbmsDriver;
+import es.ull.etsii.jitrax.database.MySqlDriver;
+import es.ull.etsii.jitrax.database.PostgreSqlDriver;
 import es.ull.etsii.jitrax.gui.dbcreation.NewDatabaseDialog;
 import es.ull.etsii.jitrax.gui.dbcreation.TablesManagerWindow;
 import es.ull.etsii.jitrax.gui.dialogs.DBMSConnectionWindow;
@@ -35,7 +37,7 @@ public class ListenersSetter {
 	private MainWindow mainWindow;
 	private String lastSavingLocation;
 	private FileDialog fileDialog;
-	private PostgreDriver postgreDriver;
+	private DbmsDriver dbmsDriver;
 	
 	public ListenersSetter(MainWindow aMainWindow) {
 		mainWindow = aMainWindow;
@@ -83,7 +85,7 @@ public class ListenersSetter {
 	
 	private class OpenListener implements ActionListener {
 
-		private void readDatabase(PostgreDriver postgreDriver) throws SQLException {
+		private void readDatabase(DbmsDriver postgreDriver) throws SQLException {
 			FileDialog fileDialog = new FileDialog();
 			Database importedDatabase = fileDialog.importDatabaseDialog();
 			
@@ -95,7 +97,7 @@ public class ListenersSetter {
 				}
 			
 				// Assign a PostgreDriver to the new database
-				importedDatabase.setPostgreDriver(postgreDriver);
+				importedDatabase.setDbmsDriver(postgreDriver);
 				
 				// If it does not exist, create, switch and set it up
 				if (!postgreDriver.databaseAlreadyExists(importedDatabase.getName())) {
@@ -156,7 +158,7 @@ public class ListenersSetter {
 		}
 		
 		public void actionPerformed(ActionEvent arg0) {
-			if (getMainWindow().getPostgreDriver() == null) {
+			if (getMainWindow().getDbmsDriver() == null) {
 				DBMSConnectionWindow dbmsConnectionWindow = new DBMSConnectionWindow(mainWindow);
 				
 				dbmsConnectionWindow.getNextButton().addActionListener(new ActionListener() {
@@ -170,6 +172,10 @@ public class ListenersSetter {
 						String username = dbmsConnectionWindow.getUsername().getText();
 						String password = new String(dbmsConnectionWindow.getPassword().getPassword());
 						
+						hostname.trim();
+						port.trim();
+						username.trim();
+						
 						// Empty fields are not allowed
 						if (hostname.equals("") || port.equals("") 
 								|| username.equals("") || password.equals("")) {
@@ -177,13 +183,22 @@ public class ListenersSetter {
 						}
 						
 						try {
-							postgreDriver = new PostgreDriver(hostname, 
-									port, 
-									username, 
-									password);
 							
-							getMainWindow().setPostgreDriver(postgreDriver);
-							readDatabase(postgreDriver);
+							// DBMS to work with
+							if (dbmsConnectionWindow.postgreIsSelected()) {
+								dbmsDriver = new PostgreSqlDriver(hostname, 
+										port, 
+										username, 
+										password);
+							} else if (dbmsConnectionWindow.mysqlIsSelected()) {
+								dbmsDriver = new MySqlDriver(hostname, 
+										port, 
+										username, 
+										password);
+							}
+							
+							getMainWindow().setDbmsDriver(dbmsDriver);
+							readDatabase(dbmsDriver);
 						} 
 
 						// Errors? Show them
@@ -192,14 +207,20 @@ public class ListenersSetter {
 							errors.add(e.getMessage());
 							ErrorsDialog errorsDialog = new ErrorsDialog(errors);
 						}
+						
+						catch (Exception e) {
+							ArrayList<String> errors = new ArrayList<String>();
+							errors.add("Unknown error while connecting to the DBMS.");
+							ErrorsDialog errorsDialog = new ErrorsDialog(errors);
+						}
 					}
 				});
 			}
 			
 			else {
-				postgreDriver = getMainWindow().getPostgreDriver();
+				dbmsDriver = getMainWindow().getDbmsDriver();
 				try {
-					readDatabase(postgreDriver);
+					readDatabase(dbmsDriver);
 				} catch (SQLException e) {
 					ArrayList<String> errors = new ArrayList<String>();
 					errors.add(e.getMessage());

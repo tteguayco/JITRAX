@@ -1,3 +1,9 @@
+// This is a view
 S = PROJECT [A] (R1 x S1);
 
+/* This is the expression to be executed,
+ * where the former view is used.
+ *
+ * NOTE: Yeah, JITRAX supports Java-like comments :)
+ */
 (R2 / S2) x S;

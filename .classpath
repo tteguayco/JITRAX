@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/rsyntaxtextarea-3.0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/postgresql-42.0.0.jre6.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate-core-4.3.9.Final.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.41-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
