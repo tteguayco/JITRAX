@@ -58,6 +58,7 @@ public class RelationalAlgebraInterpreter {
 	    else {
 	    	System.out.println("\n" + SYNTAX_ERRORS_MSG);
 	    	errorListener.printErrors();
+	    	System.out.println();
 	    }
 	    
 	    return null;

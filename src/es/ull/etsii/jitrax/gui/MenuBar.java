@@ -1,5 +1,6 @@
 package es.ull.etsii.jitrax.gui;
 
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;

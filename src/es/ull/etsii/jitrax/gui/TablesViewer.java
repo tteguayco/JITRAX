@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
+
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
@@ -17,6 +19,11 @@ public class TablesViewer extends JPanel {
 	private static final int MAXIMUM_WIDTH = 100;
 	private static final int MAXIMUM_HEIGHT = 100;
 	
+	private static final int TOP_MARGIN = 10;
+	private static final int LEFT_MARGIN = 10;
+	private static final int BOTTOM_MARGIN = 10;
+	private static final int RIGHT_MARGIN = 10;
+	
 	private static final Color BACKGROUND_COLOR = Color.WHITE;
 	
 	private static final float ATTRIBUTES_ALIGNMENT = Component.CENTER_ALIGNMENT;
@@ -29,6 +36,9 @@ public class TablesViewer extends JPanel {
 		tables = new ArrayList<Table>();
 		graphicTables = new ArrayList<TablePanel>();
 		selectedTablePanel = null;
+		
+		setBorder(BorderFactory.createEmptyBorder(TOP_MARGIN, LEFT_MARGIN, 
+				BOTTOM_MARGIN, RIGHT_MARGIN));
 	}
 	
 	public TablesViewer(ArrayList<Table> newTables) {

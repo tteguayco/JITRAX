@@ -53,6 +53,13 @@ public class Workspace extends JPanel {
 	private static final String TOKEN_MAKER_LOCATION =
 			"es.ull.etsii.jitrax.tokenMaker.RelationalAlgebraTokenMaker";
 	
+	private static final String INITIAL_COMMENT = "/*\n" + 
+			" * Your Relational Algebra query goes here.\n" + 
+			" * \n" + 
+			" * Example:\n" + 
+			" * PROJECT [attr1, attr2] (relation)\n" + 
+			" */";
+	
 	private static final Color RA_CARET_COLOR = Color.BLACK;
 	private static final Color SQL_CARET_COLOR = Color.BLACK;
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
@@ -194,6 +201,7 @@ public class Workspace extends JPanel {
 	    raEditorElementsPanel.add(raFontStyles);
 	    raEditorElementsPanel.add(new JLabel("Size: "));
 	    raEditorElementsPanel.add(raFontSizeSelector);
+	    relationalAlgebraCodeEditor.setText(INITIAL_COMMENT);
 	    
 	    // SQL Tab
 	    JPanel sqlPanel = new JPanel(new BorderLayout());

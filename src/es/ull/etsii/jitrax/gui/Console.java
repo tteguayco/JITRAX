@@ -56,7 +56,7 @@ public class Console extends JPanel {
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		buttonsPanel.add(clearButton);
-		buttonsPanel.add(exportButton);
+		//buttonsPanel.add(exportButton);
 		
 		console.setFont(new Font(CONSOLE_STYLE, Font.PLAIN, FONT_SIZE));
 		//console.setRows(NROWS);

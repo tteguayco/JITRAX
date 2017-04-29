@@ -37,7 +37,7 @@ import es.ull.etsii.jitrax.interpreters.RelationalAlgebraInterpreter;
 
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
-	private static final int FRAME_WIDTH = 1000;
+	private static final int FRAME_WIDTH = 1050;
 	private static final int FRAME_HEIGHT = 550;
 	private static final int MINIMUM_WIDTH = 800;
 	private static final int MINIMUM_HEIGHT = 500;
@@ -99,7 +99,6 @@ public class MainWindow extends JFrame {
 		add(mainContainer, BorderLayout.CENTER);
 		
 		mainContainer.setVisible(false);
-
 		setJMenuBar(barMenu);
 		setListeners();
 		buildWindow();
@@ -273,7 +272,7 @@ public class MainWindow extends JFrame {
 		
 		catch (SQLException e) {
 			System.out.println("\n" + DBMS_ERRORS_MSG);
-			System.out.println(" - " + e.getMessage());
+			System.out.println(" - " + e.getMessage() + "\n");
 			return false;
 		}
 	}

@@ -1,5 +1,6 @@
 package es.ull.etsii.jitrax.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.border.LineBorder;
 
 import es.ull.etsii.jitrax.adt.Database;
@@ -22,9 +24,12 @@ import es.ull.etsii.jitrax.listeners.TablePanelListener;
 
 public class DatabaseViewer extends JPanel {
 	private static final long serialVersionUID = 1L;
+	
 	private static final int EXTRA_GAP_SIZE = 10;
+	private static final int DBVIEWER_TOP_PADDING = 20;
 	
 	private static final String PANEL_TITLE = "DB Viewer";
+	private static final double SPLIT_WEIGHT = 0.8;
 	private static final Color PANEL_BORDER_COLOR = Color.GRAY;
 	
 	private SelectedDatabaseViewer selectedDatabaseViewer;
@@ -36,17 +41,20 @@ public class DatabaseViewer extends JPanel {
 		tablesViewer = new TablesViewer();
 		selectedTableViewer = new SelectedTableViewer();
 		
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BorderLayout());
 		
 		JScrollPane tablesSP = new JScrollPane(tablesViewer);
 		tablesSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		tablesSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		add(Box.createVerticalStrut(EXTRA_GAP_SIZE));
-		add(selectedDatabaseViewer);
-		add(tablesSP);
-		add(Box.createVerticalStrut(EXTRA_GAP_SIZE));
-		add(selectedTableViewer);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true,
+				tablesSP, selectedTableViewer);
+		
+		splitPane.setResizeWeight(SPLIT_WEIGHT);
+		selectedDatabaseViewer.setBorder(BorderFactory.createEmptyBorder(DBVIEWER_TOP_PADDING, 0, 0, 0));
+		
+		add(selectedDatabaseViewer, BorderLayout.NORTH);
+		add(splitPane, BorderLayout.CENTER);
 		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
 		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
@@ -109,12 +117,13 @@ public class DatabaseViewer extends JPanel {
 						getSelectedDatabaseViewer().getCombo().getSelectedItem();
 				// Confirm deletion
 				int dialogResult = JOptionPane.showConfirmDialog (null, 
-						"Are you sure you want to remove the database " + databaseToRemove.getName() + "?",
+						"Are you sure you want to remove the database '" + databaseToRemove.getName() + "'?",
 						"Confirm Deletion",
 						JOptionPane.YES_NO_OPTION);
 				
 				if(dialogResult == JOptionPane.YES_OPTION){
 					databasesCombo.removeItem((Database) databaseToRemove);
+					System.out.println("> Database '" + databaseToRemove.getName() + "' was removed.");
 				}
 			}
 			
