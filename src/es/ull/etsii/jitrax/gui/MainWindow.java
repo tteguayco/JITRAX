@@ -283,8 +283,9 @@ public class MainWindow extends JFrame {
 		public void actionPerformed(ActionEvent evt) {
 			// Translation successful?
 			if (translateToSql()) {
-				executeTranslationOnDbms();
-				getWorkspace().switchToQueryResultTab();
+				if (executeTranslationOnDbms()) {
+					getWorkspace().switchToQueryResultTab();
+				}
 			}
 		}
 	}

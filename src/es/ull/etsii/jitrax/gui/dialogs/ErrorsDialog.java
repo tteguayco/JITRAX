@@ -26,7 +26,7 @@ public class ErrorsDialog extends JFrame {
 	private static final int PADDING_BOTTOM = 5;
 	private static final int PADDING_RIGHT = 15;
 	
-	private static final String WINDOW_TITLE = "Errors feedback";
+	private static final String WINDOW_TITLE = "Errors";
 	private static final String MESSAGE = "The system detected the "
 			+ "following errors:";
 	

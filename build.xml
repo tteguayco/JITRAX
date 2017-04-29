@@ -74,8 +74,22 @@
             <classpath refid="JITRAX.classpath"/>
         </java>
     </target>
+              	
+	<!-- Compile from java sources -->
+  	<target name="compile" depends="">  
+  		<mkdir dir="bin"/>
+	  	 <javac srcdir="src" destdir="bin">  
+	  	    <classpath>  
+	  	        <fileset dir="lib">  
+	  	            <include name="**/*.jar" />  
+	  	        </fileset>  
+	  	       </classpath>  
+	  	</javac> 
+	</target>
+  		
+	<!-- Build JAR -->
   	<property name="projectHome" location="."/>
-  	  <target name="build-jar">
+  	  <target name="build-jar" depends="compile">
   	    <jar destfile="${projectHome}/build/jar/JITRAX.jar" basedir="${projectHome}/bin">
   	    	<zipgroupfileset includes="*.jar" dir="lib"/>
   	    	<manifest>
