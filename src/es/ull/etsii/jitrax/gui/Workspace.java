@@ -31,6 +31,8 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Utilities;
 
 import org.antlr.v4.gui.TreeViewer;
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
@@ -120,7 +122,7 @@ public class Workspace extends JPanel {
 		parseTreePanel = new JPanel(new BorderLayout());
 		queryResultViewer = new QueryResultViewer();
 		formattedSqlCodeCheck = new JCheckBox("Display SQL code formatted");
-		raEditorCaretPositionLabel = new JLabel("Position: 0");
+		raEditorCaretPositionLabel = new JLabel("Column: 0");
 		
 		executeButton.setToolTipText("Execute this Relational Algebra query on your DBMS");
 		
@@ -355,8 +357,8 @@ public class Workspace extends JPanel {
 	//	getSqlEditorCaretPositionLabel().setText("Position: " + pos);
 	//}
 	
-	private void updateRaCaretPositionLabel(int pos) {
-		getRaEditorCaretPositionLabel().setText("Position: " + pos);
+	private void updateRaCaretColumnLabel(int col) {
+		getRaEditorCaretPositionLabel().setText("Column: " + col);
 	}
 	
 	private void formatCodeIfNeeded() {
@@ -426,7 +428,16 @@ public class Workspace extends JPanel {
 		
 		relationalAlgebraCodeEditor.addCaretListener(new CaretListener() {
 			 public void caretUpdate(CaretEvent caretEvent) {
-		        updateRaCaretPositionLabel(relationalAlgebraCodeEditor.getCaretPosition());
+				try {
+					 int caretPos = relationalAlgebraCodeEditor.getCaretPosition();
+					 int offset = Utilities.getRowStart(relationalAlgebraCodeEditor, caretPos);
+					 int colNum = caretPos - offset;
+		        
+					updateRaCaretColumnLabel(colNum);
+					
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
 		      }
 		});
 	}
