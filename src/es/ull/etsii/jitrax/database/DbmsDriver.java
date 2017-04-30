@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Database;
@@ -108,8 +109,9 @@ public class DbmsDriver {
 	/**
 	 * Creates the specified table on the current database of PostgreSQL.
 	 * @param table
+	 * @throws SQLException 
 	 */
-	public void createTable(Table table) {
+	public void createTable(Table table) throws SQLException {
 		Attribute auxAttr;
 		String createTableStatement = "CREATE TABLE ";
 		
@@ -138,23 +140,30 @@ public class DbmsDriver {
 			}
 		}
 		
-		try {
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(createTableStatement);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		Statement statement = connection.createStatement();
+		statement.executeUpdate(createTableStatement);
 	}
 	
-	public void dropTable(Table aTable) {
-		String dropTableStatement = "DROP TABLE " + aTable.getName() + " CASCADE";
+	public void dropTable(Table aTable) throws SQLException {
+		String dropTableStatement = "DROP TABLE IF EXISTS " + aTable.getName() + " CASCADE";
 		
-		try {
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(dropTableStatement);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		Statement statement = connection.createStatement();
+		statement.executeUpdate(dropTableStatement);
+	}
+	
+	public void deleteRowsFromTable(Table aTable) throws SQLException {
+		String deleteRowsStatement = "DELETE FROM " + aTable.getName() + " WHERE 1=1";
+		
+		Statement statement = connection.createStatement();
+		statement.executeUpdate(deleteRowsStatement);
+	}
+	
+	public void renameTable(Table aTable, String newName) throws SQLException {
+		String renameStatement = "ALTER TABLE " + aTable.getName() 
+			+ " RENAME TO " + newName;
+		
+		Statement statement = connection.createStatement();
+		statement.executeUpdate(renameStatement);
 	}
 	
 	public void insertRow(Row row, Table table) {
@@ -179,6 +188,24 @@ public class DbmsDriver {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void insertRow(ArrayList<String> row, Table table) throws SQLException {
+		String insertRowStatement = "INSERT INTO " + table.getName() + " VALUES(";
+		
+		for (int i = 0; i < row.size(); i++) {
+			insertRowStatement += row.get(i);
+			
+			// Add comma
+			if (i < row.size() - 1) {
+				insertRowStatement += ",";
+			} else {
+				insertRowStatement += ")";
+			}
+		}
+		
+		Statement statement = connection.createStatement();
+		statement.executeUpdate(insertRowStatement);
 	}
 	
 	public void dropDatabase(String databaseName) throws SQLException {

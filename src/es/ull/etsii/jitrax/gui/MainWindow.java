@@ -39,8 +39,8 @@ public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final int FRAME_WIDTH = 1050;
 	private static final int FRAME_HEIGHT = 550;
-	private static final int MINIMUM_WIDTH = 800;
-	private static final int MINIMUM_HEIGHT = 500;
+	private static final int MINIMUM_WIDTH = 1050;
+	private static final int MINIMUM_HEIGHT = 550;
 	private static final int BORDER_GAP = 15;
 	
 	private static final String WELCOME_MSG = "> Welcome to JITRAX (v1.0)";

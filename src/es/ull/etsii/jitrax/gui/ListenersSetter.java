@@ -76,7 +76,8 @@ public class ListenersSetter {
 					String newDatabaseName = newDatabaseDialog.getNewDatabaseNameField().getText();
 					if (!newDatabaseName.equals("")) {
 						Database newDatabase = new Database(newDatabaseName);
-						TablesManagerWindow tablesManagerWindow = new TablesManagerWindow(newDatabase);
+						TablesManagerWindow tablesManagerWindow = 
+								new TablesManagerWindow(newDatabase, mainWindow.getDatabaseViewerPanel());
 					}
 				}
 			});

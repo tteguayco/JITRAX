@@ -6,7 +6,6 @@ import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Row;
 import es.ull.etsii.jitrax.adt.Table;
 import es.ull.etsii.jitrax.adt.DataType;
-import es.ull.etsii.jitrax.exceptions.DuplicatePrimaryKeyException;
 import es.ull.etsii.jitrax.exceptions.DuplicateTableException;
 
 import java.util.ArrayList;

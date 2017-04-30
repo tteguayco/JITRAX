@@ -48,7 +48,7 @@ public class SelectedDatabaseViewer extends JPanel {
 	public SelectedDatabaseViewer() {
 		dbComboBox = new JComboBox<Database>();
 		alterButton = new JButton("ALTER");
-		removeButton = new JButton("REMOVE");
+		removeButton = new JButton("DROP");
 		
 		setLayout(new GridLayout(NROWS, NCOLS, VGAP, HGAP));
 		setBorder(new EmptyBorder(TOP_PADDING,

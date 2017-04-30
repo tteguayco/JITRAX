@@ -117,13 +117,13 @@ public class DatabaseViewer extends JPanel {
 						getSelectedDatabaseViewer().getCombo().getSelectedItem();
 				// Confirm deletion
 				int dialogResult = JOptionPane.showConfirmDialog (null, 
-						"Are you sure you want to remove the database '" + databaseToRemove.getName() + "'?",
+						"Are you sure you want to drop the database '" + databaseToRemove.getName() + "'?",
 						"Confirm Deletion",
 						JOptionPane.YES_NO_OPTION);
 				
 				if(dialogResult == JOptionPane.YES_OPTION){
 					databasesCombo.removeItem((Database) databaseToRemove);
-					System.out.println("> Database '" + databaseToRemove.getName() + "' was removed.");
+					System.out.println("> Database '" + databaseToRemove.getName() + "' was dropped.");
 				}
 			}
 			
@@ -141,7 +141,8 @@ public class DatabaseViewer extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Database selectedDatabase = (Database) getSelectedDatabaseViewer().getCombo().getSelectedItem();
-			TablesManagerWindow tmWindow = new TablesManagerWindow(selectedDatabase);
+			TablesManagerWindow tmWindow = 
+					new TablesManagerWindow(selectedDatabase, DatabaseViewer.this);
 			int graphicTableIndex;
 			
 			// Mark the current selected table

@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Vector;
@@ -20,6 +22,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -35,9 +38,14 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import es.ull.etsii.jitrax.adt.Database;
+import es.ull.etsii.jitrax.adt.Datum;
+import es.ull.etsii.jitrax.adt.Row;
 import es.ull.etsii.jitrax.adt.Table;
 import es.ull.etsii.jitrax.gui.TablesViewer;
+import es.ull.etsii.jitrax.gui.dialogs.ErrorsDialog;
 import es.ull.etsii.jitrax.listeners.TablePanelListener;
+import es.ull.etsii.jitrax.gui.DatabaseViewer;
+import es.ull.etsii.jitrax.gui.MainWindow;
 import es.ull.etsii.jitrax.gui.SelectedTableViewer;
 import es.ull.etsii.jitrax.gui.TablePanel;
 
@@ -61,6 +69,8 @@ public class TablesManagerWindow extends JFrame {
 	private Database database;
 	private int selectedTableIndex;
 	
+	private DatabaseViewer databaseViewer;
+	
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private JPanel mainContainer;
@@ -71,14 +81,17 @@ public class TablesManagerWindow extends JFrame {
 	private JButton addTableButton;
 	private JButton eraseTableButton;
 	private JButton modifyTableButton;
-	private JButton applyButton;
+	private JButton insertButton;
 	
 	private JButton newRowButton;
 	private JButton removeRowButton;
+	private JButton doneButton;
 	
-	public TablesManagerWindow(Database aDatabase) {
+	public TablesManagerWindow(Database aDatabase, DatabaseViewer aDatabaseViewer) {
 		database = aDatabase;
 		selectedTableIndex = -1;
+		
+		databaseViewer = aDatabaseViewer;
 		mainContainer = new JPanel(new BorderLayout());
 		leftPanel = new JPanel(new BorderLayout());
 		rightPanel = new JPanel(new BorderLayout());
@@ -86,21 +99,26 @@ public class TablesManagerWindow extends JFrame {
 		selectedTableViewer = new SelectedTableViewer();
 		selectedTableViewer.makeEditable();
 		
-		addTableButton = new JButton("ADD");
-		eraseTableButton = new JButton("ERASE");
-		modifyTableButton = new JButton("MODIFY");
-		applyButton = new JButton("  ✔ APPLY  ");
-		applyButton.setToolTipText("Apply changes on DBMS");
+		addTableButton = new JButton("CREATE");
+		eraseTableButton = new JButton("DROP");
+		modifyTableButton = new JButton("ALTER");
+		insertButton = new JButton("INSERT");
+		doneButton = new JButton("  ✔ DONE  ");
+		insertButton.setToolTipText("Insert new rows on DBMS for this table");
 		
 		newRowButton = new JButton("➕");
 		removeRowButton = new JButton("➖");
 		newRowButton.setToolTipText("Add new row");
 		removeRowButton.setToolTipText("Remove selected rows");
 		
-		
 		// Setting up listeners
 		addTableButton.addActionListener(new TableEditorSetterUp());
+		modifyTableButton.addActionListener(new TableEditorSetterUp());
+		eraseTableButton.addActionListener(new RemoveTableListener());
 		newRowButton.addActionListener(new NewRowListener());
+		removeRowButton.addActionListener(new RemoveRowListener());
+		insertButton.addActionListener(new InsertRows());
+		doneButton.addActionListener(new DoneButtonListener());
 		
 		EmptyBorder schemaPanelPadding = new EmptyBorder(10, 10, 10, 10);
 		
@@ -141,10 +159,7 @@ public class TablesManagerWindow extends JFrame {
 		tablesListSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 		// Listeners for the graphic tables
-		for (int i = 0; i < tablesViewer.getNumOfTables(); i++) {
-			tablesViewer.getGraphicTables().get(i).addMouseListener(
-					new TablePanelListener(tablesViewer, selectedTableViewer));
-		}
+		setPanelsListeners();
 		
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.add(getAddTableButton());
@@ -154,6 +169,13 @@ public class TablesManagerWindow extends JFrame {
 		getLeftPanel().add(tablesListSP, BorderLayout.CENTER);
 	}
 	
+	private void setPanelsListeners() {
+		for (int i = 0; i < tablesViewer.getNumOfTables(); i++) {
+			tablesViewer.getGraphicTables().get(i).addMouseListener(
+					new TablePanelListener(tablesViewer, selectedTableViewer));
+		}
+	}
+	
 	private void buildRightPanel() {
 		JPanel tableButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		
@@ -161,7 +183,10 @@ public class TablesManagerWindow extends JFrame {
 		tableButtonPanel.add(newRowButton);
 		tableButtonPanel.add(removeRowButton);
 		
+		JPanel southButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		southButtonPanel.add(insertButton);
 		selectedTableViewer.add(tableButtonPanel, BorderLayout.NORTH);
+		selectedTableViewer.add(southButtonPanel, BorderLayout.SOUTH);
 		
 		JScrollPane contentTablePanelSP = new JScrollPane(selectedTableViewer);
 		contentTablePanelSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -170,7 +195,7 @@ public class TablesManagerWindow extends JFrame {
 		
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		buttonsPanel.add(getOkButton());
+		buttonsPanel.add(doneButton);
 		bottomPanel.add(buttonsPanel, BorderLayout.SOUTH);
 		getRightPanel().add(selectedTableViewer, BorderLayout.CENTER);
 		getRightPanel().add(bottomPanel, BorderLayout.SOUTH);
@@ -209,6 +234,19 @@ public class TablesManagerWindow extends JFrame {
 		repaint();
 	}
 	
+	public void updateTablesViewer() {
+		ArrayList<Table> tables = database.getTables();
+		tablesViewer.updateTables(tables);
+		
+		// Listeners for panels
+		setPanelsListeners();
+	}
+	
+	public void updateDatabaseViewer() {
+		ArrayList<Table> tables = database.getTables();
+		databaseViewer.getTablesViewer().updateTables(tables);
+	}
+	
 	public static void main(String[] args) {
 		for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
             if ("Nimbus".equals(info.getName())) {
@@ -228,24 +266,127 @@ public class TablesManagerWindow extends JFrame {
         }
 		
 		Database mydb = new Database("MyDB");
-		TablesManagerWindow tmWindow = new TablesManagerWindow(mydb);
+		TablesManagerWindow tmWindow = new TablesManagerWindow(mydb, null);
 	}
 	
 	private class TableEditorSetterUp implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			String tableName = tablesViewer.getSelectedTablePanel().getTable().getName();
+			Table targetTable = database.getTableByName(tableName);
+			TableEditor tableEditor = null;
+			
 			// ADD NEW TABLE
 			if (e.getSource() == getAddTableButton()) {
-				TableEditor tableEditor = new TableEditor(null, TableEditorMode.CREATION);
-				tableEditor.setVisible(true);
+				tableEditor = new TableEditor(TablesManagerWindow.this, 
+						targetTable, TableEditorMode.CREATION);
 			}
 			
 			// MODIFY EXISTING TABLE
 			else if (e.getSource() == getModifyTableButton()) {
-				TableEditor tableEditor = new TableEditor(null, TableEditorMode.MODIFICATION);
-				tableEditor.setVisible(true);
+				tableEditor = new TableEditor(TablesManagerWindow.this, 
+						targetTable, TableEditorMode.MODIFICATION);
 			}
+			
+			tableEditor.setVisible(true);
+		}
+	}
+	
+	private class RemoveTableListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Table targetTable = tablesViewer.getSelectedTablePanel().getTable();
+			
+			if (database.getNumOfTables() <= 1) {
+				showWrongNumberOfTablesDialog();
+				return;
+			}
+			
+			// Confirm removal
+			int choice = showTableRemovalConfirmation(targetTable.getName());
+			
+			if (choice == JOptionPane.YES_OPTION) {
+				// Remove from gui
+				database.removeTable(targetTable);
+				
+				// Remove from DBMS
+				try {
+					database.getDbmsDriver().dropTable(targetTable);
+				} 
+				
+				catch (SQLException e1) {
+					ArrayList<String> errorsMessages = new ArrayList<String>();
+					errorsMessages.add(e1.getMessage());
+					ErrorsDialog errorsDialog = new ErrorsDialog(errorsMessages);
+				}
+				
+				// Refresh panels
+				updateTablesViewer();
+			}
+		}
+	}
+	
+	private class InsertRows implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Table targetTable = selectedTableViewer.getTable();
+			ArrayList<Vector> rows = 
+					new ArrayList<Vector>(selectedTableViewer.getTableModel().getDataVector());
+			
+			ArrayList<ArrayList<String>> rowsToInsert = new ArrayList<ArrayList<String>>();
+			for (int i = 0; i < rows.size(); i++) {
+				ArrayList<String> auxRow = new ArrayList<String>();
+				for (int j = 0; j < rows.get(i).size(); j++) {
+					auxRow.add((String) rows.get(i).get(j).toString());
+				}
+				
+				rowsToInsert.add(new ArrayList<String>(auxRow));
+				auxRow.clear();
+			}
+			
+			try {
+				database.getDbmsDriver().deleteRowsFromTable(targetTable);
+				for (int i = 0; i < rowsToInsert.size(); i++) {
+					database.getDbmsDriver().insertRow(rowsToInsert.get(i), targetTable);
+					
+					// If everything was OK, save the row locally
+					Datum datum;
+					ArrayList<Datum> dataForRow = new ArrayList<Datum>();
+					for (int j = 0; j < rowsToInsert.get(i).size(); j++) {
+						datum = new Datum(rowsToInsert.get(i).get(j));
+						dataForRow.add(datum);
+					}
+					
+					targetTable.addRow(dataForRow);
+					dataForRow.clear();
+				}
+				
+				showCorrectRowsInsertionDialog();
+			}
+			
+			catch(SQLException e1) {
+				ArrayList<String> errorsMessages = new ArrayList<String>();
+				errorsMessages.add(new String("Some rows are not valid and could not"
+						+ " insert them into the DBMS. Please, check the following:\n"
+						+ "    * Char or string values are between single or double quotes.\n"
+						+ "    * There are no empty values.\n"
+						+ "    * Numeric (integer or float) or date values are correct."));
+				ErrorsDialog errorsDialog = new ErrorsDialog(errorsMessages);
+			}
+		}
+	}
+	
+	private class DoneButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// Close window
+			TablesManagerWindow
+				.this
+				.dispatchEvent(new WindowEvent(TablesManagerWindow.this, WindowEvent.WINDOW_CLOSING));
 		}
 	}
 	
@@ -263,6 +404,26 @@ public class TablesManagerWindow extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			
 		}
+	}
+	
+	private void showWrongNumberOfTablesDialog() {
+		JOptionPane.showMessageDialog(null, "There must be at least one table.",
+				"Table removal failed", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	private void showCorrectRowsInsertionDialog() {
+		JOptionPane.showMessageDialog(null, "All rows were correctly inserted on the DBMS.",
+				"Rows inserted", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	private int showTableRemovalConfirmation(String tableName) {
+		int choice = 0;
+		
+		choice = JOptionPane.showConfirmDialog(null, 
+				"Are you sure you want to drop the table '" + tableName + "'?",
+				"Table removal", JOptionPane.YES_NO_OPTION);
+		
+		return choice;
 	}
 	
 	public Database getDatabase() {
@@ -327,14 +488,6 @@ public class TablesManagerWindow extends JFrame {
 
 	public void setRightPanel(JPanel rightPanel) {
 		this.rightPanel = rightPanel;
-	}
-
-	public JButton getOkButton() {
-		return applyButton;
-	}
-
-	public void setOkButton(JButton okButton) {
-		this.applyButton = okButton;
 	}
 
 	public TablesViewer getTablesViewer() {

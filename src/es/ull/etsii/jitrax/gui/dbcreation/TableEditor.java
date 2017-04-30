@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -25,12 +27,16 @@ import javax.swing.border.EmptyBorder;
 
 import es.ull.etsii.jitrax.adt.Attribute;
 import es.ull.etsii.jitrax.adt.Table;
+import es.ull.etsii.jitrax.exceptions.DuplicateTableException;
+import es.ull.etsii.jitrax.gui.dialogs.ErrorsDialog;
 import es.ull.etsii.jitrax.adt.DataType;;
 
 public class TableEditor extends JFrame {
 	private static final String WINDOW_TITLE = "Table Editor";
 	private static final String ATTR_LIST_TITLE = "Attributes";
 	private static final String NEW_ATTR_TITLE = "New";
+	
+	private static final String WHITESPACE_REGEXP = ".*\\s+.*";
 	
 	private static final int WINDOW_WIDTH = 400;
 	private static final int WINDOW_HEIGHT = 200;
@@ -51,7 +57,9 @@ public class TableEditor extends JFrame {
 	private static final int ATTRLIST_HEIGHT = 150;
 	
 	private Table table;
+	private TablesManagerWindow tablesManagerParent;
 	private TableEditorMode mode;
+	private boolean schemaHasChanged;
 	
 	private JPanel mainContainer;
 	private JPanel centerPanel;
@@ -67,9 +75,13 @@ public class TableEditor extends JFrame {
 	private JButton eraseAttrButton;
 	private JButton okButton;
 	
-	public TableEditor(Table aTable, TableEditorMode aMode) {
+	private String tableOriginalName;
+	
+	public TableEditor(TablesManagerWindow aTablesManager, Table aTable, TableEditorMode aMode) {
 		table = aTable;
+		tablesManagerParent = aTablesManager;
 		mode = aMode;
+		schemaHasChanged = false;
 		
 		mainContainer = new JPanel();
 		centerPanel = new JPanel();
@@ -83,6 +95,8 @@ public class TableEditor extends JFrame {
 		defaultListModel = new DefaultListModel<Attribute>();
 		attrList.setModel(defaultListModel);
 	
+		tableOriginalName = aTable.getName();
+		
 		newAttrName.setPreferredSize(new Dimension(TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT));
 		newAttrType.setPreferredSize(new Dimension(TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT));
 		
@@ -118,21 +132,50 @@ public class TableEditor extends JFrame {
 		centerPanel.setBorder(new EmptyBorder(CENTER_TOP_PADDING,
 				CENTER_LEFT_PADDING, CENTER_BOTTOM_PADDING, CENTER_RIGHT_PADDING));
 		
-		setOkButtonText();
-		
+		buildOkButton();
 		buildWindow();
+		setCreationModeConfiguration();
+		setModificationModeConfiguration();
+		
 		pack();
 	}
 	
-	private void setOkButtonText() {
+	private void buildOkButton() {
 		if (mode == TableEditorMode.CREATION) {
 			okButton.setText("✔ CREATE");
-			okButton.setToolTipText("Create table");
-		} 
+			okButton.setToolTipText("Create table on DBMS");
+			okButton.addActionListener(new CreateTableListener());
+		}
 		
 		else if (mode == TableEditorMode.MODIFICATION) {
-			okButton.setText("✔ APPLY");
-			okButton.setToolTipText("Apply changes");
+			okButton.setText("✔ COMMIT");
+			okButton.setToolTipText("Commit changes on DBMS");
+			okButton.addActionListener(new AlterTableListener());
+		}
+	}
+	
+	private void fillWithExitingTableData() {
+		// Table name 
+		tableName.setText(table.getName());
+		
+		// List of attributes
+		for (int i = 0; i < table.getAttributes().size(); i++) {
+			defaultListModel.addElement(table.getAttributes().get(i));
+		}
+	}
+	
+	private void setCreationModeConfiguration() {
+		if (mode == TableEditorMode.CREATION) {
+			setTitle(getTitle() + " - Create new table");
+		}
+	}
+	
+	private void setModificationModeConfiguration() {
+		if (mode == TableEditorMode.MODIFICATION) {
+			setTitle(getTitle() + " - Modify existing table");
+			//tableName.setEditable(false);
+			//tableName.setToolTipText("You can only alter the table schema using this edition mode");
+			fillWithExitingTableData();
 		}
 	}
 	
@@ -192,19 +235,14 @@ public class TableEditor extends JFrame {
 	private void buildWindow() {
 		setTitle(WINDOW_TITLE);
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		pack();
 		setLocationRelativeTo(null);
 		setResizable(false);
-		
-		if (mode == TableEditorMode.CREATION) {
-			setTitle(getTitle() + " - Create new table");
-		} else if (mode == TableEditorMode.MODIFICATION) {
-			setTitle(getTitle() + " - Modify existing table");
-		}
 	}
 	
 	public static void main(String args[]) {
 		Table table = new Table("Prueba", new ArrayList<Attribute>());
-		TableEditor tableEditor = new TableEditor(null, TableEditorMode.CREATION);
+		TableEditor tableEditor = new TableEditor(null, null, TableEditorMode.CREATION);
 		tableEditor.setVisible(true);
 	}
 
@@ -216,13 +254,14 @@ public class TableEditor extends JFrame {
 			String name = getNewAttrName().getText().trim();
 			DataType type = (DataType) getNewAttrType().getSelectedItem();
 			
-			boolean isWhitespace = name.matches(".*\\s+.*");
+			boolean isWhitespace = name.matches(WHITESPACE_REGEXP);
 			
 			// Name specified or whitespaces?
 			if (!name.equals("") && !isWhitespace) {
 				Attribute newAttr = new Attribute(name, type);
 				defaultListModel.addElement((Attribute) newAttr);
 				resetAttrEditorPanel();
+				schemaHasChanged = true;
 			}
 			
 			else {
@@ -231,10 +270,169 @@ public class TableEditor extends JFrame {
 		}
 	}
 	
+	private boolean nameIsValid(String name) {
+		return !name.equals("") && !name.matches(WHITESPACE_REGEXP);
+	}
+	
+	private ArrayList<Attribute> getListOfAttributes() {
+		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+		for (int i = 0; i < defaultListModel.size(); i++) {
+			attributes.add(defaultListModel.getElementAt(i));
+		}
+		
+		return attributes;
+	}
+	
+	private void createNewTable() {
+		String newTableName = tableName.getText();
+		
+		// Add table if everything is OK
+		if (nameIsValid(newTableName)) {
+			
+			// NumOfAttributes must be > 1
+			if (defaultListModel.size() < 1) {
+				showWrongNumberOfAttributesDialog();
+				return;
+			}
+			
+			// Getting attributes
+			ArrayList<Attribute> attributes = getListOfAttributes();
+			
+			// Create table on DBMS
+			Table newTable = new Table(newTableName, attributes);
+			try {
+				
+				if (!tablesManagerParent.getDatabase().containsTable(newTableName)) {
+					tablesManagerParent.getDatabase().getDbmsDriver().createTable(newTable);
+					tablesManagerParent.getDatabase().addTable(newTable);
+				} 
+				
+				else {
+					showTableAlreadyExistsDialog();
+					return;
+				}
+			}
+			
+			catch (DuplicateTableException | SQLException e) {
+				ArrayList<String> errorsMessages = new ArrayList<String>();
+				errorsMessages.add(e.getMessage());
+				ErrorsDialog errorsDialog = new ErrorsDialog(errorsMessages);
+			}
+			
+			closeWindowAndRefresh();
+		}
+		
+		else {
+			showTableNameNotValidDialog();
+		}
+	}
+	
+	private class CreateTableListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			createNewTable();
+		}
+	}
+	
+	private void alterTable() {
+		String newTableName = tableName.getText();
+		Table originalTable = tablesManagerParent.getDatabase().getTableByName(tableOriginalName);
+		
+		if (nameIsValid(newTableName)) {
+			
+			// NumOfAttributes must be > 1
+			if (defaultListModel.size() < 1) {
+				showWrongNumberOfAttributesDialog();
+				return;
+			}
+			
+			try {
+			
+				// Just rename table
+				if (!schemaHasChanged) {
+					tablesManagerParent.getDatabase().getDbmsDriver().renameTable(originalTable, 
+							newTableName);
+					originalTable.setName(newTableName);
+				}
+				
+				else {
+					int choice = showSchemaHasChangedConfirmation();
+					
+					if (choice == JOptionPane.YES_OPTION) {
+						// Getting attributes
+						ArrayList<Attribute> attributes = getListOfAttributes();
+						Table newTable = new Table(newTableName, attributes);
+						
+						// DROP and RE-CREATE table
+						tablesManagerParent.getDatabase().getDbmsDriver().dropTable(originalTable);
+						tablesManagerParent.getDatabase().removeTable(originalTable);
+						tablesManagerParent.getDatabase().getDbmsDriver().createTable(newTable);
+						tablesManagerParent.getDatabase().addTable(newTable);
+					}
+				}		
+			}
+			
+			catch (SQLException | DuplicateTableException e) {
+				ArrayList<String> errorsMessages = new ArrayList<String>();
+				errorsMessages.add(e.getMessage());
+				ErrorsDialog errorsDialog = new ErrorsDialog(errorsMessages);
+			}
+			
+			closeWindowAndRefresh();
+		}
+	}
+	
+	private class AlterTableListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			alterTable();
+		}
+	}
+	
+	private void closeWindowAndRefresh() {
+		// Refresh TablesManager
+		tablesManagerParent.updateTablesViewer();
+		
+		// Close this window
+		TableEditor
+			.this
+			.dispatchEvent(new WindowEvent(TableEditor.this, WindowEvent.WINDOW_CLOSING));
+	}
+	
 	private void showAttrNameNotValidDialog() {
 		JOptionPane.showMessageDialog(null, "The name specified for the attribute you are trying \n"
 				+ "to add is empty or contains whitespaces.",
 				"Attribute name not valid", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	private void showTableNameNotValidDialog() {
+		JOptionPane.showMessageDialog(null, "The name specified for the table you are trying \n"
+				+ "to create is empty or contains whitespaces.",
+				"Table name not valid", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	private void showWrongNumberOfAttributesDialog() {
+		JOptionPane.showMessageDialog(null, "There must be at least one attribute",
+				"Wrong number of attributes", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	private void showTableAlreadyExistsDialog() {
+		JOptionPane.showMessageDialog(null, "A table with the specified name already\nexists."
+				+ "Please, choose another one.",
+				"Table duplication detected", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	private int showSchemaHasChangedConfirmation() {
+		int choice = 0;
+		
+		choice = JOptionPane.showConfirmDialog(null, 
+				"This table's schema has changed. If you commit the changes, the current rows "
+				+ "will be deleted. Do you want to continue?",
+				"Schema has changed", JOptionPane.YES_NO_OPTION);
+		
+		return choice;
 	}
 	
 	public Table getTable() {
@@ -313,10 +511,6 @@ public class TableEditor extends JFrame {
 		return defaultListModel;
 	}
 
-	public void setDefaultListModel(DefaultListModel defaultListModel) {
-		this.defaultListModel = defaultListModel;
-	}
-
 	public JButton getAddAttrButton() {
 		return addAttrButton;
 	}
@@ -331,6 +525,34 @@ public class TableEditor extends JFrame {
 
 	public void setEraseAttrButton(JButton eraseAttrButton) {
 		this.eraseAttrButton = eraseAttrButton;
+	}
+
+	public TablesManagerWindow getTablesManagerParent() {
+		return tablesManagerParent;
+	}
+
+	public void setTablesManagerParent(TablesManagerWindow tablesManagerParent) {
+		this.tablesManagerParent = tablesManagerParent;
+	}
+
+	public TableEditorMode getMode() {
+		return mode;
+	}
+
+	public void setMode(TableEditorMode mode) {
+		this.mode = mode;
+	}
+
+	public JButton getOkButton() {
+		return okButton;
+	}
+
+	public void setOkButton(JButton okButton) {
+		this.okButton = okButton;
+	}
+
+	public void setDefaultListModel(DefaultListModel<Attribute> defaultListModel) {
+		this.defaultListModel = defaultListModel;
 	}
 	
 }

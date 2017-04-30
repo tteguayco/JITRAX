@@ -29,11 +29,19 @@ public class Database {
 	}
 	
 	public void addTable(Table newTable) throws DuplicateTableException {
-		/**
-		 * provisional
-		 * 
-		 */
+		if (containsTable(newTable.getName())) {
+			throw new DuplicateTableException();
+		}
+		
 		getTables().add(newTable);
+	}
+	
+	public void removeTable(Table tableToRemove) {
+		for (int i = 0; i < tables.size(); i++) {
+			if (tables.get(i).getName().equalsIgnoreCase(tableToRemove.getName())) {
+				tables.remove(i);
+			}
+		}
 	}
 	
 	public String[] getTablesNames() {
@@ -54,13 +62,13 @@ public class Database {
 	 * @return
 	 */
 	public boolean containsTable(String tableName) {
-		if (getTables().contains(tableName)) {
-			return true;
+		for (int i = 0; i < getTables().size(); i++) {
+			if (getTables().get(i).getName().equalsIgnoreCase(tableName)) {
+				return true;
+			}
 		}
 		
-		else {
-			return false;
-		}
+		return false;
 	}
 	
 	/**

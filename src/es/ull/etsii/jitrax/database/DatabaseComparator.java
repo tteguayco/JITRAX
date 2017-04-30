@@ -85,7 +85,7 @@ public class DatabaseComparator {
 		Table auxTable;
 		DbmsDriver dbmsDriver = database.getDbmsDriver();
 		
-		// dROP TABLES
+		// DROP TABLES
 		for (int i = 0; i < database.getTables().size(); i++) {
 			auxTable = database.getTables().get(i);
 			dbmsDriver.dropTable(auxTable);
@@ -95,7 +95,7 @@ public class DatabaseComparator {
 		dbmsDriver.setUpDatabase(database);
 	}
 	
-	public boolean localTablesAreOnDbms() {
+	private boolean localTablesAreOnDbms() {
 		ArrayList<String> dbmsTables = new ArrayList<String>();
 		
 		try {
@@ -112,11 +112,12 @@ public class DatabaseComparator {
 			e.printStackTrace();
 		}
 		
-		// COMPARING TABLES (it does not matter if there are more tables in the DBMS;
-		// all of the tables of the locale database have to be in the DBMS)
+		// COMPARING TABLES (it does not matter if there are more tables on the DBMS;
+		// however, all of the tables of the locale database have to be on the DBMS)
 		for (int i = 0; i < getDatabase().getNumOfTables(); i++) {
 			Table localTable = getDatabase().getTables().get(i);
 			if (!dbmsTables.contains(localTable.getName().toLowerCase())) {
+				//System.err.println("Falta la tabla -> " + localTable.getName());
 				return false;
 			} else  {
 				localTablesOnDbms.add(localTable);
@@ -126,7 +127,7 @@ public class DatabaseComparator {
 		return true;
 	}
 	
-	public boolean databaseSchemasCoincide() {
+	private boolean databaseSchemasCoincide() {
 		
 		try {
 			// For each DBMS table
@@ -206,7 +207,7 @@ public class DatabaseComparator {
 				for (int i = 0; i < getDatabase().getNumOfTables(); i++) {
 					int numOfRows = 0;
 					Statement st = getDbmsConnection().createStatement();
-					ResultSet countRS = st.executeQuery("select count(*) from " + 
+					ResultSet countRS = st.executeQuery("SELECT COUNT(*) FROM " + 
 							currentLocalTable.getName());
 					
 					countRS.next();

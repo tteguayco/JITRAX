@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import es.ull.etsii.jitrax.exceptions.DuplicatePrimaryKeyException;
-
 public class Table {
 	private String name;
 	private ArrayList<Attribute> attributes;
