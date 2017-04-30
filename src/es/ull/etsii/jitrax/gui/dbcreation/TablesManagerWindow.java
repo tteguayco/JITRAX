@@ -336,18 +336,19 @@ public class TablesManagerWindow extends JFrame {
 			ArrayList<Vector> rows = 
 					new ArrayList<Vector>(selectedTableViewer.getTableModel().getDataVector());
 			
-			ArrayList<ArrayList<String>> rowsToInsert = new ArrayList<ArrayList<String>>();
-			for (int i = 0; i < rows.size(); i++) {
-				ArrayList<String> auxRow = new ArrayList<String>();
-				for (int j = 0; j < rows.get(i).size(); j++) {
-					auxRow.add((String) rows.get(i).get(j).toString());
-				}
-				
-				rowsToInsert.add(new ArrayList<String>(auxRow));
-				auxRow.clear();
-			}
-			
 			try {
+				
+				ArrayList<ArrayList<String>> rowsToInsert = new ArrayList<ArrayList<String>>();
+				for (int i = 0; i < rows.size(); i++) {
+					ArrayList<String> auxRow = new ArrayList<String>();
+					for (int j = 0; j < rows.get(i).size(); j++) {
+						auxRow.add((String) rows.get(i).get(j).toString());
+					}
+					
+					rowsToInsert.add(new ArrayList<String>(auxRow));
+					auxRow.clear();
+				}
+			
 				database.getDbmsDriver().deleteRowsFromTable(targetTable);
 				for (int i = 0; i < rowsToInsert.size(); i++) {
 					database.getDbmsDriver().insertRow(rowsToInsert.get(i), targetTable);
@@ -367,11 +368,11 @@ public class TablesManagerWindow extends JFrame {
 				showCorrectRowsInsertionDialog();
 			}
 			
-			catch(SQLException e1) {
+			catch(SQLException | NullPointerException e1) {
 				ArrayList<String> errorsMessages = new ArrayList<String>();
 				errorsMessages.add(new String("Some rows are not valid and could not"
 						+ " insert them into the DBMS. Please, check the following:\n"
-						+ "    * Char or string values are between single or double quotes.\n"
+						+ "    * Char or string values are between single quotes.\n"
 						+ "    * There are no empty values.\n"
 						+ "    * Numeric (integer or float) or date values are correct."));
 				ErrorsDialog errorsDialog = new ErrorsDialog(errorsMessages);
