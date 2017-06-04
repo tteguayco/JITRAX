@@ -349,7 +349,7 @@ public class TablesManagerWindow extends JFrame {
 					auxRow.clear();
 				}
 			
-				database.getDbmsDriver().deleteRowsFromTable(targetTable);
+				database.getDbmsDriver().deleteAllRowsFromTable(targetTable);
 				for (int i = 0; i < rowsToInsert.size(); i++) {
 					database.getDbmsDriver().insertRow(rowsToInsert.get(i), targetTable);
 					
@@ -403,20 +403,50 @@ public class TablesManagerWindow extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			ArrayList<Row> selectedRows = new ArrayList<Row>();
+			ArrayList<Integer> selectedRowsIndexes = new ArrayList<Integer>();
+			int numOfSelectedRows = 0;
 			
 			// Getting which rows are selected
 			for (int i = 0; i < getSelectedTableViewer().getGraphicTable().getRowCount(); i++) {
 				if (getSelectedTableViewer().getGraphicTable().isRowSelected(i)) {
-					selectedRows.add(getSelectedTableViewer().getTable().getRowAt(i));
+					numOfSelectedRows++;
+					selectedRowsIndexes.add(i);
+					
+					
 				}
 			}
 			
 			try {
-				// Delete selected rows from DBMS
-				for (int i = 0; i < selectedRows.size(); i++) {
-					Table selectedTable = getSelectedTableViewer().getTable();
-					database.getDbmsDriver().deleteRow(selectedTable, selectedRows.get(i));
+				if (numOfSelectedRows > 0) {
+					// Delete selected rows
+					int indexToRemove = 0;
+					Row auxRow;
+					Table selectedTable;
+					for (int i = 0; i < selectedRowsIndexes.size(); i++) {
+						indexToRemove = selectedRowsIndexes.get(i);	
+						selectedTable = getSelectedTableViewer().getTable();
+					
+						// Remove from GUI
+						getSelectedTableViewer().getTableModel().removeRow(indexToRemove);
+						getSelectedTableViewer().getTableModel().fireTableDataChanged();
+						
+						if (indexToRemove < selectedTable.getNumOfRows()) {
+							// Remove from DBMS
+							auxRow = selectedTable.getRowAt(indexToRemove);
+							database.getDbmsDriver().deleteRow(selectedTable, auxRow);	
+							
+							// Remove from table model
+							selectedTable.removeRowByIndex(indexToRemove);
+						}
+						
+						// Select last row
+						int lastRowIndex = getSelectedTableViewer().getTable().getNumOfRows();
+						getSelectedTableViewer().selectWholeRow(lastRowIndex);
+					}
+				}
+				
+				else {
+					showNoRowsSelectionForRemoval();
 				}
 			}
 			catch (SQLException exc) {
@@ -433,6 +463,11 @@ public class TablesManagerWindow extends JFrame {
 	private void showCorrectRowsInsertionDialog() {
 		JOptionPane.showMessageDialog(null, "All rows were correctly inserted on the DBMS.",
 				"Rows inserted", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	private void showNoRowsSelectionForRemoval() {
+		JOptionPane.showMessageDialog(null, "Please, select those rows to be removed.",
+				"No rows selected", JOptionPane.ERROR_MESSAGE);
 	}
 	
 	private int showTableRemovalConfirmation(String tableName) {

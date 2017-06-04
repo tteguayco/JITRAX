@@ -115,6 +115,10 @@ public class Table {
 		addRow(newRow);
 	}
 	
+	public void removeRowByIndex(int rowIndex) {
+		getRows().remove(rowIndex);
+	}
+	
 	/**
 	 * Adds a new attribute to the table. Returns false if couldn't do it
 	 * because the attribute already exists.

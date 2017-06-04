@@ -151,7 +151,7 @@ public class DbmsDriver {
 		statement.executeUpdate(dropTableStatement);
 	}
 	
-	public void deleteRowsFromTable(Table aTable) throws SQLException {
+	public void deleteAllRowsFromTable(Table aTable) throws SQLException {
 		String deleteRowsStatement = "DELETE FROM " + aTable.getName() + " WHERE 1=1";
 		
 		Statement statement = connection.createStatement();

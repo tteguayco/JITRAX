@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
@@ -141,17 +142,23 @@ public class SelectedTableViewer extends GraphicTable {
 	    {   
 	       Point pnt = e.getPoint();
 	       int row = graphicTable.rowAtPoint(pnt);
-	       int col = graphicTable.columnAtPoint(pnt);
 	       
-	       // Check limits
-	       if (row >= 0 && row < graphicTable.getRowCount()) {
-	    	   if (col >= 0 && col < graphicTable.getColumnCount()) {
-	    		   // Select the whole row
-			       graphicTable.addRowSelectionInterval(row, row);
-			       graphicTable.addColumnSelectionInterval(0, 
-			    		   graphicTable.getColumnCount() - 1);
-	    	   }
-	       }
+	       // Allow only one row selected at a time
+	       // Disable the others...
+	       graphicTable.clearSelection();
+	       
+	       selectWholeRow(row);
+	    }
+	}
+	
+	public void selectWholeRow(int rowIndex) {
+		// Check limits
+	    if (rowIndex >= 0 && rowIndex < graphicTable.getRowCount()) {
+		    // Select the whole row
+	        graphicTable.addRowSelectionInterval(rowIndex, rowIndex);
+	        graphicTable.addColumnSelectionInterval(0, 
+	    		   graphicTable.getColumnCount() - 1);
+		   
 	    }
 	}
 	
