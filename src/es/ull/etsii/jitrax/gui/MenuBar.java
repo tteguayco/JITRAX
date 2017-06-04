@@ -123,7 +123,7 @@ public class MenuBar extends JMenuBar {
 		
 		exitOption = new JMenuItem("Exit");
 		
-		getFileMenu().add(newDatabase);
+		//getFileMenu().add(newDatabase);
 		getFileMenu().add(openDatabase);
 		getFileMenu().add(new JSeparator());
 		getFileMenu().add(saveDatabase);

@@ -51,6 +51,10 @@ public class Table {
 		return null;
 	}
 	
+	public Row getRowAt(int rowIndex) {
+		return rows.get(rowIndex);
+	}
+	
 	/**
 	 * Returns the names of the columns of this table.
 	 */

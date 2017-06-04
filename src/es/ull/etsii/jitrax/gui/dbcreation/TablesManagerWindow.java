@@ -403,7 +403,25 @@ public class TablesManagerWindow extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			ArrayList<Row> selectedRows = new ArrayList<Row>();
 			
+			// Getting which rows are selected
+			for (int i = 0; i < getSelectedTableViewer().getGraphicTable().getRowCount(); i++) {
+				if (getSelectedTableViewer().getGraphicTable().isRowSelected(i)) {
+					selectedRows.add(getSelectedTableViewer().getTable().getRowAt(i));
+				}
+			}
+			
+			try {
+				// Delete selected rows from DBMS
+				for (int i = 0; i < selectedRows.size(); i++) {
+					Table selectedTable = getSelectedTableViewer().getTable();
+					database.getDbmsDriver().deleteRow(selectedTable, selectedRows.get(i));
+				}
+			}
+			catch (SQLException exc) {
+				exc.printStackTrace();
+			}
 		}
 	}
 	

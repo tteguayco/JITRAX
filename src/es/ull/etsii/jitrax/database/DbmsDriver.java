@@ -158,6 +158,22 @@ public class DbmsDriver {
 		statement.executeUpdate(deleteRowsStatement);
 	}
 	
+	public void deleteRow(Table table, Row row) throws SQLException {
+		String deleteRowStmt = "DELETE FROM " + table.getName() + " WHERE ";
+		for (int i = 0; i < row.getTableAttributes().size(); i++) {
+			deleteRowStmt += row.getTableAttributes().get(i).getName() 
+					+ " = " + row.getDatum(i);
+			
+			// Add logical AND
+			if (i < row.getTableAttributes().size() - 1) {
+				deleteRowStmt += " and ";
+			}
+		}
+		
+		Statement statement = connection.createStatement();
+		statement.executeUpdate(deleteRowStmt);
+	}
+	
 	public void renameTable(Table aTable, String newName) throws SQLException {
 		String renameStatement = "ALTER TABLE " + aTable.getName() 
 			+ " RENAME TO " + newName;

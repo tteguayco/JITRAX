@@ -3,7 +3,11 @@ package es.ull.etsii.jitrax.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseAdapter;
 import java.util.Arrays;
 
 import javax.swing.BorderFactory;
@@ -50,6 +54,9 @@ public class SelectedTableViewer extends GraphicTable {
 		//graphicTable = new JTable();
 		tableModel = new DefaultTableModel();
 		graphicTable.setModel(tableModel);
+		
+		// Listener for whole-row-selection
+		graphicTable.addMouseListener(new RowSelectorListener());
 	}
 	
 	public void makeEditable() {
@@ -116,6 +123,36 @@ public class SelectedTableViewer extends GraphicTable {
 	public void addEmptyRow() {
 		((DefaultTableModel) graphicTable.getModel()).addRow(new Object[] {});
 		((DefaultTableModel) graphicTable.getModel()).fireTableDataChanged();
+	}
+	
+	private boolean isRowSelected(int rowIndex) {
+		for (int col = 0; col < graphicTable.getColumnCount(); col++) {
+			if (!graphicTable.isCellSelected(rowIndex, col)) {
+				return false; 
+			}
+		}
+		
+		return true;
+	}
+	
+	private class RowSelectorListener extends MouseAdapter {
+		@Override
+	    public void mouseClicked(MouseEvent e)
+	    {   
+	       Point pnt = e.getPoint();
+	       int row = graphicTable.rowAtPoint(pnt);
+	       int col = graphicTable.columnAtPoint(pnt);
+	       
+	       // Check limits
+	       if (row >= 0 && row < graphicTable.getRowCount()) {
+	    	   if (col >= 0 && col < graphicTable.getColumnCount()) {
+	    		   // Select the whole row
+			       graphicTable.addRowSelectionInterval(row, row);
+			       graphicTable.addColumnSelectionInterval(0, 
+			    		   graphicTable.getColumnCount() - 1);
+	    	   }
+	       }
+	    }
 	}
 	
 	public Table getTable() {
