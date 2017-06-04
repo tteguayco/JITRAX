@@ -328,6 +328,14 @@ public class MainWindow extends JFrame {
 		}
 	}
 	
+	private class DoneButtonTablesManagerListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			getDatabaseViewerPanel().updateSelectedDatabase();
+		}
+	}
+	
 	private static void translateGUI() {
 		UIManager.put("OptionPane.yesButtonText", "Yes");
 		UIManager.put("OptionPane.cancelButtonText", "Cancel");

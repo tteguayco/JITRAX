@@ -70,7 +70,7 @@ public class DatabaseViewer extends JPanel {
 		getSelectedDatabaseViewer().addDatabase(database);
 	}
 	
-	private void updateSelectedDatabase() {
+	public void updateSelectedDatabase() {
 		Database newSelectedDatabase = getSelectedDatabaseViewer().getSelectedDatabase();
 		
 		getTablesViewer().updateTables(newSelectedDatabase.getTables());

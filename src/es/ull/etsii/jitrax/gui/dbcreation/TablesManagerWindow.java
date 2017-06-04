@@ -388,6 +388,7 @@ public class TablesManagerWindow extends JFrame {
 			TablesManagerWindow
 				.this
 				.dispatchEvent(new WindowEvent(TablesManagerWindow.this, WindowEvent.WINDOW_CLOSING));
+			updateMainView();
 		}
 	}
 	
@@ -411,8 +412,6 @@ public class TablesManagerWindow extends JFrame {
 				if (getSelectedTableViewer().getGraphicTable().isRowSelected(i)) {
 					numOfSelectedRows++;
 					selectedRowsIndexes.add(i);
-					
-					
 				}
 			}
 			
@@ -452,6 +451,30 @@ public class TablesManagerWindow extends JFrame {
 			catch (SQLException exc) {
 				exc.printStackTrace();
 			}
+		}
+	}
+	
+	public void updateMainView() {
+		Component parent = getMainViewParent(databaseViewer);
+		
+		if (parent instanceof MainWindow) {
+			MainWindow mainView = (MainWindow) parent;
+			mainView.getDatabaseViewerPanel().updateSelectedDatabase();
+		}
+	}
+	
+	/**
+	 * Method used for finding the main view of the application
+	 * @param aChild
+	 * @return
+	 */
+	private MainWindow getMainViewParent(Component aChild) {
+		if (aChild.getParent() != null && aChild.getParent() instanceof MainWindow) {
+			return (MainWindow) aChild.getParent();
+		}
+		
+		else {
+			return getMainViewParent(aChild.getParent());
 		}
 	}
 	

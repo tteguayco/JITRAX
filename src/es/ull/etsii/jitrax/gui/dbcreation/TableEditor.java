@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
@@ -94,7 +95,8 @@ public class TableEditor extends JFrame {
 		attrList = new JList<Attribute>();
 		defaultListModel = new DefaultListModel<Attribute>();
 		attrList.setModel(defaultListModel);
-	
+		attrList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
 		tableOriginalName = aTable.getName();
 		
 		newAttrName.setPreferredSize(new Dimension(TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT));
@@ -199,6 +201,7 @@ public class TableEditor extends JFrame {
 		attrListPanel.setLayout(new BorderLayout());
 		attrListPanel.add(sp, BorderLayout.CENTER);
 		attrListPanel.add(buttonsPanel, BorderLayout.SOUTH);
+		eraseAttrButton.addActionListener(new RemoveAttrListener());
 	}
 	
 	private void buildAttrEditorPanel() {
@@ -266,6 +269,19 @@ public class TableEditor extends JFrame {
 			
 			else {
 				showAttrNameNotValidDialog();
+			}
+		}
+	}
+	
+	private class RemoveAttrListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Attribute selectedAttr = attrList.getSelectedValue();
+			
+			if (selectedAttr != null && defaultListModel.size() > 1) {
+				defaultListModel.removeElement(selectedAttr);
+				schemaHasChanged = true;
 			}
 		}
 	}
@@ -374,6 +390,7 @@ public class TableEditor extends JFrame {
 			}
 			
 			catch (SQLException | DuplicateTableException e) {
+				e.printStackTrace();
 				ArrayList<String> errorsMessages = new ArrayList<String>();
 				errorsMessages.add(e.getMessage());
 				ErrorsDialog errorsDialog = new ErrorsDialog(errorsMessages);
