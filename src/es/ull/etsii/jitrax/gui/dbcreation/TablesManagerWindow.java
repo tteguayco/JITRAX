@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -148,6 +149,15 @@ public class TablesManagerWindow extends JFrame {
 		//setMaximumSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 		setLocationRelativeTo(null);
 		setVisible(true);
+		
+		addWindowListener(new WindowAdapter()
+		{
+		    public void windowClosing(WindowEvent e)
+		    {
+		    	updateMainView();
+		    	TablesManagerWindow.this.dispose();
+		    }
+		});
 	}
 	
 	private void buildLeftPanel() {
