@@ -268,7 +268,7 @@ public class MenuBar extends JMenuBar {
 		setHelpMenu(new JMenu("Help"));
 		getHelpMenu().setMnemonic(KeyEvent.VK_H);
 		
-		getHelpMenu().add(getOnlineDocumentationOption());
+		//getHelpMenu().add(getOnlineDocumentationOption());
 		getHelpMenu().add(getSourceCodeOption());
 		getHelpMenu().add(new JSeparator());
 		getHelpMenu().add(getAboutOption());

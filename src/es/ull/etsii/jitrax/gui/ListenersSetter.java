@@ -63,6 +63,7 @@ public class ListenersSetter {
 		getMainWindow().getBarMenu().getConsoleShow().addActionListener(new ViewsHidder());
 		getMainWindow().getBarMenu().getDbViewerShow().addActionListener(new ViewsHidder());
 		getMainWindow().getBarMenu().getQueriesListShow().addActionListener(new ViewsHidder());
+		getMainWindow().getBarMenu().getAboutOption().addActionListener(new AboutListener());
 	}
 	
 	private class NewDatabaseListener implements ActionListener {
@@ -407,6 +408,14 @@ public class ListenersSetter {
 					getMainWindow().getQueryList().setVisible(false);
 				}
 			}
+		}
+	}
+	
+	private class AboutListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			AboutWindow aboutWindow = new AboutWindow();
 		}
 	}
 	
