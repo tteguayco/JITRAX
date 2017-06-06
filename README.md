@@ -91,7 +91,7 @@ a SQL.
 
 ## Mejor Proyecto Educativo CUSL 2016/2017
 
-En la undécima edición del Concurso Universitario de Software Libre celebrada en Sevilla (España) [Concurso Universitario de Software Libre](https://www.concursosoftwarelibre.org/1617/) JITRAX ha conseguido el premio al Mejor Proyecto Educativo, el cual le confiere a este trabajo un reconocimiento destacable como herramienta que favorece el aprendizaje del Álgebra Relacional.
+En la undécima edición del [Concurso Universitario de Software Libre](https://www.concursosoftwarelibre.org/1617/) celebrada en Sevilla (España) JITRAX ha conseguido el premio al Mejor Proyecto Educativo, el cual le confiere a este trabajo un reconocimiento destacable como herramienta que favorece el aprendizaje del Álgebra Relacional.
 
 ## Licencia
 
