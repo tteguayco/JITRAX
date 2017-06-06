@@ -11,7 +11,9 @@ consulta, se utiliza una técnica mucho más ingeniosa: traducir las expresiones
 a expresiones equivalentes en SQL y ejecutar estas últimas sobre un Sistema Gestor de PostgreSQL. ¿No es 
 genial? ;-)
 
-![alt tag](https://cloud.githubusercontent.com/assets/20015750/24921090/8ccf6ce4-1ee1-11e7-9e47-402ad233ee6d.png)
+Esta herramienta ha sido desarrollada como parte de un Trabajo de Fin de Grado en la Universidad de La Laguna por Teguayco Gutiérrez González, bajo la dirección de Jesús M. Jorge Santiso.
+
+![alt tag](https://user-images.githubusercontent.com/20015750/26836066-c33a7154-4ad1-11e7-8429-74f3ae709ad7.png)
 
 ## Características
 
@@ -30,17 +32,7 @@ diferencia, intersección, producto cartesiano, yunción, yunción natural y div
 * Soporte para vistas (asignación de un alias a una consulta que permite su posterior reutilización).
 * Optimización de consultas: JITRAX es capaz de detectar cascadas de proyecciones y selecciones (véase los ficheros 'examples/R1R2R3R4/projection_cascade.ra' y 'examples/R1R2R3R4/selection_cascade.ra') y proponer traducciones que sean más eficientes y legibles.
 * Mecanismo de sincronización con PostgreSQL: la discrepancia que pueda existir entre el contenido de la base de datos alojada en el Sistema Gestor de PostgreSQL y el de la base de datos con la que el usuario trabaja en el entorno puede derivar en un problema. Es por ello que JITRAX implementa un mecanismo de sincronización que pretende que la base de datos que hay en PostgreSQL sea exactamente igual que la que hay especificada en la aplicación. En la guía de usuario que está pediente de elaboración se comentará con más detalle cómo funciona esta característica.
-
-## Prototipo
-
-Actualmente se encuentra disponible un prototipo de la aplicación en formato JAR. Esta versión ya cuenta con
-un alto grado de funcionaldad; no obstante, aún se espera poder incorporar las siguientes características
-pendientes:
-
-* Creación de bases de datos desde el propio entorno gráfico (de momento sólo es posible especificarlas
-mediante fichero).
-* Formato multidioma: se ha decidido que el idioma de la primera versión de JITRAX sea el inglés, pero en el
-futuro se espera incorporar soporte para más idiomas. 
+* Modificación de los esquemas de bases de datos sobre los que operar desde el propio entorno gráfico.
 
 ## Ejecución
 
@@ -60,11 +52,9 @@ ant run
 
 ## 'Quick start'
 
-¿Ya has ejecutado el proyecto? Para comenzar a trastear con JITRAX, dirígete a 'File > Open' y selecciona
-aquel fichero que contenga la especificación de la base de datos con la que quieras empezar a trabajar (en el directorio 'examples' de este proyecto dispones de algunos ejemplos). 
+¿Ya has ejecutado JITRAX? Para comenzar a trastear con la herramienta, dirígete a 'File > Open' y selecciona aquel fichero que contenga la especificación de la base de datos con la que quieras empezar a trabajar (en el directorio 'examples' dispones de algunos ejemplos). 
 
-NOTA: antes de poder seleccionar el fichero de la base de datos, necesitas establecer conexión con el SG de 
-PostgreSQL que has descargado anteriormente. Por defecto, el puerto en el que se ejecuta PostgreSQL en tu máquina es el 5432 (aunque esto podría no ser así siempre). Además, el nombre de usuario y contraseña que JITRAX propone por defecto es 'postgres', dado que es la cuenta que PostgreSQL crea inicialmente de forma automática.
+NOTA: antes de poder seleccionar el fichero de la base de datos, necesitas establecer conexión con el SG de PostgreSQL que has descargado anteriormente. Por defecto, el puerto en el que se ejecuta PostgreSQL en tu máquina es el 5432 (aunque esto podría no ser así siempre). Además, el nombre de usuario y contraseña que JITRAX propone por defecto es 'postgres', dado que es la cuenta que PostgreSQL crea inicialmente de forma automática.
 
 ## Documentación
 
@@ -97,11 +87,11 @@ resaltado sintáctico para nuevos lenguajes (en este caso, se ha añadido para �
 la conexión con el Sistema Gestor de PostgreSQL que utilizará la aplicación para ejecutar las traducciones
 a SQL.
 
-* [Hibernate ORM](http://hibernate.org/orm/): analizador del lenguaje SQL que incluye infinidad de funciones, pero JITRAX sólo la utiliza para añadir la opción de formateo de código SQL en el editor del entorno gráfico.
+* [Hibernate ORM](http://hibernate.org/orm/): herramienta que incorpora un formateador de código SQL que utiliza JITRAX.
 
-## Participante CUSL 2016/2017
+## Mejor Proyecto Educativo CUSL 2016/2017
 
-A día de hoy, JITRAX participa en el [Concurso Universitario de Software Libre](https://www.concursosoftwarelibre.org/1617/) en su undécima edición. Además, puesto que se trata de un herramienta con carácter metodológico y cuyo fin último es meramente didáctico, participa en la categoría ocio/educación.
+En la undécima edición del Concurso Universitario de Software Libre celebrada en Sevilla (España) [Concurso Universitario de Software Libre](https://www.concursosoftwarelibre.org/1617/) JITRAX ha conseguido el premio al Mejor Proyecto Educativo, el cual le confiere a este trabajo un reconocimiento destacable como herramienta que favorece el aprendizaje del Álgebra Relacional.
 
 ## Licencia
 
