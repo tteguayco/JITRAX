@@ -73,7 +73,7 @@ public class PreprocessingEvalVisitor extends RelationalAlgebraBaseVisitor<Strin
 	}
 	
 	@Override public String visitDifference(RelationalAlgebraParser.DifferenceContext ctx) { 
-		return visit(ctx.expr(0)) + " PRODUCT " + visit(ctx.expr(1)); 
+		return visit(ctx.expr(0)) + " DIFFERENCE " + visit(ctx.expr(1)); 
 	}
 	
 	@Override public String visitProjection(RelationalAlgebraParser.ProjectionContext ctx) {
