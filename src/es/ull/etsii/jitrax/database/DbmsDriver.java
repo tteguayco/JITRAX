@@ -49,6 +49,9 @@ public class DbmsDriver {
 	 * @throws SQLException
 	 */
 	public void switchDatabase(String databaseName) throws SQLException {
+		// Close former connection
+		connection.close();
+		
 		databaseName = databaseName.toLowerCase();
 		String newUrl = makeUrlConnection(hostname, port, databaseName);
 		connection = DriverManager.getConnection(newUrl, username, password);

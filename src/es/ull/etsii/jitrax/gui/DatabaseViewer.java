@@ -6,11 +6,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -111,19 +113,43 @@ public class DatabaseViewer extends JPanel {
 		
 		public void actionPerformed(ActionEvent e) {
 			JComboBox<Database> databasesCombo = getSelectedDatabaseViewer().getCombo();
+			JCheckBox dropOnDbmsCheckBox = new JCheckBox("Drop database on DBMS too", true);
+			
 			// There must be at least one database
 			if (databasesCombo.getItemCount() > 1) {
 				Database databaseToRemove = (Database)
 						getSelectedDatabaseViewer().getCombo().getSelectedItem();
+				
+				String message = "Are you sure you want to drop the database '" + 
+						databaseToRemove.getName() + "'?\n\n";
+				Object[] params = { message, dropOnDbmsCheckBox };
+				
 				// Confirm deletion
 				int dialogResult = JOptionPane.showConfirmDialog (null, 
-						"Are you sure you want to drop the database '" + databaseToRemove.getName() + "'?",
+						params,
 						"Confirm Deletion",
 						JOptionPane.YES_NO_OPTION);
 				
 				if(dialogResult == JOptionPane.YES_OPTION){
 					databasesCombo.removeItem((Database) databaseToRemove);
 					System.out.println("> Database '" + databaseToRemove.getName() + "' was dropped.");
+					
+					// Drop it from DBMS?
+					if (dropOnDbmsCheckBox.isSelected()) {
+						try {
+							
+							// Switch to an existing database
+							String existingDatabaseName = getSelectedDatabaseViewer()
+									.getSelectedDatabase().getName();
+							getSelectedDatabaseViewer().getSelectedDatabase().getDbmsDriver()
+								.switchDatabase(existingDatabaseName);
+							
+							getSelectedDatabaseViewer().getSelectedDatabase().getDbmsDriver()
+							.dropDatabase(databaseToRemove.getName());
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+					}
 				}
 			}
 			
