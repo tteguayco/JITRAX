@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="c10n-core">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/c10n-core.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

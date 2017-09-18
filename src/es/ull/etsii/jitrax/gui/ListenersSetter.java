@@ -9,6 +9,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -63,6 +65,8 @@ public class ListenersSetter {
 		getMainWindow().getBarMenu().getConsoleShow().addActionListener(new ViewsHidder());
 		getMainWindow().getBarMenu().getDbViewerShow().addActionListener(new ViewsHidder());
 		getMainWindow().getBarMenu().getQueriesListShow().addActionListener(new ViewsHidder());
+		getMainWindow().getBarMenu().getEnglishRadioButton().addActionListener(new LanguageHandler());
+		getMainWindow().getBarMenu().getSpanishRadioButton().addActionListener(new LanguageHandler());
 		getMainWindow().getBarMenu().getAboutOption().addActionListener(new AboutListener());
 	}
 	
@@ -408,6 +412,22 @@ public class ListenersSetter {
 					getMainWindow().getQueryList().setVisible(false);
 				}
 			}
+		}
+	}
+
+	private class LanguageHandler implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			if (actionEvent.getSource() == getMainWindow().getBarMenu().getEnglishRadioButton()) {
+				getMainWindow().setLocale(new Locale("en"));
+			}
+
+			else if (actionEvent.getSource() == getMainWindow().getBarMenu().getSpanishRadioButton()) {
+				getMainWindow().setLocale(new Locale("es"));
+			}
+
+			getMainWindow().translate();
 		}
 	}
 	

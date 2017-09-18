@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
@@ -25,8 +26,9 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
+import es.ull.etsii.jitrax.i18n.Translatable;
 
-public class MenuBar extends JMenuBar {
+public class MenuBar extends JMenuBar implements Translatable {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String DOC_URL = "https://github.com/tteguayco/JITRAX#quick-start";
@@ -73,7 +75,8 @@ public class MenuBar extends JMenuBar {
 	private JMenuItem aboutOption;
 	
 	private JRadioButtonMenuItem englishRadioButton;
-	
+	private JRadioButtonMenuItem spanishRadioButton;
+
 	public MenuBar(Workspace aWorkspace) {
 		workspace = aWorkspace;
 		
@@ -93,7 +96,7 @@ public class MenuBar extends JMenuBar {
 	}
 	
 	private void buildFileMenu() {
-		setFileMenu(new JMenu("File"));
+		setFileMenu(new JMenu());
 		fileMenu.setMnemonic(KeyEvent.VK_F);
 		
 		newDatabase = new JMenuItem("New Database");
@@ -152,7 +155,7 @@ public class MenuBar extends JMenuBar {
 	}
 	
 	private void buildEditMenu() {
-		editMenu = new JMenu("Edit");
+		editMenu = new JMenu();
 		editMenu.setMnemonic(KeyEvent.VK_E);
 		
 		undoOption = new JMenuItem("Undo");
@@ -239,7 +242,7 @@ public class MenuBar extends JMenuBar {
 		showMenu.add(queriesListShow);
 		showMenu.add(consoleShow);
 		
-		setViewMenu(new JMenu("View"));
+		setViewMenu(new JMenu());
 		getViewMenu().setMnemonic(KeyEvent.VK_V);
 		getViewMenu().add(codeHMenu);
 		getViewMenu().add(showMenu);
@@ -247,13 +250,16 @@ public class MenuBar extends JMenuBar {
 	
 	private void buildLanguageMenu() {
 		setEnglishRadioButton(new JRadioButtonMenuItem("English", true));
-		
+		setSpanishRadioButton(new JRadioButtonMenuItem("Español", true));
+
 		ButtonGroup buttonGroup = new ButtonGroup();
 		buttonGroup.add(getEnglishRadioButton());
-		
-		setLanguageMenu(new JMenu("Language"));
+		buttonGroup.add(getSpanishRadioButton());
+
+		setLanguageMenu(new JMenu());
 		getLanguageMenu().setMnemonic(KeyEvent.VK_L);
 		getLanguageMenu().add(getEnglishRadioButton());
+		getLanguageMenu().add(getSpanishRadioButton());
 	}
 	
 	private void buildHelpMenu() {
@@ -265,7 +271,7 @@ public class MenuBar extends JMenuBar {
 		getSourceCodeOption().addActionListener(new HelpOptionListener());
 		getAboutOption().addActionListener(new HelpOptionListener());
 		
-		setHelpMenu(new JMenu("Help"));
+		setHelpMenu(new JMenu());
 		getHelpMenu().setMnemonic(KeyEvent.VK_H);
 		
 		//getHelpMenu().add(getOnlineDocumentationOption());
@@ -273,7 +279,24 @@ public class MenuBar extends JMenuBar {
 		getHelpMenu().add(new JSeparator());
 		getHelpMenu().add(getAboutOption());
 	}
-	
+
+	public JRadioButtonMenuItem getSpanishRadioButton() {
+		return spanishRadioButton;
+	}
+
+	public void setSpanishRadioButton(JRadioButtonMenuItem spanishRadioButton) {
+		this.spanishRadioButton = spanishRadioButton;
+	}
+
+	@Override
+	public void translate(ResourceBundle rb) {
+		getFileMenu().setText(rb.getString("file"));
+		getEditMenu().setText(rb.getString("edit"));
+		getViewMenu().setText(rb.getString("view"));
+		getLanguageMenu().setText(rb.getString("language"));
+		getHelpMenu().setText(rb.getString("help"));
+	}
+
 	private class HelpOptionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {

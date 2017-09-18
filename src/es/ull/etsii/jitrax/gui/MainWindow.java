@@ -1,7 +1,6 @@
 package es.ull.etsii.jitrax.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +12,8 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -47,7 +48,10 @@ public class MainWindow extends JFrame {
 	private static final String QUERY_TRANSLATION_MSG = "> Relational Algebra query translated to SQL.";
 	private static final String DBMS_EXECUTION_MSG = "> Relational Algebra query executed on DBMS.";
 	private static final String DBMS_ERRORS_MSG = "> The DBMS detected the following error:";
-	
+
+	private static final String DEFAULT_LANG = "en";
+	private static final String BUNDLES_LOCATION = "resources.translations.Translations";
+
 	private static final double HORIZONTAL_SPLITPANE_DEFAULT_WEIGHT = 0.55d;
 	private static final double VERTICAL_SPLITPANE_DEFAULT_WEIGHT = 0.02;
 	
@@ -63,6 +67,12 @@ public class MainWindow extends JFrame {
 	private JSplitPane horSplitPane;
 	
 	private RelationalAlgebraInterpreter raInterpreter;
+
+	/**
+	 * Internationalization
+	 */
+	private Locale locale;
+	private ResourceBundle resourceBundle;
 	
 	public MainWindow() {
 		workspace = new Workspace();
@@ -70,7 +80,10 @@ public class MainWindow extends JFrame {
 		queryList = new QueryList();
 		console = new Console();
 		databaseViewerPanel = new DatabaseViewer();
-		
+
+		setLocale(new Locale(DEFAULT_LANG));
+		setResourceBundle(ResourceBundle.getBundle(BUNDLES_LOCATION, getLocale()));
+
 		mainContainer = new JPanel(new BorderLayout());
 		JPanel rightPanel = new JPanel(new BorderLayout());
 		JPanel rightInnerPanel = new JPanel(new BorderLayout());
@@ -114,6 +127,8 @@ public class MainWindow extends JFrame {
 		 * Redirect System.out to the console in the GUI.
 		 */
 		redirectOutputToConsole();
+
+		translate();
 	}
 	
 	public void addDatabase(Database database) {
@@ -137,6 +152,12 @@ public class MainWindow extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+	}
+
+	public void translate() {
+		setResourceBundle(ResourceBundle.getBundle(BUNDLES_LOCATION, locale));
+
+		getBarMenu().translate(getResourceBundle());
 	}
 	
 	public static void main(String[] args) {
@@ -276,7 +297,28 @@ public class MainWindow extends JFrame {
 			return false;
 		}
 	}
-	
+
+	/**
+	 * Internationalization
+	 */
+	@Override
+	public Locale getLocale() {
+		return locale;
+	}
+
+	@Override
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
+
+	public ResourceBundle getResourceBundle() {
+		return resourceBundle;
+	}
+
+	public void setResourceBundle(ResourceBundle resourceBundle) {
+		this.resourceBundle = resourceBundle;
+	}
+
 	private class ExecutionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent evt) {

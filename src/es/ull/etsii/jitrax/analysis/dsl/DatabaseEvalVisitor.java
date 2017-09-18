@@ -11,7 +11,7 @@ import es.ull.etsii.jitrax.exceptions.DuplicateTableException;
 import java.util.ArrayList;
 
 /**
- * This class allows to analyze semantically a expression which describes
+ * This class allows to semantically analyze an expression which describes
  * a database specification (using a DSL). It has to be syntactically correct.
  */
 public class DatabaseEvalVisitor extends DatabaseBaseVisitor<Object> {

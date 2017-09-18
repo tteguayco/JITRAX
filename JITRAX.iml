@@ -83,5 +83,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="c10n-core" level="project" />
   </component>
 </module>
