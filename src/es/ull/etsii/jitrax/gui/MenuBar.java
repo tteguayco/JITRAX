@@ -1,6 +1,5 @@
 package es.ull.etsii.jitrax.gui;
 
-import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
@@ -20,12 +19,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
 
-import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
 import es.ull.etsii.jitrax.i18n.Translatable;
 
 public class MenuBar extends JMenuBar implements Translatable {
@@ -63,7 +57,10 @@ public class MenuBar extends JMenuBar implements Translatable {
 	private JMenuItem pasteOption;
 	private JMenuItem deleteOption;
 	private JMenuItem selectAllOption;
-	
+
+	private JMenu codeHMenu;
+	private JMenu showMenu;
+
 	private JCheckBoxMenuItem raCodeHighLighting;
 	private JCheckBoxMenuItem sqlCodeHighLighting;
 	private JCheckBoxMenuItem consoleShow;
@@ -226,26 +223,26 @@ public class MenuBar extends JMenuBar implements Translatable {
 		
 		ButtonGroup buttonGroup = new ButtonGroup();
 		
-		JMenu codeHMenu = new JMenu("Code highlighting");
+		setCodeHMenu(new JMenu("Code highlighting"));
 		raCodeHighLighting = new JCheckBoxMenuItem("Relational Algebra", true);
 		sqlCodeHighLighting = new JCheckBoxMenuItem("SQL", true);
 		
-		codeHMenu.add(raCodeHighLighting);
-		codeHMenu.add(sqlCodeHighLighting);
+		getCodeHMenu().add(raCodeHighLighting);
+		getCodeHMenu().add(sqlCodeHighLighting);
 		
-		JMenu showMenu = new JMenu("Show");
+		setShowMenu(new JMenu("Show"));
 		consoleShow = new JCheckBoxMenuItem("Console", true);
 		dbViewerShow = new JCheckBoxMenuItem("DB Viewer", true);
 		queriesListShow = new JCheckBoxMenuItem("Query List", true);
 		
-		showMenu.add(dbViewerShow);
-		showMenu.add(queriesListShow);
-		showMenu.add(consoleShow);
+		getShowMenu().add(dbViewerShow);
+		getShowMenu().add(queriesListShow);
+		getShowMenu().add(consoleShow);
 		
 		setViewMenu(new JMenu());
 		getViewMenu().setMnemonic(KeyEvent.VK_V);
-		getViewMenu().add(codeHMenu);
-		getViewMenu().add(showMenu);
+		getViewMenu().add(getCodeHMenu());
+		getViewMenu().add(getShowMenu());
 	}
 	
 	private void buildLanguageMenu() {
@@ -295,6 +292,53 @@ public class MenuBar extends JMenuBar implements Translatable {
 		getViewMenu().setText(rb.getString("view"));
 		getLanguageMenu().setText(rb.getString("language"));
 		getHelpMenu().setText(rb.getString("help"));
+
+		getOpenDatabase().setText(rb.getString("open"));
+		getSaveDatabase().setText(rb.getString("save"));
+		getSaveDatabaseAs().setText(rb.getString("saveas"));
+		getImportOption().setText(rb.getString("import"));
+		getImportRelAlgQuery().setText(rb.getString("relalgquery"));
+		getExportOption().setText(rb.getString("export"));
+		getExportRelAlgQuery().setText(rb.getString("relalgquery"));
+		getExportSqlQuery().setText(rb.getString("sqlquery"));
+		getExportParseTree().setText(rb.getString("parsetree"));
+		getExportQueryResultTable().setText(rb.getString("resulttable"));
+		getExitOption().setText(rb.getString("exit"));
+
+		getUndoOption().setText(rb.getString("undo"));
+		getRedoOption().setText(rb.getString("redo"));
+		getCutOption().setText(rb.getString("cut"));
+		getCopyOption().setText(rb.getString("copy"));
+		getPasteOption().setText(rb.getString("paste"));
+		getDeleteOption().setText(rb.getString("delete"));
+		getSelectAllOption().setText(rb.getString("selectall"));
+
+		getCodeHMenu().setText(rb.getString("codehighlighting"));
+		getRaCodeHighLighting().setText(rb.getString("codehighlightingrelalg"));
+		getSqlCodeHighLighting().setText(rb.getString("codehighlightingsql"));
+		getShowMenu().setText(rb.getString("show"));
+		getDbViewerShow().setText(rb.getString("dbviewer"));
+		getQueriesListShow().setText(rb.getString("querieslist"));
+		getConsoleShow().setText(rb.getString("console"));
+
+		getSourceCodeOption().setText(rb.getString("sourcecode"));
+		getAboutOption().setText(rb.getString("about"));
+	}
+
+	public JMenu getCodeHMenu() {
+		return codeHMenu;
+	}
+
+	public void setCodeHMenu(JMenu codeHMenu) {
+		this.codeHMenu = codeHMenu;
+	}
+
+	public JMenu getShowMenu() {
+		return showMenu;
+	}
+
+	public void setShowMenu(JMenu showMenu) {
+		this.showMenu = showMenu;
 	}
 
 	private class HelpOptionListener implements ActionListener {
