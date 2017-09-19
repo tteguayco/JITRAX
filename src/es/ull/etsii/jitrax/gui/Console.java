@@ -4,21 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -26,8 +17,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.text.DefaultCaret;
 
 import es.ull.etsii.jitrax.gui.dialogs.FileDialog;
+import es.ull.etsii.jitrax.i18n.Translatable;
 
-public class Console extends JPanel {
+public class Console extends JPanel implements Translatable {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String PANEL_TITLE = "Console";
@@ -43,15 +35,18 @@ public class Console extends JPanel {
 	
 	private JTextArea console;
 	private JButton clearButton;
-	private JButton exportButton;
+	//private JButton exportButton;
+
+	private String panelTitle;
 	
 	public Console() {
 		console = new JTextArea();
 		clearButton = new JButton("Clear");
-		exportButton = new JButton("Export");
-		
+		//exportButton = new JButton("Export");
+		setPanelTitle(PANEL_TITLE);
+
 		clearButton.addActionListener(new ClearListener());
-		exportButton.addActionListener(new ExportListener());
+		//exportButton.addActionListener(new ExportListener());
 		
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -78,9 +73,14 @@ public class Console extends JPanel {
 		add(sp);
 		
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
-		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
+		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, getPanelTitle()));
 	}
-	
+
+	private void createTitledBorder(String title) {
+		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
+		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, title));
+	}
+
 	public void appendMessage(String newMessage) {
 		// Scroll to bottom
 		getConsole().setCaretPosition(getConsole().getDocument().getLength());
@@ -104,14 +104,28 @@ public class Console extends JPanel {
 		this.clearButton = clearButton;
 	}
 
-	public JButton getExportButton() {
-		return exportButton;
+	//public JButton getExportButton() {
+	//	return exportButton;
+	//}
+
+	//public void setExportButton(JButton exportButton) {
+	//	this.exportButton = exportButton;
+	//}
+
+	@Override
+	public void translate(ResourceBundle rb) {
+		getClearButton().setText(rb.getString("clear"));
+		createTitledBorder(rb.getString("console"));
 	}
 
-	public void setExportButton(JButton exportButton) {
-		this.exportButton = exportButton;
+	public String getPanelTitle() {
+		return panelTitle;
 	}
-	
+
+	public void setPanelTitle(String panelTitle) {
+		this.panelTitle = panelTitle;
+	}
+
 	private class ClearListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			getConsole().setText("");

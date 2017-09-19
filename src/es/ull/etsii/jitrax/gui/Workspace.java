@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -34,6 +35,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Utilities;
 
+import es.ull.etsii.jitrax.i18n.Translatable;
 import org.antlr.v4.gui.TreeViewer;
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -44,7 +46,7 @@ import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
 import es.ull.etsii.jitrax.adt.Query;
 
-public class Workspace extends JPanel {
+public class Workspace extends JPanel implements Translatable {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String[] FONT_STYLES = { "Plain", "Bold", "Italic" };
@@ -104,7 +106,7 @@ public class Workspace extends JPanel {
 	private SpinnerModel raFontSizeModel;
 	private SpinnerModel sqlFontSizeModel;
 	
-	private JTabbedPane tabbedPane = new JTabbedPane();
+	private JTabbedPane tabbedPane;
 	private JButton executeButton;
 	private JPanel parseTreePanel;
 	private QueryResultViewer queryResultViewer;
@@ -114,6 +116,10 @@ public class Workspace extends JPanel {
 	
 	private BasicFormatterImpl sqlFormatter;
 	private Query selectedQuery;
+
+	private JLabel styleLabel;
+	private JLabel sizeLabel;
+	private JLabel columnLabel;
 	
 	public Workspace() {
 		relationalAlgebraCodeEditor = new RSyntaxTextArea();
@@ -122,8 +128,10 @@ public class Workspace extends JPanel {
 		parseTreePanel = new JPanel(new BorderLayout());
 		queryResultViewer = new QueryResultViewer();
 		formattedSqlCodeCheck = new JCheckBox("Display SQL code formatted");
-		raEditorCaretPositionLabel = new JLabel("Column: 0");
-		
+		setColumnLabel(new JLabel("Column:"));
+		raEditorCaretPositionLabel = new JLabel("0");
+		tabbedPane = new JTabbedPane();
+
 		executeButton.setToolTipText("Execute this Relational Algebra query on your DBMS");
 		
 		sqlFormatter = new BasicFormatterImpl();
@@ -194,14 +202,19 @@ public class Workspace extends JPanel {
 	    translationPanel.add(executeButton);
 	    translationPanel.add(new JSeparator());
 	    translationPanel.add(new JSeparator());
+	    translationPanel.add(getColumnLabel());
 	    translationPanel.add(raEditorCaretPositionLabel);
 	    raControlPanel.add(translationPanel, BorderLayout.WEST);
 	    JPanel editorElementsOuterPanel = new JPanel(new BorderLayout());
 	    editorElementsOuterPanel.add(raEditorElementsPanel, BorderLayout.EAST);
 	    raControlPanel.add(editorElementsOuterPanel, BorderLayout.EAST);
-	    raEditorElementsPanel.add(new JLabel("Style: "));
+
+	    setStyleLabel(new JLabel("Style:"));
+	    setSizeLabel(new JLabel("Size:"));
+
+	    raEditorElementsPanel.add(getStyleLabel());
 	    raEditorElementsPanel.add(raFontStyles);
-	    raEditorElementsPanel.add(new JLabel("Size: "));
+	    raEditorElementsPanel.add(getSizeLabel());
 	    raEditorElementsPanel.add(raFontSizeSelector);
 	    relationalAlgebraCodeEditor.setText(INITIAL_COMMENT);
 	    
@@ -237,13 +250,16 @@ public class Workspace extends JPanel {
 		tabbedPane.setEnabledAt(PARSE_TREE_TAB_INDEX, false);
 		tabbedPane.setEnabledAt(QUERY_RESULT_TAB_INDEX, false);
 		add(tabbedPane, BorderLayout.CENTER);
-		
-		setListeners();
-		
+
 		setMinimumSize(new Dimension(FRAME_MIN_WIDTH, FRAME_MIN_HEIGHT));
-		
+
+		createTitledBorder(PANEL_TITLE);
+		setListeners();
+	}
+
+	private void createTitledBorder(String title) {
 		LineBorder lineBorderPanel = (LineBorder) BorderFactory.createLineBorder(PANEL_BORDER_COLOR);
-		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, PANEL_TITLE));
+		setBorder(BorderFactory.createTitledBorder(lineBorderPanel, title));
 	}
 	
 	public void enableSqlTab() {
@@ -358,7 +374,7 @@ public class Workspace extends JPanel {
 	//}
 	
 	private void updateRaCaretColumnLabel(int col) {
-		getRaEditorCaretPositionLabel().setText("Column: " + col);
+		getRaEditorCaretPositionLabel().setText(String.valueOf(col));
 	}
 	
 	private void formatCodeIfNeeded() {
@@ -441,7 +457,43 @@ public class Workspace extends JPanel {
 		      }
 		});
 	}
-	
+
+	@Override
+	public void translate(ResourceBundle rb) {
+		createTitledBorder(rb.getString("workspace"));
+		getTabbedPane().setTitleAt(RA_TAB_INDEX, rb.getString("relalg"));
+		getTabbedPane().setTitleAt(PARSE_TREE_TAB_INDEX, rb.getString("parsetree"));
+		getTabbedPane().setTitleAt(QUERY_RESULT_TAB_INDEX, rb.getString("resulttable"));
+		getStyleLabel().setText(rb.getString("style"));
+		getSizeLabel().setText(rb.getString("size"));
+		getExecuteButton().setText(rb.getString("execute"));
+		getColumnLabel().setText(rb.getString("column"));
+	}
+
+	public JLabel getStyleLabel() {
+		return styleLabel;
+	}
+
+	public void setStyleLabel(JLabel styleLabel) {
+		this.styleLabel = styleLabel;
+	}
+
+	public JLabel getSizeLabel() {
+		return sizeLabel;
+	}
+
+	public void setSizeLabel(JLabel sizeLabel) {
+		this.sizeLabel = sizeLabel;
+	}
+
+	public JLabel getColumnLabel() {
+		return columnLabel;
+	}
+
+	public void setColumnLabel(JLabel columnLabel) {
+		this.columnLabel = columnLabel;
+	}
+
 	private class FormatSqlCodeListener implements ActionListener {
 		
 		@Override

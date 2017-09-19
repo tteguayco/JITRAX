@@ -158,6 +158,8 @@ public class MainWindow extends JFrame {
 		setResourceBundle(ResourceBundle.getBundle(BUNDLES_LOCATION, locale));
 
 		getBarMenu().translate(getResourceBundle());
+		getConsole().translate(getResourceBundle());
+		getWorkspace().translate(getResourceBundle());
 	}
 	
 	public static void main(String[] args) {

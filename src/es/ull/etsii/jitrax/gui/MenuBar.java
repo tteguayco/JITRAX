@@ -301,8 +301,8 @@ public class MenuBar extends JMenuBar implements Translatable {
 		getExportOption().setText(rb.getString("export"));
 		getExportRelAlgQuery().setText(rb.getString("relalgquery"));
 		getExportSqlQuery().setText(rb.getString("sqlquery"));
-		getExportParseTree().setText(rb.getString("parsetree"));
-		getExportQueryResultTable().setText(rb.getString("resulttable"));
+		getExportParseTree().setText(rb.getString("parsetreepng"));
+		getExportQueryResultTable().setText(rb.getString("resulttablecsv"));
 		getExitOption().setText(rb.getString("exit"));
 
 		getUndoOption().setText(rb.getString("undo"));
@@ -314,8 +314,8 @@ public class MenuBar extends JMenuBar implements Translatable {
 		getSelectAllOption().setText(rb.getString("selectall"));
 
 		getCodeHMenu().setText(rb.getString("codehighlighting"));
-		getRaCodeHighLighting().setText(rb.getString("codehighlightingrelalg"));
-		getSqlCodeHighLighting().setText(rb.getString("codehighlightingsql"));
+		getRaCodeHighLighting().setText(rb.getString("relalg"));
+		getSqlCodeHighLighting().setText(rb.getString("sql"));
 		getShowMenu().setText(rb.getString("show"));
 		getDbViewerShow().setText(rb.getString("dbviewer"));
 		getQueriesListShow().setText(rb.getString("querieslist"));
